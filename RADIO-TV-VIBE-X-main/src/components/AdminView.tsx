@@ -26,18 +26,32 @@ import {
   User,
   Check,
   Loader2,
-  Heart
+  Heart,
+  Tag,
+  ListMusic,
+  Play,
+  ChevronUp,
+  ChevronDown,
+  GripVertical,
+  Radio,
+  FolderOpen,
+  Upload,
+  Folder,
+  FileAudio,
+  Image,
+  Film
 } from 'lucide-react';
 import { cn } from '../utils';
 // @ts-ignore
-// @ts-ignore
-import confetti from 'canvas-confetti';
+// Lazy-load confetti to prevent page crash on initialization errors
+const Confetti = React.lazy(() => import('canvas-confetti'));
 
 import { useAuth } from '../context/AuthContext';
 import { useStation } from '../context/StationContext';
 import { Product, DJ, ScheduleEntry, Track } from '../types';
+import { uploadToStorage, sanitizePathSegment } from '../firebaseConfig';
 
-type Tab = 'metrics' | 'shop' | 'schedule' | 'djs' | 'stream' | 'donors' | 'settings';
+type Tab = 'metrics' | 'shop' | 'schedule' | 'djs' | 'stream' | 'playlist' | 'storage' | 'donors' | 'settings';
 
 export default function AdminView() {
   const [activeTab, setActiveTab] = useState<Tab>('metrics');
@@ -50,6 +64,8 @@ export default function AdminView() {
     { id: 'schedule', name: 'Schedule', icon: Calendar },
     { id: 'djs', name: 'DJs', icon: Users },
     { id: 'stream', name: 'Stream', icon: Video },
+    { id: 'playlist', name: 'Playlist', icon: ListMusic },
+    { id: 'storage', name: 'Storage', icon: FolderOpen },
     { id: 'donors', name: 'Donors', icon: Heart },
     { id: 'settings', name: 'Settings', icon: Settings },
   ];
@@ -124,6 +140,8 @@ export default function AdminView() {
               {activeTab === 'schedule' && <ScheduleManager />}
               {activeTab === 'djs' && <DJManager />}
               {activeTab === 'stream' && <StreamManager />}
+              {activeTab === 'playlist' && <PlaylistManager />}
+              {activeTab === 'storage' && <StorageManager />}
               {activeTab === 'donors' && <DonorManager />}
               {activeTab === 'settings' && <SettingsManager />}
             </div>
@@ -135,8 +153,9 @@ export default function AdminView() {
 }
 
 function MetricsDashboard() {
+  const { listenerCount } = useStation();
   const stats = [
-    { name: 'Total Listeners', value: '42.8k', change: '+12%', icon: Users, color: 'text-neon-blue' },
+    { name: 'Active Listeners', value: listenerCount.toString(), change: 'LIVE', icon: Users, color: 'text-neon-blue' },
     { name: 'Avg. Session', value: '48m', change: '+5%', icon: Activity, color: 'text-neon-pink' },
     { name: 'Revenue', value: '$12,450', change: '+18%', icon: DollarSign, color: 'text-neon-green' },
     { name: 'Page Views', value: '156k', change: '+24%', icon: Eye, color: 'text-white' },
@@ -170,33 +189,47 @@ function MetricsDashboard() {
   );
 }
 
-function FileUpload({ onUpload, label, accept = "image/*" }: { onUpload: (url: string, file?: File) => void, label: string, accept?: string }) {
+function FileUpload({ onUpload, label, accept = "image/*" }: {
+  onUpload: (url: string, file?: File) => void;
+  label: string;
+  accept?: string;
+}) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [progress, setProgress] = useState<string | null>(null);
   const fileInputRef = React.useRef<HTMLInputElement>(null);
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // Limit file size to 50MB for IndexedDB safety
-    if (file.size > 50 * 1024 * 1024) {
-      setError('File too large (max 50MB)');
+    // Max 500MB for music/video files via Firebase Storage
+    if (file.size > 500 * 1024 * 1024) {
+      setError('File too large (max 500MB)');
       return;
     }
 
     setLoading(true);
     setError(null);
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      onUpload(reader.result as string, file);
+    setProgress('Uploading to Firebase...');
+
+    try {
+      // Build storage path: music/Artist-Title-timestamp.ext
+      const safeName = sanitizePathSegment(file.name.replace(/\.[^/.]+$/, ''));
+      const ext = file.name.split('.').pop() || 'bin';
+      const path = `music/${safeName}-${Date.now()}.${ext}`;
+
+      const url = await uploadToStorage(path, file);
+      setProgress('Done!');
+      onUpload(url, file);
+    } catch (err) {
+      console.error('Upload error:', err);
+      setError('Upload failed — check Firebase Storage rules');
+    } finally {
       setLoading(false);
-    };
-    reader.onerror = () => {
-      setError('Failed to read file');
-      setLoading(false);
-    };
-    reader.readAsDataURL(file);
+      setProgress(null);
+      if (fileInputRef.current) fileInputRef.current.value = '';
+    }
   };
 
   return (
@@ -205,26 +238,30 @@ function FileUpload({ onUpload, label, accept = "image/*" }: { onUpload: (url: s
         <label className="text-[10px] font-bold text-white/40 uppercase tracking-widest">{label}</label>
         {error && <span className="text-[10px] font-bold text-red-500 uppercase tracking-widest">{error}</span>}
       </div>
-      <div 
-        onClick={() => fileInputRef.current?.click()}
+      <div
+        onClick={() => !loading && fileInputRef.current?.click()}
         className={cn(
           "w-full bg-white/5 border border-white/10 border-dashed rounded-2xl p-4 flex flex-col items-center justify-center cursor-pointer hover:border-neon-green/50 transition-all group",
-          error && "border-red-500/50"
+          error && "border-red-500/50",
+          loading && "cursor-wait opacity-60"
         )}
       >
-        <input 
-          type="file" 
-          ref={fileInputRef} 
-          onChange={handleFileChange} 
-          accept={accept} 
-          className="hidden" 
+        <input
+          type="file"
+          ref={fileInputRef}
+          onChange={handleFileChange}
+          accept={accept}
+          className="hidden"
         />
         {loading ? (
-          <Loader2 className="w-6 h-6 animate-spin text-neon-green" />
+          <div className="flex flex-col items-center gap-2">
+            <Loader2 className="w-6 h-6 animate-spin text-neon-green" />
+            <span className="text-[10px] font-bold text-white/50 uppercase tracking-widest">{progress || 'Uploading...'}</span>
+          </div>
         ) : (
           <>
             <Plus className="w-6 h-6 text-white/20 group-hover:text-neon-green transition-colors mb-2" />
-            <span className="text-[10px] font-bold text-white/30 group-hover:text-white/50 uppercase tracking-widest">Upload File</span>
+            <span className="text-[10px] font-bold text-white/30 group-hover:text-white/50 uppercase tracking-widest">Upload to Firebase</span>
           </>
         )}
       </div>
@@ -754,9 +791,83 @@ function StreamManager() {
     <div className="space-y-8">
       <div>
         <h3 className="text-3xl font-bold tracking-tighter uppercase mb-8">Stream Configuration</h3>
+
+        {/* YouTube Live Setup */}
+        <div className="space-y-6 mb-8">
+          <div className="glass rounded-2xl p-6 border border-white/10">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 rounded-xl bg-red-600/20 flex items-center justify-center">
+                <Radio className="w-6 h-6 text-red-500" />
+              </div>
+              <div>
+                <h4 className="font-bold text-sm uppercase tracking-widest">YouTube Live</h4>
+                <p className="text-[10px] text-white/40 mt-0.5">OBS → YouTube → VIBE-X auto-switch</p>
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <label className="text-[10px] font-bold text-white/40 uppercase tracking-widest">YouTube Video ID</label>
+                  <input
+                    type="text"
+                    value={streamSource.youtubeVideoId || ''}
+                    onChange={(e) => {
+                      const videoId = e.target.value.replace(/https?:\/\/.*youtube\.com\/watch\?v=/, '').replace(/.*youtu\.be\//, '').split('&')[0];
+                      updateStreamSource({ ...streamSource, youtubeVideoId: videoId, platform: 'youtube', type: 'stream', isActive: true });
+                    }}
+                    placeholder="dQw4w9WgXcQ or full YouTube URL"
+                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-red-500/50 transition-colors font-mono"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-[10px] font-bold text-white/40 uppercase tracking-widest">Stream Status</label>
+                  <div className="flex items-center gap-3 h-[46px]">
+                    <div className={cn(
+                      "flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-widest",
+                      streamSource.youtubeVideoId ? "bg-red-600/20 text-red-500" : "bg-white/5 text-white/30"
+                    )}>
+                      <div className={cn("w-2 h-2 rounded-full", streamSource.youtubeVideoId ? "bg-red-600 animate-pulse" : "bg-white/20")} />
+                      {streamSource.youtubeVideoId ? 'Ready to Go Live' : 'No Video ID'}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-black/20 rounded-xl p-4 space-y-2">
+                <p className="text-[10px] text-white/40 font-bold uppercase tracking-widest mb-3">Setup Guide</p>
+                <div className="text-xs text-white/50 space-y-1.5 font-mono">
+                  <p><span className="text-neon-green">1.</span> Open OBS on the ComfyUI PC (10.0.0.69)</p>
+                  <p><span className="text-neon-green">2.</span> In OBS: Settings → Stream → Service: YouTube</p>
+                  <p><span className="text-neon-green">3.</span> Connect your @3volution_tv YouTube account</p>
+                  <p><span className="text-neon-green">4.</span> Copy your <span className="text-white/70">Stream Key</span> from youtube.com/livestreaming</p>
+                  <p><span className="text-neon-green">5.</span> Paste the video ID above (from the YouTube stream URL)</p>
+                  <p><span className="text-neon-green">6.</span> Start streaming in OBS — VIBE-X auto-switches to live</p>
+                </div>
+              </div>
+
+              {streamSource.youtubeVideoId && (
+                <div className="flex items-center gap-3">
+                  <a
+                    href={`https://youtu.be/${streamSource.youtubeVideoId}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 px-4 py-2 bg-red-600/20 hover:bg-red-600/30 border border-red-500/30 rounded-xl text-red-400 text-xs font-bold transition-all"
+                  >
+                    <Radio className="w-4 h-4" /> View on YouTube ↗
+                  </a>
+                  <span className="text-white/30 text-xs">Video ID: <span className="font-mono text-white/50">{streamSource.youtubeVideoId}</span></span>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
+        <div className="h-px bg-white/10 mb-8" />
+
         <div className="space-y-6">
           <form onSubmit={handleSourceUpdate} className="space-y-4">
-            <label className="text-xs font-bold text-white/40 uppercase tracking-widest">Live Stream Source (RTMP/HLS/Video Link)</label>
+            <label className="text-xs font-bold text-white/40 uppercase tracking-widest">Fallback Stream URL (RTMP/HLS/Video Link)</label>
             <div className="flex flex-col md:flex-row gap-4">
               <input 
                 name="url"
@@ -908,6 +1019,405 @@ function StreamManager() {
   );
 }
 
+function PlaylistManager() {
+  const { playlist, updatePlaylist } = useStation();
+  const [editingTrack, setEditingTrack] = useState<Track | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [uploadedMediaUrl, setUploadedMediaUrl] = useState<string>('');
+  const [uploadedAudioUrl, setUploadedAudioUrl] = useState<string>('');
+  const [uploadedVisualUrl, setUploadedVisualUrl] = useState<string>('');
+  const [confirmingId, setConfirmingId] = useState<string | null>(null);
+  const [trackTitle, setTrackTitle] = useState('');
+  const [trackArtist, setTrackArtist] = useState('');
+  const [trackDuration, setTrackDuration] = useState('');
+  const [trackGenre, setTrackGenre] = useState('');
+  const [trackMood, setTrackMood] = useState<Track['mood']>(undefined);
+  const [filterMood, setFilterMood] = useState<Track['mood'] | 'all'>('all');
+  const [editingOrder, setEditingOrder] = useState(false);
+
+  const MOODS = [
+    { id: 'relax', label: 'Relax' },
+    { id: 'working', label: 'Working' },
+    { id: 'exercise', label: 'Exercise' },
+    { id: 'home', label: 'Home' },
+    { id: 'chilling', label: 'Chilling' },
+    { id: 'getting-ready', label: 'Getting Ready' },
+  ] as const;
+
+  const filteredPlaylist = filterMood === 'all' ? playlist : playlist.filter(t => t.mood === filterMood);
+
+  const moveTrack = (fromIdx: number, direction: 'up' | 'down') => {
+    const newPlaylist = [...filteredPlaylist];
+    const actualFrom = playlist.findIndex(t => t.id === newPlaylist[fromIdx].id);
+    const actualTo = direction === 'up' ? actualFrom - 1 : actualFrom + 1;
+    if (actualTo < 0 || actualTo >= playlist.length) return;
+    const newArr = [...playlist];
+    [newArr[actualFrom], newArr[actualTo]] = [newArr[actualTo], newArr[actualFrom]];
+    updatePlaylist(newArr);
+  };
+
+  const removeTrack = (id: string) => {
+    updatePlaylist(playlist.filter(t => t.id !== id));
+  };
+
+  const extractTrackData = (url: string, file?: File) => {
+    if (!file) return;
+    const nameStr = file.name.replace(/\.[^/.]+$/, "");
+    const nameParts = nameStr.split('-');
+    if (nameParts.length >= 2) {
+      if (!trackArtist) setTrackArtist(nameParts[0].trim());
+      if (!trackTitle) setTrackTitle(nameParts.slice(1).join('-').trim());
+    } else {
+      if (!trackTitle) setTrackTitle(nameStr);
+    }
+    const audio = new Audio(url);
+    audio.addEventListener('loadedmetadata', () => {
+      if (!isFinite(audio.duration)) return;
+      const mins = Math.floor(audio.duration / 60);
+      const secs = Math.floor(audio.duration % 60);
+      const formatted = `${mins}:${secs.toString().padStart(2, '0')}`;
+      if (!trackDuration) setTrackDuration(formatted);
+    });
+  };
+
+  const handleTrackSave = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const trackData: Track = {
+      id: editingTrack?.id || Date.now().toString(),
+      title: formData.get('title') as string,
+      artist: formData.get('artist') as string,
+      duration: formData.get('duration') as string,
+      genre: formData.get('genre') as string,
+      videoUrl: uploadedMediaUrl || formData.get('videoUrl') as string,
+      audioUrl: uploadedAudioUrl || formData.get('audioUrl') as string,
+      visualUrl: uploadedVisualUrl || formData.get('visualUrl') as string,
+      mood: trackMood,
+    };
+    if (editingTrack) {
+      updatePlaylist(playlist.map(t => t.id === editingTrack.id ? trackData : t));
+    } else {
+      updatePlaylist([...playlist, trackData]);
+    }
+    setIsModalOpen(false);
+    setEditingTrack(null);
+    setUploadedMediaUrl('');
+    setUploadedAudioUrl('');
+    setUploadedVisualUrl('');
+    setTrackMood(undefined);
+  };
+
+  const openModal = (track: Track | null = null) => {
+    setEditingTrack(track);
+    setUploadedMediaUrl(track?.videoUrl || '');
+    setUploadedAudioUrl(track?.audioUrl || '');
+    setUploadedVisualUrl(track?.visualUrl || '');
+    setTrackTitle(track?.title || '');
+    setTrackArtist(track?.artist || '');
+    setTrackDuration(track?.duration || '');
+    setTrackGenre(track?.genre || '');
+    setTrackMood(track?.mood || undefined);
+    setIsModalOpen(true);
+  };
+
+  const handleTrackDelete = (id: string) => {
+    updatePlaylist(playlist.filter(t => t.id !== id));
+  };
+
+  const moodBadgeColor = (mood: string) => {
+    const map: Record<string, string> = {
+      relax: 'bg-blue-500/20 text-blue-400 border-blue-500/30',
+      working: 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30',
+      exercise: 'bg-red-500/20 text-red-400 border-red-500/30',
+      home: 'bg-green-500/20 text-green-400 border-green-500/30',
+      chilling: 'bg-purple-500/20 text-purple-400 border-purple-500/30',
+      'getting-ready': 'bg-neon-green/20 text-neon-green border-neon-green/30',
+    };
+    return map[mood] || 'bg-white/10 text-white/40 border-white/10';
+  };
+
+  const getMediaTypeBadge = (item: Track) => {
+    if (item.videoUrl) return <span className="text-[8px] px-1.5 py-0.5 bg-white/10 rounded font-mono text-white/40 uppercase">Video</span>;
+    if (item.audioUrl && item.visualUrl) return <span className="text-[8px] px-1.5 py-0.5 bg-neon-blue/20 text-neon-blue rounded font-mono uppercase">Audio+Visual</span>;
+    if (item.audioUrl) return <span className="text-[8px] px-1.5 py-0.5 bg-neon-green/20 text-neon-green rounded font-mono uppercase">Audio</span>;
+    return null;
+  };
+
+  return (
+    <div className="space-y-8">
+      <div className="flex items-end justify-between">
+        <div>
+          <h3 className="text-3xl font-bold tracking-tighter uppercase mb-2">Playlist Manager</h3>
+          <p className="text-sm text-white/40">{playlist.length} tracks — drag to reorder, tag with moods</p>
+        </div>
+        <div className="flex items-center gap-2">
+          {playlist.length > 1 && (
+            <button
+              onClick={() => setEditingOrder(!editingOrder)}
+              className={cn("flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-widest border transition-all",
+                editingOrder ? 'bg-neon-green text-black border-neon-green' : 'bg-white/5 text-white/50 border-white/10 hover:border-white/30'
+              )}
+            >
+              <ListMusic className="w-4 h-4" /> {editingOrder ? 'Done Reordering' : 'Reorder Tracks'}
+            </button>
+          )}
+          <button onClick={() => openModal()} className="bg-neon-green text-black px-4 py-2 rounded-xl font-bold text-xs flex items-center gap-2">
+            <Plus className="w-4 h-4" /> ADD TRACK
+          </button>
+        </div>
+      </div>
+
+      {/* Filter bar */}
+      <div className="flex flex-wrap items-center gap-3">
+        <span className="text-[10px] font-bold text-white/30 uppercase tracking-widest">Filter:</span>
+        <button
+          onClick={() => setFilterMood('all')}
+          className={cn("px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-widest border transition-all",
+            filterMood === 'all' ? 'bg-neon-green text-black border-neon-green' : 'bg-white/5 text-white/50 border-white/10 hover:border-white/30'
+          )}
+        >All ({playlist.length})</button>
+        {MOODS.map(mood => {
+          const count = playlist.filter(t => t.mood === mood.id).length;
+          return (
+            <button
+              key={mood.id}
+              onClick={() => setFilterMood(mood.id)}
+              className={cn("px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-widest border transition-all",
+                filterMood === mood.id ? 'bg-neon-green text-black border-neon-green' : 'bg-white/5 text-white/50 border-white/10 hover:border-white/30'
+              )}
+            >
+              {mood.label} ({count})
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Track list */}
+      <div className="space-y-2">
+        {filteredPlaylist.length === 0 && (
+          <div className="text-center py-16 text-white/30">
+            <ListMusic className="w-16 h-16 mx-auto mb-4 opacity-20" />
+            <p className="text-sm uppercase tracking-widest font-bold">No tracks{filterMood !== 'all' ? ` tagged as ${filterMood}` : ''}</p>
+            <p className="text-[10px] mt-2">Click "ADD TRACK" to add music and tag it with a mood</p>
+          </div>
+        )}
+        {filteredPlaylist.map((item, idx) => {
+          const actualIdx = playlist.findIndex(t => t.id === item.id);
+          return (
+            <div 
+              key={item.id} 
+              className={cn(
+                "bg-white/5 border rounded-2xl p-4 flex items-center gap-4 group transition-all",
+                confirmingId === item.id ? 'border-red-500/50 bg-red-500/5' : 'border-white/10 hover:border-white/20'
+              )}
+            >
+              {/* Reorder mode: drag handle + move buttons */}
+              {editingOrder && (
+                <div className="flex flex-col items-center gap-1">
+                  <button 
+                    onClick={() => moveTrack(idx, 'up')}
+                    disabled={actualIdx === 0}
+                    className="p-1 text-white/30 hover:text-white disabled:opacity-20"
+                  >
+                    <ChevronUp className="w-4 h-4" />
+                  </button>
+                  <div className="cursor-grab text-white/20 hover:text-white/50 p-1">
+                    <GripVertical className="w-4 h-4" />
+                  </div>
+                  <button 
+                    onClick={() => moveTrack(idx, 'down')}
+                    disabled={actualIdx === playlist.length - 1}
+                    className="p-1 text-white/30 hover:text-white disabled:opacity-20"
+                  >
+                    <ChevronDown className="w-4 h-4" />
+                  </button>
+                </div>
+              )}
+
+              {/* Index / Play button */}
+              <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex-shrink-0">
+                {editingOrder ? (
+                  <span className="text-white/30 font-mono text-xs">{actualIdx + 1}</span>
+                ) : (
+                  <button 
+                    onClick={() => window.open(item.videoUrl || item.audioUrl, '_blank')}
+                    className="w-full h-full flex items-center justify-center text-white/30 hover:text-neon-green transition-colors"
+                    title="Preview track"
+                  >
+                    <Play className="w-4 h-4 fill-current ml-0.5" />
+                  </button>
+                )}
+              </div>
+
+              {/* Track info */}
+              <div className="flex-grow min-w-0">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <p className="text-sm font-bold truncate">{item.title}</p>
+                  <span className="text-white/30 text-xs font-mono">{item.duration}</span>
+                </div>
+                <div className="flex items-center gap-2 mt-1 flex-wrap">
+                  <span className="text-[10px] text-white/40">{item.artist}</span>
+                  <span className="text-white/10">•</span>
+                  <span className="text-[10px] text-white/30">{item.genre}</span>
+                  {getMediaTypeBadge(item)}
+                  {item.mood && (
+                    <span className={cn('text-[8px] px-1.5 py-0.5 rounded border uppercase font-bold tracking-widest', moodBadgeColor(item.mood))}>
+                      {MOODS.find(m => m.id === item.mood)?.label}
+                    </span>
+                  )}
+                  {!item.mood && (
+                    <span className="text-[8px] text-white/20 italic">Untagged</span>
+                  )}
+                </div>
+              </div>
+
+              {/* Actions */}
+              <div className={cn("flex items-center gap-2 transition-opacity", confirmingId === item.id ? 'opacity-100' : 'opacity-0 group-hover:opacity-100')}>
+                {editingOrder ? (
+                  <>
+                    <button 
+                      onClick={() => moveTrack(idx, 'up')}
+                      className="p-2 text-white/30 hover:text-neon-green disabled:opacity-20"
+                    >
+                      <ChevronUp className="w-4 h-4" />
+                    </button>
+                    <button 
+                      onClick={() => moveTrack(idx, 'down')}
+                      className="p-2 text-white/30 hover:text-neon-green disabled:opacity-20"
+                    >
+                      <ChevronDown className="w-4 h-4" />
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <button onClick={() => openModal(item)} className="p-2 hover:text-neon-green" title="Edit track">
+                      <Edit2 className="w-4 h-4" />
+                    </button>
+                    <button onClick={() => { setConfirmingId(item.id); }} className="p-2 hover:text-red-400" title="Delete track">
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </>
+                )}
+              </div>
+
+              {/* Delete confirm */}
+              {confirmingId === item.id && (
+                <div className="flex items-center gap-2 animate-fade-in">
+                  <span className="text-[10px] text-red-400 font-bold">Delete?</span>
+                  <button 
+                    onClick={() => removeTrack(item.id)}
+                    className="px-3 py-1 bg-red-500/20 border border-red-500/40 rounded-lg text-red-400 text-[10px] font-bold uppercase tracking-widest hover:bg-red-500/30 transition-all"
+                  >
+                    Yes, Remove
+                  </button>
+                  <button 
+                    onClick={() => setConfirmingId(null)}
+                    className="px-3 py-1 bg-white/5 border border-white/10 rounded-lg text-white/40 text-[10px] font-bold uppercase tracking-widest hover:text-white transition-all"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Summary footer */}
+      {playlist.length > 0 && (
+        <div className="glass rounded-2xl p-4 flex items-center justify-between">
+          <div className="flex items-center gap-4 text-xs text-white/40">
+            <span><span className="font-mono font-bold text-white/70">{playlist.length}</span> total tracks</span>
+            <span>•</span>
+            {MOODS.map(mood => {
+              const count = playlist.filter(t => t.mood === mood.id).length;
+              if (count === 0) return null;
+              return <span key={mood.id}><span className="font-mono font-bold text-white/70">{count}</span> {mood.label}</span>;
+            })}
+          </div>
+          <button onClick={() => openModal()} className="bg-white/5 border border-white/10 px-4 py-2 rounded-xl text-xs font-bold hover:border-neon-green/30 transition-all flex items-center gap-2">
+            <Plus className="w-4 h-4" /> ADD TRACK
+          </button>
+        </div>
+      )}
+
+      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title={editingTrack ? "Edit Track" : "Add Track"}>
+        <form onSubmit={handleTrackSave} className="space-y-4">
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <label className="text-[10px] font-bold text-white/40 uppercase tracking-widest">Title</label>
+              <input name="title" value={trackTitle} onChange={e => setTrackTitle(e.target.value)} required className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-neon-green/50" />
+            </div>
+            <div className="space-y-2">
+              <label className="text-[10px] font-bold text-white/40 uppercase tracking-widest">Artist</label>
+              <input name="artist" value={trackArtist} onChange={e => setTrackArtist(e.target.value)} required className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-neon-green/50" />
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <label className="text-[10px] font-bold text-white/40 uppercase tracking-widest">Duration</label>
+              <input name="duration" placeholder="4:20" value={trackDuration} onChange={e => setTrackDuration(e.target.value)} required className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-neon-green/50" />
+            </div>
+            <div className="space-y-2">
+              <label className="text-[10px] font-bold text-white/40 uppercase tracking-widest">Genre</label>
+              <input name="genre" value={trackGenre} onChange={e => setTrackGenre(e.target.value)} required className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-neon-green/50" />
+            </div>
+          </div>
+
+          {/* Mood selector */}
+          <div className="space-y-2">
+            <label className="text-[10px] font-bold text-white/40 uppercase tracking-widest">Mood Tag</label>
+            <div className="grid grid-cols-3 gap-2">
+              <button
+                type="button"
+                onClick={() => setTrackMood(undefined)}
+                className={cn("p-2 rounded-xl border text-[10px] font-bold uppercase tracking-widest transition-all",
+                  !trackMood ? 'border-neon-green bg-neon-green/10 text-neon-green' : 'border-white/10 bg-white/5 text-white/40 hover:border-white/30'
+                )}
+              >None</button>
+              {MOODS.map(mood => (
+                <button
+                  key={mood.id}
+                  type="button"
+                  onClick={() => setTrackMood(mood.id)}
+                  className={cn("p-2 rounded-xl border text-[10px] font-bold uppercase tracking-widest transition-all",
+                    trackMood === mood.id ? 'border-neon-green bg-neon-green/10 text-neon-green' : 'border-white/10 bg-white/5 text-white/40 hover:border-white/30'
+                  )}
+                >
+                  {mood.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="h-px bg-white/10 my-4" />
+
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <label className="text-[10px] font-bold text-white/40 uppercase tracking-widest">Media URL</label>
+              <input name="videoUrl" value={uploadedMediaUrl} onChange={e => setUploadedMediaUrl(e.target.value)} placeholder="https://..." className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-neon-green/50" />
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <label className="text-[10px] font-bold text-white/40 uppercase tracking-widest">Audio URL</label>
+                <input name="audioUrl" value={uploadedAudioUrl} onChange={e => setUploadedAudioUrl(e.target.value)} placeholder="https://..." className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-neon-green/50" />
+              </div>
+              <div className="space-y-2">
+                <label className="text-[10px] font-bold text-white/40 uppercase tracking-widest">Visual URL</label>
+                <input name="visualUrl" value={uploadedVisualUrl} onChange={e => setUploadedVisualUrl(e.target.value)} placeholder="https://..." className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-neon-green/50" />
+              </div>
+            </div>
+          </div>
+
+          <button type="submit" className="w-full bg-neon-green text-black py-4 rounded-xl font-bold mt-4 flex items-center justify-center gap-2">
+            <Save className="w-4 h-4" /> SAVE TRACK
+          </button>
+        </form>
+      </Modal>
+    </div>
+  );
+}
+
 function DonorManager() {
   const [donors, setDonors] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -957,6 +1467,160 @@ function DonorManager() {
             </div>
           </div>
         ))}
+      </div>
+    </div>
+  );
+}
+
+function StorageManager() {
+  const [activeFolder, setActiveFolder] = useState<string>('visuals');
+  const [files, setFiles] = useState<{name: string; url: string; size: string}[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [uploading, setUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState<string>('');
+  const [message, setMessage] = useState<{type: 'success'|'error', text: string} | null>(null);
+
+  const STORAGE_FOLDERS = [
+    { id: 'music', label: 'Music', icon: FileAudio, extensions: ['.mp3', '.mp4', '.wav', '.aac'] },
+    { id: 'visuals', label: 'Visuals', icon: Film, extensions: ['.mp4', '.webm', '.mov'] },
+    { id: 'logos', label: 'Logos', icon: ImageIcon, extensions: ['.png', '.jpg', '.svg', '.webp'] },
+    { id: 'thumbnails', label: 'Thumbnails', icon: Image, extensions: ['.png', '.jpg', '.webp'] },
+    { id: 'ads', label: 'Ads', icon: Film, extensions: ['.mp4', '.webm'] },
+    { id: 'banners', label: 'Banners', icon: Image, extensions: ['.png', '.jpg', '.webp'] },
+  ];
+
+  const folder = STORAGE_FOLDERS.find(f => f.id === activeFolder)!;
+
+  useEffect(() => {
+    async function loadFiles() {
+      setLoading(true);
+      try {
+        const bucket = 'vibe-x-app.firebasestorage.app';
+        const url = `https://firebasestorage.googleapis.com/v0/b/${bucket}/o?prefix=${activeFolder}%2F`;
+        const res = await fetch(url);
+        const data = await res.json();
+        if (data.items) {
+          setFiles(data.items.map((item: any) => ({
+            name: item.name.replace(`${activeFolder}/`, ''),
+            url: `https://firebasestorage.googleapis.com/v0/b/${bucket}/o/${encodeURIComponent(item.name)}?alt=media`,
+            size: item.size ? `${(Number(item.size) / 1024 / 1024).toFixed(1)} MB` : 'Unknown',
+            fullPath: item.name,
+          })));
+        } else {
+          setFiles([]);
+        }
+      } catch {
+        setFiles([]);
+      }
+      setLoading(false);
+    }
+    loadFiles();
+  }, [activeFolder]);
+
+  async function handleUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const uploadedFiles = e.target.files;
+    if (!uploadedFiles || uploadedFiles.length === 0) return;
+    setUploading(true);
+    setMessage(null);
+    try {
+      const bucket = 'vibe-x-app.firebasestorage.app';
+      for (let i = 0; i < uploadedFiles.length; i++) {
+        const file = uploadedFiles[i];
+        setUploadProgress(`Uploading ${file.name}... (${i + 1}/${uploadedFiles.length})`);
+        const path = `${activeFolder}/${file.name}`;
+        const uploadUrl = `https://firebasestorage.googleapis.com/v0/b/${bucket}/o?uploadType=media&name=${encodeURIComponent(path)}`;
+        const res = await fetch(uploadUrl, { method: 'POST', headers: { 'Content-Type': file.type }, body: file });
+        if (!res.ok) throw new Error(`Upload failed: ${res.statusText}`);
+      }
+      setMessage({ type: 'success', text: `${uploadedFiles.length} file(s) uploaded to /${activeFolder}/` });
+      // Refresh
+      const url = `https://firebasestorage.googleapis.com/v0/b/${bucket}/o?prefix=${activeFolder}%2F`;
+      const res = await fetch(url);
+      const data = await res.json();
+      if (data.items) {
+        setFiles(data.items.map((item: any) => ({
+          name: item.name.replace(`${activeFolder}/`, ''),
+          url: `https://firebasestorage.googleapis.com/v0/b/${bucket}/o/${encodeURIComponent(item.name)}?alt=media`,
+          size: item.size ? `${(Number(item.size) / 1024 / 1024).toFixed(1)} MB` : 'Unknown',
+          fullPath: item.name,
+        })));
+      }
+    } catch (err: any) {
+      setMessage({ type: 'error', text: err.message || 'Upload failed' });
+    }
+    setUploading(false);
+    setUploadProgress('');
+    (e.target as HTMLInputElement).value = '';
+  }
+
+  return (
+    <div>
+      <div className="flex items-center justify-between mb-6">
+        <h3 className="text-2xl font-bold">Storage Manager</h3>
+        <label className="flex items-center gap-2 px-4 py-2 bg-neon-green text-black rounded-xl text-sm font-bold cursor-pointer hover:bg-neon-green/90 transition-colors">
+          <Upload className="w-4 h-4" />
+          Upload File
+          <input type="file" multiple accept={folder.extensions.join(',')} className="hidden" onChange={handleUpload} disabled={uploading} />
+        </label>
+      </div>
+
+      {uploading && (
+        <div className="glass rounded-xl p-4 mb-4 flex items-center gap-3 text-neon-green border border-neon-green/30">
+          <Loader2 className="w-4 h-4 animate-spin" />
+          <span className="text-sm">{uploadProgress}</span>
+        </div>
+      )}
+      {message && (
+        <div className={`glass rounded-xl p-4 mb-4 ${message.type === 'success' ? 'border-neon-green/30 text-neon-green' : 'border-red-500/30 text-red-400'}`}>
+          <p className="text-sm">{message.text}</p>
+        </div>
+      )}
+
+      <div className="grid grid-cols-3 md:grid-cols-6 gap-3 mb-6">
+        {STORAGE_FOLDERS.map(f => {
+          const Icon = f.icon;
+          return (
+            <button key={f.id} onClick={() => setActiveFolder(f.id)}
+              className={cn("glass rounded-2xl p-4 flex flex-col items-center gap-2 transition-all hover:border-neon-green/30",
+                activeFolder === f.id ? "border-neon-green bg-neon-green/10" : "border-white/10")}>
+              <Icon className={cn("w-5 h-5", activeFolder === f.id ? "text-neon-green" : "text-white/40")} />
+              <span className="text-xs font-bold uppercase tracking-wider">{f.label}</span>
+            </button>
+          );
+        })}
+      </div>
+
+      <div className="glass rounded-3xl p-6">
+        <div className="flex items-center gap-3 mb-4 pb-4 border-b border-white/10">
+          <folder.icon className="w-5 h-5 text-neon-green" />
+          <div>
+            <h4 className="font-bold">/{activeFolder}/</h4>
+            <p className="text-xs text-white/40">{folder.extensions.join(', ')}</p>
+          </div>
+          <span className="ml-auto text-xs font-mono text-white/30">{files.length} files</span>
+        </div>
+        {loading ? (
+          <div className="flex items-center gap-3 text-white/40 text-sm py-8"><Loader2 className="w-4 h-4 animate-spin" /> Loading files...</div>
+        ) : files.length === 0 ? (
+          <div className="text-center py-12 text-white/30">
+            <folder.icon className="w-12 h-12 mx-auto mb-3 opacity-20" />
+            <p className="text-sm">No files in /{activeFolder}/</p>
+            <p className="text-xs mt-1 text-white/20">Upload files using the button above</p>
+          </div>
+        ) : (
+          <div className="space-y-2 max-h-80 overflow-y-auto">
+            {files.map(file => (
+              <div key={file.name} className="flex items-center gap-3 p-3 bg-white/5 rounded-xl hover:bg-white/10 transition-colors">
+                <folder.icon className="w-4 h-4 text-white/40 flex-shrink-0" />
+                <div className="flex-grow min-w-0">
+                  <p className="text-sm font-mono truncate">{file.name}</p>
+                  <p className="text-xs text-white/30">{file.size}</p>
+                </div>
+                <a href={file.url} target="_blank" rel="noopener noreferrer" className="text-xs text-neon-green hover:underline flex-shrink-0">View</a>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

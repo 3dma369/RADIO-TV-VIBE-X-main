@@ -1,64 +1,82 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { User, signInWithEmailAndPassword, createUserWithEmailAndPassword, auth as firebaseAuth } from '../firebaseConfig';
+import { signInWithGoogle, logout, onAuthChange } from '../firebaseConfig';
+
+const ADMIN_EMAILS = ['3dma369@proton.me', '3dma369@gmail.com', 'carmencrispinneira@gmail.com'];
 
 interface AuthContextType {
+  currentUser: User | null;
   isAuthenticated: boolean;
-  isVerified: boolean;
-  login: (email: string, password: string) => Promise<void>;
-  verify: (code: string) => Promise<void>;
-  logout: () => void;
-  updateCredentials: (email: string, password: string) => Promise<void>;
-  user: { email: string } | null;
+  isDonor: boolean;
+  isAdmin: boolean;
+  isLoading: boolean;
+  signInWithGoogle: () => Promise<void>;
+  signInWithEmail: (email: string, password: string) => Promise<void>;
+  signUpWithEmail: (email: string, password: string) => Promise<void>;
+  logout: () => Promise<void>;
+  setDonorStatus: (status: boolean) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<{ email: string } | null>(null);
-  const [isVerified, setIsVerified] = useState(false);
-  const [credentials, setCredentials] = useState({ email: 'admin@vibe-x.radio', password: 'admin123' });
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const [isDonor, setIsDonor] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const login = async (email: string, password: string) => {
-    // Simulated login logic
-    if (email === credentials.email && password === credentials.password) {
-      setUser({ email });
-      // Simulate sending verification code
-      console.log('Verification code sent to:', email);
-    } else {
-      throw new Error('Invalid credentials');
+  useEffect(() => {
+    const unsubscribe = onAuthChange((user) => {
+      setCurrentUser(user);
+      setIsLoading(false);
+    });
+    return () => unsubscribe();
+  }, []);
+
+  const isAdmin = !!currentUser && ADMIN_EMAILS.includes(currentUser.email?.toLowerCase() || '');
+
+  const handleSignInWithGoogle = async () => {
+    try {
+      await signInWithGoogle();
+    } catch (error) {
+      console.error("Google sign-in error:", error);
+      throw error;
     }
   };
 
-  const verify = async (code: string) => {
-    // Simulated verification logic
-    if (code === '123456') {
-      setIsVerified(true);
-    } else {
-      throw new Error('Invalid verification code');
+  const signInWithEmail = async (email: string, password: string) => {
+    await signInWithEmailAndPassword(firebaseAuth, email, password);
+  };
+
+  const signUpWithEmail = async (email: string, password: string) => {
+    await createUserWithEmailAndPassword(firebaseAuth, email, password);
+  };
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      setIsDonor(false);
+    } catch (error) {
+      console.error("Logout error:", error);
+      throw error;
     }
   };
 
-  const logout = () => {
-    setUser(null);
-    setIsVerified(false);
-  };
-
-  const updateCredentials = async (email: string, password: string) => {
-    // Simulated update logic
-    setCredentials({ email, password });
-    setUser({ email });
-    setIsVerified(false); // Require re-verification after credential change
-    console.log('Credentials updated. New verification code sent to:', email);
+  const setDonorStatus = (status: boolean) => {
+    setIsDonor(status);
   };
 
   return (
     <AuthContext.Provider value={{ 
-      isAuthenticated: !!user, 
-      isVerified, 
-      login, 
-      verify, 
-      logout, 
-      updateCredentials,
-      user 
+      currentUser,
+      isAuthenticated: !!currentUser,
+      isDonor,
+      isAdmin,
+      isLoading,
+      signInWithGoogle: handleSignInWithGoogle,
+      signInWithEmail,
+      signUpWithEmail,
+      logout: handleLogout,
+      setDonorStatus
     }}>
       {children}
     </AuthContext.Provider>

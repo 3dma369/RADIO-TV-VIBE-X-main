@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
-import { motion, AnimatePresence } from 'motion/react';
 import { Radio, ShoppingBag, Heart, Menu, X, Play, Pause, SkipForward, Volume2, ExternalLink, Github, Twitter, Instagram } from 'lucide-react';
 import { cn } from './utils';
+import { motion, AnimatePresence } from 'motion/react';
 
 // Components
 import RadioView from './components/RadioView';
@@ -12,54 +12,97 @@ import ScheduleView from './components/ScheduleView';
 import DJsView from './components/DJsView';
 import AdminView from './components/AdminView';
 import LoginView from './components/LoginView';
+import PurchasesView from './components/PurchasesView';
+import ProfileView from './components/ProfileView';
 import Navbar from './components/Navbar';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { StationProvider } from './context/StationContext';
+import { ProfileProvider } from './context/ProfileContext';
 import GlobalAudioPlayer from './components/GlobalAudioPlayer';
 import { Navigate } from 'react-router-dom';
+import { trackPageView, trackEngagement } from './services/analytics';
 
-function ProtectedRoute({ children }: { children: React.ReactNode }) {
-  const { isAuthenticated, isVerified } = useAuth();
+function ProtectedRoute({ children, requireAdmin = false }: { children: React.ReactNode; requireAdmin?: boolean }) {
+  const { isAuthenticated, isAdmin } = useAuth();
   const location = useLocation();
 
-  if (!isAuthenticated || !isVerified) {
+  if (!isAuthenticated) {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
+  if (requireAdmin && !isAdmin) {
+    return <Navigate to="/" state={{ from: location }} replace />;
+  }
+
   return <>{children}</>;
+}
+
+// Tracks page views on route change + engagement heartbeats
+function AnalyticsTracker() {
+  const location = useLocation();
+  const lastPath = useRef(location.pathname);
+
+  useEffect(() => {
+    if (location.pathname !== lastPath.current) {
+      lastPath.current = location.pathname;
+      trackPageView(location.pathname, document.title);
+    }
+  }, [location]);
+
+  // Send engagement heartbeat every 30s while app is open
+  useEffect(() => {
+    const interval = setInterval(() => {
+      trackEngagement('active_session', Date.now());
+    }, 30000);
+    return () => clearInterval(interval);
+  }, []);
+
+  return null;
 }
 
 export default function App() {
   return (
     <AuthProvider>
       <StationProvider>
-        <GlobalAudioPlayer />
-        <Router>
-          <div className="min-h-screen flex flex-col">
-            <Navbar />
-            <main className="flex-grow pt-20">
-              <AnimatePresence mode="wait">
-                <Routes>
-                  <Route path="/" element={<RadioView />} />
-                  <Route path="/shop" element={<ShopView />} />
-                  <Route path="/donate" element={<DonateView />} />
-                  <Route path="/schedule" element={<ScheduleView />} />
-                  <Route path="/djs" element={<DJsView />} />
-                  <Route path="/login" element={<LoginView />} />
-                  <Route 
-                    path="/admin" 
-                    element={
-                      <ProtectedRoute>
-                        <AdminView />
-                      </ProtectedRoute>
-                    } 
-                  />
-                </Routes>
-              </AnimatePresence>
-            </main>
-            <Footer />
-          </div>
-        </Router>
+        <ProfileProvider>
+          <GlobalAudioPlayer />
+          <Router>
+            <AnalyticsTracker />
+            <div className="min-h-screen flex flex-col">
+              <Navbar />
+              <main className="flex-grow pt-20">
+                <AnimatePresence mode="wait">
+                  <Routes>
+                    <Route path="/" element={<RadioView />} />
+                    <Route path="/shop" element={<ShopView />} />
+                    <Route path="/donate" element={<DonateView />} />
+                    <Route path="/schedule" element={<ScheduleView />} />
+                    <Route path="/djs" element={<DJsView />} />
+                    <Route path="/login" element={<LoginView />} />
+                    <Route
+                      path="/admin"
+                      element={
+                        <ProtectedRoute requireAdmin={true}>
+                          <AdminView />
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route path="/purchases" element={<PurchasesView />} />
+                    <Route
+                      path="/profile"
+                      element={
+                        <ProtectedRoute>
+                          <ProfileView />
+                        </ProtectedRoute>
+                      }
+                    />
+                  </Routes>
+                </AnimatePresence>
+              </main>
+              <Footer />
+            </div>
+          </Router>
+        </ProfileProvider>
       </StationProvider>
     </AuthProvider>
   );
