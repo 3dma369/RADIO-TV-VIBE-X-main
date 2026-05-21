@@ -1,0 +1,897 @@
+[debug] [2026-05-21T19:56:04.477Z] ----------------------------------------------------------------------
+[debug] [2026-05-21T19:56:04.478Z] Command:       /opt/homebrew/Cellar/node/26.0.0/bin/node /opt/homebrew/bin/firebase deploy --only hosting --project vibe-x-app
+[debug] [2026-05-21T19:56:04.478Z] CLI Version:   15.16.0
+[debug] [2026-05-21T19:56:04.478Z] Platform:      darwin
+[debug] [2026-05-21T19:56:04.478Z] Node Version:  v26.0.0
+[debug] [2026-05-21T19:56:04.478Z] Time:          Thu May 21 2026 12:56:04 GMT-0700 (Pacific Daylight Time)
+[debug] [2026-05-21T19:56:04.479Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2026-05-21T19:56:05.166Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2026-05-21T19:56:05.166Z] > authorizing via signed-in user (3dma369@proton.me)
+[debug] [2026-05-21T19:56:05.166Z] [iam] checking project vibe-x-app for permissions ["firebase.projects.get","firebasehosting.sites.update"]
+[debug] [2026-05-21T19:56:05.166Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:05.166Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:05.167Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/vibe-x-app:testIamPermissions [none]
+[debug] [2026-05-21T19:56:05.167Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/vibe-x-app:testIamPermissions  x-goog-user-project=vibe-x-app
+[debug] [2026-05-21T19:56:05.167Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/vibe-x-app:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2026-05-21T19:56:05.679Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/vibe-x-app:testIamPermissions 200
+[debug] [2026-05-21T19:56:05.679Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/vibe-x-app:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2026-05-21T19:56:05.679Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:05.679Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:05.679Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/vibe-x-app [none]
+[debug] [2026-05-21T19:56:06.063Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/vibe-x-app 200
+[debug] [2026-05-21T19:56:06.063Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/vibe-x-app {"projectId":"vibe-x-app","projectNumber":"426023723852","displayName":"VIBE-X Radio App","name":"projects/vibe-x-app","resources":{"hostingSite":"vibe-x-app","realtimeDatabaseInstance":"vibe-x-app-default-rtdb"},"state":"ACTIVE","etag":"1_ab0b4188-f470-4a4a-98cf-d29d8ddf06c8"}
+[info] 
+[info] === Deploying to 'vibe-x-app'...
+[info] 
+[info] i  deploying hosting 
+[debug] [2026-05-21T19:56:06.064Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:06.064Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:06.064Z] >>> [apiv2][query] GET https://firebasehosting.googleapis.com/v1beta1/projects/vibe-x-app/sites/vibe-x-app [none]
+[debug] [2026-05-21T19:56:06.915Z] <<< [apiv2][status] GET https://firebasehosting.googleapis.com/v1beta1/projects/vibe-x-app/sites/vibe-x-app 200
+[debug] [2026-05-21T19:56:06.915Z] <<< [apiv2][body] GET https://firebasehosting.googleapis.com/v1beta1/projects/vibe-x-app/sites/vibe-x-app {"name":"projects/vibe-x-app/sites/vibe-x-app","defaultUrl":"https://vibe-x-app.web.app","type":"DEFAULT_SITE"}
+[debug] [2026-05-21T19:56:06.916Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:06.916Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:06.916Z] >>> [apiv2][query] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/vibe-x-app/versions [none]
+[debug] [2026-05-21T19:56:06.916Z] >>> [apiv2][body] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/vibe-x-app/versions {"status":"CREATED","labels":{"deployment-tool":"cli-firebase"}}
+[debug] [2026-05-21T19:56:07.953Z] <<< [apiv2][status] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/vibe-x-app/versions 200
+[debug] [2026-05-21T19:56:07.953Z] <<< [apiv2][body] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/vibe-x-app/versions {"name":"projects/426023723852/sites/vibe-x-app/versions/13ccb62212adea26","status":"CREATED","config":{},"labels":{"deployment-tool":"cli-firebase"}}
+[info] i  hosting[vibe-x-app]: beginning deploy... 
+[info] i  hosting[vibe-x-app]: found 102 files in dist 
+[debug] [2026-05-21T19:56:07.961Z] [hosting] uploading with 200 concurrency
+[debug] [2026-05-21T19:56:07.962Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:07.962Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:07.963Z] [hosting] hash cache [ZGlzdA] stored for 102 files
+[debug] [2026-05-21T19:56:07.963Z] [hosting][hash queue][FINAL] {"max":1,"min":0,"avg":0,"active":0,"complete":102,"success":102,"errored":0,"retried":0,"total":102,"elapsed":2}
+[debug] [2026-05-21T19:56:07.963Z] >>> [apiv2][query] POST https://firebasehosting.googleapis.com/v1beta1/projects/426023723852/sites/vibe-x-app/versions/13ccb62212adea26:populateFiles [none]
+[debug] [2026-05-21T19:56:07.963Z] >>> [apiv2][body] POST https://firebasehosting.googleapis.com/v1beta1/projects/426023723852/sites/vibe-x-app/versions/13ccb62212adea26:populateFiles {"files":{"/products.json":"3a24cd68945cb2256a325f6be3ae91786cd93beea11e761d9397962d2af605c1","/playlist.json":"3cdc9f905b7eaa39e4937d2bb8d26f005e42f8a07db2fe741b05690736f3f32b","/index.html":"62da2c94ab1f3a279c0bec4df097cbbb485a4b9bbd4f98186fc8f62a0090e941","/music_mp3/Zed Bias - Pick Up The Pieces -ft. Boudah- -Skeptical Remix-.mp3":"4db086d63356dd763ec2e85ed9e5621e709b8ed77aaf7621b8abe817bc0d320c","/music_mp3/Whiney-x-P-Money-x-Frisco-Stop-Search-ft-Hugh-Hardie-Sweetie-Irie.mp3":"12ad826df730c958abc6246b9bea6ab019b2703325709025afd1114e6e1728ee","/music_mp3/Whiney-Back-In-Action-feat-Slay.mp3":"04eb7be8ac1172e46377bc9ce806282029c148939a3a192d93480fb53d0b5ece","/music_mp3/Whiney - Back In Action -feat. Slay-.mp3":"04eb7be8ac1172e46377bc9ce806282029c148939a3a192d93480fb53d0b5ece","/music_mp3/Unglued-x-Whiney-x-Lens-If-You-Like-That-ft-Doktor.mp3":"202a7fdb5610defca398c60114134bdd5a138470cabbe1c4b58eb11ca35c3133","/music_mp3/UK-Apache-with-Shy-FX-Original-Nuttah-25-Chase-Status-Remix-ft-Irah.mp3":"734523189d86212933069dda260b89f86b34e2f6a5e9d8ff64cf57928a300388","/music_mp3/UK Apache with Shy FX - Original Nuttah 25 -Chase - Status Remix ft. Irah-.mp3":"734523189d86212933069dda260b89f86b34e2f6a5e9d8ff64cf57928a300388","/music_mp3/Toppa.mp3":"8b8a12d746c846ee8aae12e8e354992ab574596ef704dd3282b0986b6f06410d","/music_mp3/Tion Wayne - IFTK -Feat. La Roux- -Vibe Chemistry.mp3":"3aa695e4d0939471b1406d95b77b335ba758aed0f794b92df6db168b057088ae","/music_mp3/Speaker-Louis-feat-Parly-B-Dangerous-Original-Mix.mp3":"6f8647b6bb07b4651ef4e3478aa3098d05dd4d1bf8892c9520ccfaa81d2fcc86","/music_mp3/Shy FX - Badboy Business -ft. Kate Stewart - Mr. Williamz-.mp3":"4fd34b403ab8db50a5d51ba0026617b3e586a849d3fc68b8059292d31347a2ef","/music_mp3/Ray Keith - Renegade vs Limb By Limb -Aries Remix-.mp3":"9bbc7c98996d66dd34daebf13a9ad29b9186856640b4033b76d1095fa9af7d76","/music_mp3/P Money x Whiney - Sorry I-m Not Sorry.mp3":"2eb6920d3839fbe5667fccae5ae7d4b94a6d14571c2b0efd2a22e6f72a81ce93","/music_mp3/NuTone - One Day At A Time -feat. Lalin St. Juste- Official Video.mp3":"12af1f6a8b2a4577f9a8f2a51f7b5e2184715be45dc035654a575455979ddeaa","/music_mp3/Mark Ruff Ryder feat MC Kie MC Sparks - Joy.mp3":"18792ea6a9273e5ba8f02eace03f5fde1087eaa0883447f5187bd1730ee27927","/music_mp3/MASSIVE.mp3":"fcd9d8b68bb4246195df6115869dbb81406bd10a02222f5f2e7266ece5ede304","/music_mp3/M-Beat feat. Nazlyn - Sweet Love.mp3":"f17eb7c0d542e7e62a7f1afc3c0f52ca49a68ef8b838ad30e7fec553a9d3f774","/music_mp3/London Elektricity - Tenderless -feat. Emer Dineen- -Whiney Remix-.mp3":"1b6108d427f78ebedf370f59af6342dd770de8a4108622f7df17e8b25f8cae45","/music_mp3/Jungliss.mp3":"67db3b587813f40d2c3ecae91d59a39dfd1b10eab8eccebd70eb098860066b72","/music_mp3/JOY -404-.mp3":"a39747cb37144e55649df2f38f58f6a9ac2702565b3b52c56701447bb3e0493c","/music_mp3/Dillinja - Mystery - Deep Love.mp3":"fe74c269d71021097f271e546dc7419282f9621bedf8e6efb599a54418c4f1c1","/music_mp3/Degs - Levitate Your Mind -feat. Unglued-.mp3":"18b1e93ba4aeddbf217e3685470c3d8c42860f7347ff3252ca212bc8b8d15032","/music_mp3/DJ Aphrodite - Stalker -Original Mix-.mp3":"76cb4158426968713f53102accb3a0a9323522bd1ddfa92feaa3bc52acfd3de1","/music_mp3/DJ Aphrodite - Rinsing Quince -Slider Mix-.mp3":"17071e15f9e85e0f150d7e31fdab843d6a73a1f09c4b6013803dd5f81cc09080","/music_mp3/Cyantific - Dont Follow -feat. Diane Charlemagne.mp3":"6cd4bf9058710c68ff851695957c35ac8f5f8e31427d678d04de4bba82d21d8e","/music_mp3/Basstripper - In The City.mp3":"5e1425764059ae1946b4c595f0b065c94869a869bb1e6934366826a10c80faf4","/music_mp3/9A-88-Kings-Of-The-Rollers-You-Got-Me-SPY-Remix.mp3":"07f1c5e112d901bfafe99b9c9dec75ee24efa8dfe38bea4b51fdd4f677ea27a0","/music_mp3/9A-86-L-Side-Steppa-Dub-ft-MC-Fats.mp3":"cfd6a6bba24050d9c0ec899cdec2c0276c8d444a18f6d7fab603cf2bd5d90e55","/music_mp3/8A-115-Harriet-Jaxxon-GQ-Find-A-Space.mp3":"5ccce288a055606728295f81493ad7677acec24692368720b420cfb9676938ab","/music_mp3/7A-95-L-Entourloop-Ft-Skarra-Mucci-Mr-President.mp3":"9ed9ceb85d326a2eb45c79d5e197374b68d63df5dc4cb00f3748d5cd5f11c8e8","/music_mp3/7A-87-Whiney-x-Hugh-Hardie-Blind-Eyes-feat-Inja-Whiney-VIP.mp3":"ec48b7af99b35a0f05fee75fb537359dfcd02541b5606bc9bffa14bc5770a001","/music_mp3/5A-87-T-Kay-Gangsta.mp3":"c009bf60bbebfbcb312a0629d7db3bfe35b87ffd968550ef717ab29fac4bd9fe","/music_mp3/4A-88-Subcriminal-Ft-Jago-Deemas-J-Murder-the-Ting.mp3":"9ec76917e6bed162229edc54cf869d176b6bc2bab731160f64c622d2c72cb479","/music_mp3/4A-88-Kings-Of-The-Rollers-On-The-Run-feat-Queen-Rose.mp3":"724a9e46c4ccda7af1cfe35bc9b808854184a6ec490c7a26b08fbe48835e5912","/music_mp3/4A-88-Exile-x-Mark-XTC-Pull-Up.mp3":"e1825f47d29d39aaedbe0906c3ae766765a4ab785771cb669564c36add643c53","/music_mp3/4A-88-Exile-Ft-Mc-Spyda-Salvation-Original-Mix.mp3":"f3072473126bc33210ce7004efca852f98c05c2bfc4411096b27818c98801d56","/music_mp3/4A-88-Badman.mp3":"2134b1fe4dce0fb2c7043e9795a321d4ecc4d3e9ab78185336f2a9877d88fda9","/music_mp3/4A-87-Tantrum-Desire-Lockdown.mp3":"abbee3c155a5c0cddcc19820c51baa148db810e85f1fdfaaa81cb7017149dd63","/music_mp3/4A-87-Selecta-J-Man-Rider-Shafique-Sound-Business.mp3":"8792e071df7fd170874c228298dde8a9cdd8affb804aa49f0bbb59e75431c1f7","/music_mp3/4A-87-Roads.mp3":"73adafefe9c9a6451cca27dc28c719a192c53be3852e2d16187ad15260fa4bf1","/music_mp3/4A-87-Jam-Thieves-Bangkok.mp3":"ccf41a60a0bb4a541a9f857ea8ce6f207445abeca3be201ef2e0ebeb85fbba14","/music_mp3/4A-87-Grafix-Acid-Generation-Official-Music-Video.mp3":"b8b4d38f5ec422252c278039ae7b0e4364ea0849cb444b4b08c66f68404fa2b2","/music_mp3/4A-87-GAW-Dutchie-Crossy-Rework.mp3":"c1262d33039b0af2f2fead01612d74ff14dc0ee2b68aa4dfb87d3d7305d24919","/music_mp3/4A-87-Document-One-Vibration.mp3":"761fcdb3c8f12e8b90bb9d806c72cfee044a4b2f75b874fbe6201578c682a7c4","/music_mp3/4A-87-Chase-Status-and-Bou-Baddadan-feat-IRAH-Flowdan-Trigga-and-Takura-Visualiser.mp3":"9d2c6212844b61fcf7916d9a652abb6eda07c9948164a0af30c7da46889b056b","/music_mp3/4A-87-Buju-Banton-Stamina-Daddy-Faint-Silence-Bootleg.mp3":"d36a83afa9ff089856e280b30e21452a192d80c65d92c4cc0548647030df8a40","/music_mp3/4A-86-Foreign-Concept-Phase-Magugu-Shut-It-Up.mp3":"2e4de7d80dd9d5b16b098b5445e113d1ea78919c9ded586a1ee6ec0de6238a0c","/music_mp3/4A-86-Disturb-Them.mp3":"b69add035e9c7c4fdfede9d981a9a32e362c2018de0ae7b98666b6dc6127bf34","/music_mp3/4A-86-Conrad-Subs-Turmoil.mp3":"7b84d177f32e45949f51ba0004fe6f1331e032128b43357d4149aa7042a34696","/music_mp3/4A-85-Watch-The-Ride-x-Nia-Archives-Mash-up-the-Dance.mp3":"cb5e6e61bd494e1a8d393d3e0367cc6f850d31be4f4a1117eeb62a7bd52ed338","/music_mp3/4A-85-Liaison-Love-Will-Take-You-Higher-Official-Lyric-Video.mp3":"3140cf550fceb45a8a9ebdab7eb84b3b2ac1cefb43c110c1638f990640d9c04a","/music_mp3/4A-85-L-DOUBLE-LITTLE-ROLLER-VOL-1-NAH-EASE-UP-MIX.mp3":"cdcf2510067a94f5fa359d0e66f2cfff4b5ead509a4a73816a5fcf9299681674","/music_mp3/4A-85-Dream-Team-Rollin-Numbers-Original-Mix-Joker-Recs-1996.mp3":"02e24cd2cbeda7510b402ea28a138ae10a59f79941c210095da8ff4a6c53d544","/music_mp3/4A-81-JMJ-Flytronix-Delusions.mp3":"2dcd66e4e16e28132663b1ecbd8db44da3099e121f81ee5e4110287ebe2b6bfc","/music_mp3/4A-112-Dub-Pistols-Back-to-Daylight-feat-Ashley-Slater.mp3":"00ccf07f060ac6dadbcd74bcd2dc105afa5251613c07742c063e98844a36f398","/music_mp3/3A-90-Cookie-Monster-vs-Ragga-Twins.mp3":"e7c7b18ce9a84ec98da518ce5f97bd8045a44bfbe08e6f9dca04300b1eba7419","/music_mp3/3A-88-Kings-Of-The-Rollers-Timebomb.mp3":"5bfd9958a6bc493f9c113ceb8e60792cbaea1ada9ac33b029c9ac91a7c4182fd","/music_mp3/3A-88-Danny-Byrd-Golden-Ticket-feat-Tanya-Lacey.mp3":"af54ff258c38856c49ad878182872c358a3b7bcc5306cb814dbde92c811446d3","/music_mp3/3A-86-Kings-Of-The-Rollers-Solar-Heat.mp3":"2ec63752914d6eb55844aa14703cb595f0885027ee9a36f2f5f7d645de0ca858","/music_mp3/3A-86-Heater.mp3":"d049f865875dd63e8db5a521ad19c3c29b0fc457d5ed2c302be84118d9162566","/music_mp3/3A-83-Crush-On-U-Original.mp3":"0c8effe546bec948f33312492eacc9c51e1b82758826d4d45724e35273973bb7","/music_mp3/3A-140-Sudley-Ana-s-Wicked-ft-Flowdan-Full-Dubstep-Edit.mp3":"10b3dbe2d637c65e4ef82ca0c7820107c579d0c57024de99ad302f56fb0a6a8e","/music_mp3/2A-91-Asher-Senator-Asher-Senator.mp3":"9b9396a872132a46d884d0f117f4f8a4cbdf10c6993c109e35fc1a214952970e","/music_mp3/2A-88-RISE-RESPECT.mp3":"feaa2edbbf4fe3524d47ddf365cd9daccb5c749d3b6f95da815ba9e551fdfb2a","/music_mp3/2A-87-NuTone-Cannibals-feat-Dynamite-MC-Full.mp3":"67cd7a380b9d1fdf448691088ecf4bb00226158bc351025e305c2ed82468eff2","/music_mp3/2A-87-Ninjaman-Murder-Dem-Danny-Byrd-Remix.mp3":"91cbb941b95e9760a538088c27b66f901e7219a9ae0b6f225413f480983a5128","/music_mp3/2A-87-IAMDOOMED-Raver.mp3":"d28ad1554e4fdbc1aa2af12f62791aa129f49b6fa636b9de704ef031b4cc17e2","/music_mp3/2A-87-Hybrid-Minds-Lost-Official-Video.mp3":"4ffd1574482c0e58336ebddcc660da869d3ede47ac8fb06bb38b6950917d881a","/music_mp3/2A-87-Disclosure-ENERGY-Clipz-Remix.mp3":"9fbcbc3c5f33cec3aaa259148631867c2be3f6b42f6f79053f36f519ff28d42c","/music_mp3/2A-85-DJ-Sofa-Jungle-Valley.mp3":"e604b0ab79e396180c38ac72f55c07aacaf65bcf6530b106c386274024aa4fad","/music_mp3/2A-109-Alix-Perez-Ain-t-Nothing.mp3":"f328f9dc0ffead064d271642a4e5a30c000003abf9fe1a0b8593ba7d94f4a70f","/music_mp3/1A-87-Logistics-Together-1.mp3":"29957ee3001ea82e3812be9f546495200b470d1088e06ac3805ec0dca803b7fd","/music_mp3/11A-86-Shy-Fx-Rudeboy-Lovesong-feat-Sweetie-Irie-and-Cara-Delevingne-Break-Remix.mp3":"715aa29377ca4ab4a30f0700bedfa80e05c2df4a682c7abe9ace61d1060d9faf","/music_mp3/11A-85-Clipz-We-Need-Jungle.mp3":"88419db6f5bff18d984d5752646f8437342fe1ab7ee5c1545076027c20b58c48","/music_mp3/10A-88-Lady-Waks-Deekline-Freestylers-Ft-BlackOut-Ja-SteppaStyle-Tenor-Youthman-Junglist-Warrior.mp3":"c4b35a3d3c4bb61b592e76a64074a2c443bb06461620b6acba0adf755caa9134","/music_mp3/10A-87-Whiney-Roll-Out-feat-Parly-B-Official-Video.mp3":"3f0a9fe9ccabfe334c7b1925414e7da5bbb2c1b095f609761dfa27ccf19ad5ea","/music_mp3/10A-87-Logistics-Ammunition-feat-Inja.mp3":"e5b06ad600f55ebf3aed623f38d80a4e678403374bd3598c34b89187b1a061a7","/music/Zed Bias - Pick Up The Pieces -ft. Boudah- -Skeptical Remix-.mp4":"c41aab421cf8f61579dc2ecfef21617c35f99447806793551d7dd028e47eb037","/music/Whiney - Back In Action -feat. Slay-.mp4":"75a9022bf9fe62916eb27a268a4b05a56ad43259f1896bd99d4d692309e6bd4a","/music/UK Apache with Shy FX - Original Nuttah 25 -Chase - Status Remix ft. Irah-.mp4":"9ba4006547f36cc066266228693b666a6cfa456551c11d87b6f3f5d01bcae97b","/music/Tion Wayne - IFTK -Feat. La Roux- -Vibe Chemistry.mp4":"f1cb806a89d2764f18fc11f93cd03ec6a0fb1aeda4f03fe91861a510492bed8b","/music/Shy FX - Badboy Business -ft. Kate Stewart - Mr. Williamz-.mp4":"14a6c564c1166364994f25e129f0c8b02b4812d48f1198abb15ebbdcd7dea9c2","/music/Ray Keith - Renegade vs Limb By Limb -Aries Remix-.mp4":"a14b81551cd5e99f7fe358daa314089958e994520fc20868348a2aebf4250f0a","/music/P Money x Whiney - Sorry I-m Not Sorry.mp4":"cddd446e8a12447d9887bcb8a2688c54ce7eab8d5fe81d073fc6ddc9280522b0","/music/NuTone - One Day At A Time -feat. Lalin St. Juste- Official Video.mp4":"3c2f4dc90e43a83bc3839abb7af6290602f92320b761cc1f80dc7d0dd73e93c7","/music/Mark Ruff Ryder feat MC Kie MC Sparks - Joy.mp4":"4473760f9cae79d61b048708421b4c428832fc63857c355a29e97f429ec70c6d","/music/MASSIVE.mp4":"cdb488870a29ef1c666847ee5d4ccae96222bae3e8b5b840868f754cc4308a9c","/music/M-Beat feat. Nazlyn - Sweet Love.mp4":"49a74bd3687d664b3eb40c275cf8097cc9cddc24579ab8a19527c89462f24847","/music/London Elektricity - Tenderless -feat. Emer Dineen- -Whiney Remix-.mp4":"235e288860d80a028fc216cdda6a92b182c0821081bef67071881c8d7b44d0f7","/music/Jungliss.mp4":"86d05f2b074e68eaa8b436366c67bb7ce06cb89b21e4cb22d6d9b46312110544","/music/JOY -404-.mp4":"2759ec486a3c03c9cb195d5031af1edc379f3cf7c970f44e91f6fa8eb11c30d2","/music/Dillinja - Mystery - Deep Love.mp4":"5acde01740f2e2a3bf63857b4a5b3806d0163f25e1a049f84c9b35d9a71225c7","/music/Degs - Levitate Your Mind -feat. Unglued-.mp4":"83fb7225b9d97258a34e7f5ddea33fc1e0bef7c4a31df1275a66a0c1428d52a1","/music/DJ Aphrodite - Stalker -Original Mix-.mp4":"f5242d2653416794f56af5f7082abea5b8407aa1c351e369657fa5249e699007","/music/DJ Aphrodite - Rinsing Quince -Slider Mix-.mp4":"4df50eedb16d691c3014576fb783e1affd41999372b9a96d0c7ae62face52377","/music/Cyantific - Dont Follow -feat. Diane Charlemagne.mp4":"2e0e06c2a2ec0e7b5b8b53f93d74e81b55bb2e273c74b993bbfb4cfaeda42dd0","/music/Basstripper - In The City.mp4":"e56ef16bc1fe58467db780270367ff5c62cb660a9cf40a1adba5eec587a8aec0","/assets/index-c4ouMfW3.js":"e8ac262874e2d843a6cb9288c7dc4e9da445dc22be2432eb0023e7a3f86866fb","/assets/index-DcmuSnXD.css":"d9db059f0f969eca5d5a8f789c3108efb70371a830de135c84dd6c0d8c7050ad"}}
+[debug] [2026-05-21T19:56:08.605Z] <<< [apiv2][status] POST https://firebasehosting.googleapis.com/v1beta1/projects/426023723852/sites/vibe-x-app/versions/13ccb62212adea26:populateFiles 200
+[debug] [2026-05-21T19:56:08.605Z] <<< [apiv2][body] POST https://firebasehosting.googleapis.com/v1beta1/projects/426023723852/sites/vibe-x-app/versions/13ccb62212adea26:populateFiles {"uploadRequiredHashes":["e604b0ab79e396180c38ac72f55c07aacaf65bcf6530b106c386274024aa4fad","e5b06ad600f55ebf3aed623f38d80a4e678403374bd3598c34b89187b1a061a7","2e4de7d80dd9d5b16b098b5445e113d1ea78919c9ded586a1ee6ec0de6238a0c","c009bf60bbebfbcb312a0629d7db3bfe35b87ffd968550ef717ab29fac4bd9fe","ec48b7af99b35a0f05fee75fb537359dfcd02541b5606bc9bffa14bc5770a001","67cd7a380b9d1fdf448691088ecf4bb00226158bc351025e305c2ed82468eff2","af54ff258c38856c49ad878182872c358a3b7bcc5306cb814dbde92c811446d3","07f1c5e112d901bfafe99b9c9dec75ee24efa8dfe38bea4b51fdd4f677ea27a0","8b8a12d746c846ee8aae12e8e354992ab574596ef704dd3282b0986b6f06410d","2ec63752914d6eb55844aa14703cb595f0885027ee9a36f2f5f7d645de0ca858","3140cf550fceb45a8a9ebdab7eb84b3b2ac1cefb43c110c1638f990640d9c04a","724a9e46c4ccda7af1cfe35bc9b808854184a6ec490c7a26b08fbe48835e5912","ccf41a60a0bb4a541a9f857ea8ce6f207445abeca3be201ef2e0ebeb85fbba14","7b84d177f32e45949f51ba0004fe6f1331e032128b43357d4149aa7042a34696","0c8effe546bec948f33312492eacc9c51e1b82758826d4d45724e35273973bb7","cfd6a6bba24050d9c0ec899cdec2c0276c8d444a18f6d7fab603cf2bd5d90e55","73adafefe9c9a6451cca27dc28c719a192c53be3852e2d16187ad15260fa4bf1","cb5e6e61bd494e1a8d393d3e0367cc6f850d31be4f4a1117eeb62a7bd52ed338","feaa2edbbf4fe3524d47ddf365cd9daccb5c749d3b6f95da815ba9e551fdfb2a","e1825f47d29d39aaedbe0906c3ae766765a4ab785771cb669564c36add643c53","d049f865875dd63e8db5a521ad19c3c29b0fc457d5ed2c302be84118d9162566","9ec76917e6bed162229edc54cf869d176b6bc2bab731160f64c622d2c72cb479","00ccf07f060ac6dadbcd74bcd2dc105afa5251613c07742c063e98844a36f398","10b3dbe2d637c65e4ef82ca0c7820107c579d0c57024de99ad302f56fb0a6a8e","e7c7b18ce9a84ec98da518ce5f97bd8045a44bfbe08e6f9dca04300b1eba7419","8792e071df7fd170874c228298dde8a9cdd8affb804aa49f0bbb59e75431c1f7","d28ad1554e4fdbc1aa2af12f62791aa129f49b6fa636b9de704ef031b4cc17e2","4ffd1574482c0e58336ebddcc660da869d3ede47ac8fb06bb38b6950917d881a","abbee3c155a5c0cddcc19820c51baa148db810e85f1fdfaaa81cb7017149dd63","88419db6f5bff18d984d5752646f8437342fe1ab7ee5c1545076027c20b58c48","202a7fdb5610defca398c60114134bdd5a138470cabbe1c4b58eb11ca35c3133","2dcd66e4e16e28132663b1ecbd8db44da3099e121f81ee5e4110287ebe2b6bfc","9d2c6212844b61fcf7916d9a652abb6eda07c9948164a0af30c7da46889b056b","c4b35a3d3c4bb61b592e76a64074a2c443bb06461620b6acba0adf755caa9134","9ed9ceb85d326a2eb45c79d5e197374b68d63df5dc4cb00f3748d5cd5f11c8e8","02e24cd2cbeda7510b402ea28a138ae10a59f79941c210095da8ff4a6c53d544","12ad826df730c958abc6246b9bea6ab019b2703325709025afd1114e6e1728ee","761fcdb3c8f12e8b90bb9d806c72cfee044a4b2f75b874fbe6201578c682a7c4","29957ee3001ea82e3812be9f546495200b470d1088e06ac3805ec0dca803b7fd","2134b1fe4dce0fb2c7043e9795a321d4ecc4d3e9ab78185336f2a9877d88fda9","cdcf2510067a94f5fa359d0e66f2cfff4b5ead509a4a73816a5fcf9299681674","b8b4d38f5ec422252c278039ae7b0e4364ea0849cb444b4b08c66f68404fa2b2","6f8647b6bb07b4651ef4e3478aa3098d05dd4d1bf8892c9520ccfaa81d2fcc86","f328f9dc0ffead064d271642a4e5a30c000003abf9fe1a0b8593ba7d94f4a70f","9b9396a872132a46d884d0f117f4f8a4cbdf10c6993c109e35fc1a214952970e","f3072473126bc33210ce7004efca852f98c05c2bfc4411096b27818c98801d56","9fbcbc3c5f33cec3aaa259148631867c2be3f6b42f6f79053f36f519ff28d42c","3f0a9fe9ccabfe334c7b1925414e7da5bbb2c1b095f609761dfa27ccf19ad5ea","5bfd9958a6bc493f9c113ceb8e60792cbaea1ada9ac33b029c9ac91a7c4182fd","715aa29377ca4ab4a30f0700bedfa80e05c2df4a682c7abe9ace61d1060d9faf","d36a83afa9ff089856e280b30e21452a192d80c65d92c4cc0548647030df8a40","5ccce288a055606728295f81493ad7677acec24692368720b420cfb9676938ab","91cbb941b95e9760a538088c27b66f901e7219a9ae0b6f225413f480983a5128","b69add035e9c7c4fdfede9d981a9a32e362c2018de0ae7b98666b6dc6127bf34","c1262d33039b0af2f2fead01612d74ff14dc0ee2b68aa4dfb87d3d7305d24919"],"uploadUrl":"https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files"}
+[debug] [2026-05-21T19:56:08.606Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.606Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.606Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.606Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.606Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.606Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.606Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.606Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.606Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.606Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.606Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.606Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.606Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.606Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.606Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.606Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.606Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.606Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.606Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.606Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.606Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.606Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.606Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.606Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.606Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.606Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.606Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.606Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.606Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.606Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.606Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.606Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.606Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.606Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.606Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.606Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.606Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.606Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.606Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.606Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.607Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.607Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.607Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.607Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.607Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.607Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.607Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.607Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.607Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.607Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.607Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.607Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.607Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.607Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.607Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.607Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.607Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.607Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.607Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.607Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.607Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.607Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.607Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.607Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.607Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.607Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.607Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.607Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.607Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.607Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.607Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.607Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.607Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.607Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.607Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.607Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.607Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.607Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.607Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.607Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.607Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.607Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.607Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.607Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.607Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.607Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.607Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.607Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.607Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.607Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.607Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.607Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.608Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.608Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.608Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.608Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.608Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.608Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.608Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.608Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.608Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.608Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.608Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.608Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.608Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.608Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.608Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.608Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.608Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.608Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:08.608Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/e604b0ab79e396180c38ac72f55c07aacaf65bcf6530b106c386274024aa4fad [none]
+[debug] [2026-05-21T19:56:08.608Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/e604b0ab79e396180c38ac72f55c07aacaf65bcf6530b106c386274024aa4fad [stream]
+[debug] [2026-05-21T19:56:08.608Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/e5b06ad600f55ebf3aed623f38d80a4e678403374bd3598c34b89187b1a061a7 [none]
+[debug] [2026-05-21T19:56:08.608Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/e5b06ad600f55ebf3aed623f38d80a4e678403374bd3598c34b89187b1a061a7 [stream]
+[debug] [2026-05-21T19:56:08.609Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/2e4de7d80dd9d5b16b098b5445e113d1ea78919c9ded586a1ee6ec0de6238a0c [none]
+[debug] [2026-05-21T19:56:08.609Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/2e4de7d80dd9d5b16b098b5445e113d1ea78919c9ded586a1ee6ec0de6238a0c [stream]
+[debug] [2026-05-21T19:56:08.609Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/c009bf60bbebfbcb312a0629d7db3bfe35b87ffd968550ef717ab29fac4bd9fe [none]
+[debug] [2026-05-21T19:56:08.609Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/c009bf60bbebfbcb312a0629d7db3bfe35b87ffd968550ef717ab29fac4bd9fe [stream]
+[debug] [2026-05-21T19:56:08.609Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/ec48b7af99b35a0f05fee75fb537359dfcd02541b5606bc9bffa14bc5770a001 [none]
+[debug] [2026-05-21T19:56:08.609Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/ec48b7af99b35a0f05fee75fb537359dfcd02541b5606bc9bffa14bc5770a001 [stream]
+[debug] [2026-05-21T19:56:08.610Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/67cd7a380b9d1fdf448691088ecf4bb00226158bc351025e305c2ed82468eff2 [none]
+[debug] [2026-05-21T19:56:08.610Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/67cd7a380b9d1fdf448691088ecf4bb00226158bc351025e305c2ed82468eff2 [stream]
+[debug] [2026-05-21T19:56:08.610Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/af54ff258c38856c49ad878182872c358a3b7bcc5306cb814dbde92c811446d3 [none]
+[debug] [2026-05-21T19:56:08.610Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/af54ff258c38856c49ad878182872c358a3b7bcc5306cb814dbde92c811446d3 [stream]
+[debug] [2026-05-21T19:56:08.610Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/07f1c5e112d901bfafe99b9c9dec75ee24efa8dfe38bea4b51fdd4f677ea27a0 [none]
+[debug] [2026-05-21T19:56:08.610Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/07f1c5e112d901bfafe99b9c9dec75ee24efa8dfe38bea4b51fdd4f677ea27a0 [stream]
+[debug] [2026-05-21T19:56:08.610Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/8b8a12d746c846ee8aae12e8e354992ab574596ef704dd3282b0986b6f06410d [none]
+[debug] [2026-05-21T19:56:08.610Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/8b8a12d746c846ee8aae12e8e354992ab574596ef704dd3282b0986b6f06410d [stream]
+[debug] [2026-05-21T19:56:08.611Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/2ec63752914d6eb55844aa14703cb595f0885027ee9a36f2f5f7d645de0ca858 [none]
+[debug] [2026-05-21T19:56:08.611Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/2ec63752914d6eb55844aa14703cb595f0885027ee9a36f2f5f7d645de0ca858 [stream]
+[debug] [2026-05-21T19:56:08.611Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/3140cf550fceb45a8a9ebdab7eb84b3b2ac1cefb43c110c1638f990640d9c04a [none]
+[debug] [2026-05-21T19:56:08.611Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/3140cf550fceb45a8a9ebdab7eb84b3b2ac1cefb43c110c1638f990640d9c04a [stream]
+[debug] [2026-05-21T19:56:08.611Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/724a9e46c4ccda7af1cfe35bc9b808854184a6ec490c7a26b08fbe48835e5912 [none]
+[debug] [2026-05-21T19:56:08.611Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/724a9e46c4ccda7af1cfe35bc9b808854184a6ec490c7a26b08fbe48835e5912 [stream]
+[debug] [2026-05-21T19:56:08.611Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/ccf41a60a0bb4a541a9f857ea8ce6f207445abeca3be201ef2e0ebeb85fbba14 [none]
+[debug] [2026-05-21T19:56:08.611Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/ccf41a60a0bb4a541a9f857ea8ce6f207445abeca3be201ef2e0ebeb85fbba14 [stream]
+[debug] [2026-05-21T19:56:08.612Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/7b84d177f32e45949f51ba0004fe6f1331e032128b43357d4149aa7042a34696 [none]
+[debug] [2026-05-21T19:56:08.612Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/7b84d177f32e45949f51ba0004fe6f1331e032128b43357d4149aa7042a34696 [stream]
+[debug] [2026-05-21T19:56:08.612Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/0c8effe546bec948f33312492eacc9c51e1b82758826d4d45724e35273973bb7 [none]
+[debug] [2026-05-21T19:56:08.612Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/0c8effe546bec948f33312492eacc9c51e1b82758826d4d45724e35273973bb7 [stream]
+[debug] [2026-05-21T19:56:08.612Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/cfd6a6bba24050d9c0ec899cdec2c0276c8d444a18f6d7fab603cf2bd5d90e55 [none]
+[debug] [2026-05-21T19:56:08.612Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/cfd6a6bba24050d9c0ec899cdec2c0276c8d444a18f6d7fab603cf2bd5d90e55 [stream]
+[debug] [2026-05-21T19:56:08.612Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/73adafefe9c9a6451cca27dc28c719a192c53be3852e2d16187ad15260fa4bf1 [none]
+[debug] [2026-05-21T19:56:08.612Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/73adafefe9c9a6451cca27dc28c719a192c53be3852e2d16187ad15260fa4bf1 [stream]
+[debug] [2026-05-21T19:56:08.612Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/cb5e6e61bd494e1a8d393d3e0367cc6f850d31be4f4a1117eeb62a7bd52ed338 [none]
+[debug] [2026-05-21T19:56:08.612Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/cb5e6e61bd494e1a8d393d3e0367cc6f850d31be4f4a1117eeb62a7bd52ed338 [stream]
+[debug] [2026-05-21T19:56:08.613Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/feaa2edbbf4fe3524d47ddf365cd9daccb5c749d3b6f95da815ba9e551fdfb2a [none]
+[debug] [2026-05-21T19:56:08.613Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/feaa2edbbf4fe3524d47ddf365cd9daccb5c749d3b6f95da815ba9e551fdfb2a [stream]
+[debug] [2026-05-21T19:56:08.613Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/e1825f47d29d39aaedbe0906c3ae766765a4ab785771cb669564c36add643c53 [none]
+[debug] [2026-05-21T19:56:08.613Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/e1825f47d29d39aaedbe0906c3ae766765a4ab785771cb669564c36add643c53 [stream]
+[debug] [2026-05-21T19:56:08.613Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/d049f865875dd63e8db5a521ad19c3c29b0fc457d5ed2c302be84118d9162566 [none]
+[debug] [2026-05-21T19:56:08.613Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/d049f865875dd63e8db5a521ad19c3c29b0fc457d5ed2c302be84118d9162566 [stream]
+[debug] [2026-05-21T19:56:08.613Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/9ec76917e6bed162229edc54cf869d176b6bc2bab731160f64c622d2c72cb479 [none]
+[debug] [2026-05-21T19:56:08.613Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/9ec76917e6bed162229edc54cf869d176b6bc2bab731160f64c622d2c72cb479 [stream]
+[debug] [2026-05-21T19:56:08.613Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/00ccf07f060ac6dadbcd74bcd2dc105afa5251613c07742c063e98844a36f398 [none]
+[debug] [2026-05-21T19:56:08.613Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/00ccf07f060ac6dadbcd74bcd2dc105afa5251613c07742c063e98844a36f398 [stream]
+[debug] [2026-05-21T19:56:08.613Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/10b3dbe2d637c65e4ef82ca0c7820107c579d0c57024de99ad302f56fb0a6a8e [none]
+[debug] [2026-05-21T19:56:08.613Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/10b3dbe2d637c65e4ef82ca0c7820107c579d0c57024de99ad302f56fb0a6a8e [stream]
+[debug] [2026-05-21T19:56:08.614Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/e7c7b18ce9a84ec98da518ce5f97bd8045a44bfbe08e6f9dca04300b1eba7419 [none]
+[debug] [2026-05-21T19:56:08.614Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/e7c7b18ce9a84ec98da518ce5f97bd8045a44bfbe08e6f9dca04300b1eba7419 [stream]
+[debug] [2026-05-21T19:56:08.614Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/8792e071df7fd170874c228298dde8a9cdd8affb804aa49f0bbb59e75431c1f7 [none]
+[debug] [2026-05-21T19:56:08.614Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/8792e071df7fd170874c228298dde8a9cdd8affb804aa49f0bbb59e75431c1f7 [stream]
+[debug] [2026-05-21T19:56:08.614Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/d28ad1554e4fdbc1aa2af12f62791aa129f49b6fa636b9de704ef031b4cc17e2 [none]
+[debug] [2026-05-21T19:56:08.614Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/d28ad1554e4fdbc1aa2af12f62791aa129f49b6fa636b9de704ef031b4cc17e2 [stream]
+[debug] [2026-05-21T19:56:08.614Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/4ffd1574482c0e58336ebddcc660da869d3ede47ac8fb06bb38b6950917d881a [none]
+[debug] [2026-05-21T19:56:08.614Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/4ffd1574482c0e58336ebddcc660da869d3ede47ac8fb06bb38b6950917d881a [stream]
+[debug] [2026-05-21T19:56:08.614Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/abbee3c155a5c0cddcc19820c51baa148db810e85f1fdfaaa81cb7017149dd63 [none]
+[debug] [2026-05-21T19:56:08.614Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/abbee3c155a5c0cddcc19820c51baa148db810e85f1fdfaaa81cb7017149dd63 [stream]
+[debug] [2026-05-21T19:56:08.615Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/88419db6f5bff18d984d5752646f8437342fe1ab7ee5c1545076027c20b58c48 [none]
+[debug] [2026-05-21T19:56:08.615Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/88419db6f5bff18d984d5752646f8437342fe1ab7ee5c1545076027c20b58c48 [stream]
+[debug] [2026-05-21T19:56:08.615Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/202a7fdb5610defca398c60114134bdd5a138470cabbe1c4b58eb11ca35c3133 [none]
+[debug] [2026-05-21T19:56:08.615Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/202a7fdb5610defca398c60114134bdd5a138470cabbe1c4b58eb11ca35c3133 [stream]
+[debug] [2026-05-21T19:56:08.615Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/2dcd66e4e16e28132663b1ecbd8db44da3099e121f81ee5e4110287ebe2b6bfc [none]
+[debug] [2026-05-21T19:56:08.615Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/2dcd66e4e16e28132663b1ecbd8db44da3099e121f81ee5e4110287ebe2b6bfc [stream]
+[debug] [2026-05-21T19:56:08.615Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/9d2c6212844b61fcf7916d9a652abb6eda07c9948164a0af30c7da46889b056b [none]
+[debug] [2026-05-21T19:56:08.615Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/9d2c6212844b61fcf7916d9a652abb6eda07c9948164a0af30c7da46889b056b [stream]
+[debug] [2026-05-21T19:56:08.615Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/c4b35a3d3c4bb61b592e76a64074a2c443bb06461620b6acba0adf755caa9134 [none]
+[debug] [2026-05-21T19:56:08.615Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/c4b35a3d3c4bb61b592e76a64074a2c443bb06461620b6acba0adf755caa9134 [stream]
+[debug] [2026-05-21T19:56:08.615Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/9ed9ceb85d326a2eb45c79d5e197374b68d63df5dc4cb00f3748d5cd5f11c8e8 [none]
+[debug] [2026-05-21T19:56:08.615Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/9ed9ceb85d326a2eb45c79d5e197374b68d63df5dc4cb00f3748d5cd5f11c8e8 [stream]
+[debug] [2026-05-21T19:56:08.616Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/02e24cd2cbeda7510b402ea28a138ae10a59f79941c210095da8ff4a6c53d544 [none]
+[debug] [2026-05-21T19:56:08.616Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/02e24cd2cbeda7510b402ea28a138ae10a59f79941c210095da8ff4a6c53d544 [stream]
+[debug] [2026-05-21T19:56:08.616Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/12ad826df730c958abc6246b9bea6ab019b2703325709025afd1114e6e1728ee [none]
+[debug] [2026-05-21T19:56:08.616Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/12ad826df730c958abc6246b9bea6ab019b2703325709025afd1114e6e1728ee [stream]
+[debug] [2026-05-21T19:56:08.616Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/761fcdb3c8f12e8b90bb9d806c72cfee044a4b2f75b874fbe6201578c682a7c4 [none]
+[debug] [2026-05-21T19:56:08.616Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/761fcdb3c8f12e8b90bb9d806c72cfee044a4b2f75b874fbe6201578c682a7c4 [stream]
+[debug] [2026-05-21T19:56:08.616Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/29957ee3001ea82e3812be9f546495200b470d1088e06ac3805ec0dca803b7fd [none]
+[debug] [2026-05-21T19:56:08.616Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/29957ee3001ea82e3812be9f546495200b470d1088e06ac3805ec0dca803b7fd [stream]
+[debug] [2026-05-21T19:56:08.616Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/2134b1fe4dce0fb2c7043e9795a321d4ecc4d3e9ab78185336f2a9877d88fda9 [none]
+[debug] [2026-05-21T19:56:08.616Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/2134b1fe4dce0fb2c7043e9795a321d4ecc4d3e9ab78185336f2a9877d88fda9 [stream]
+[debug] [2026-05-21T19:56:08.616Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/cdcf2510067a94f5fa359d0e66f2cfff4b5ead509a4a73816a5fcf9299681674 [none]
+[debug] [2026-05-21T19:56:08.616Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/cdcf2510067a94f5fa359d0e66f2cfff4b5ead509a4a73816a5fcf9299681674 [stream]
+[debug] [2026-05-21T19:56:08.617Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/b8b4d38f5ec422252c278039ae7b0e4364ea0849cb444b4b08c66f68404fa2b2 [none]
+[debug] [2026-05-21T19:56:08.617Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/b8b4d38f5ec422252c278039ae7b0e4364ea0849cb444b4b08c66f68404fa2b2 [stream]
+[debug] [2026-05-21T19:56:08.617Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/6f8647b6bb07b4651ef4e3478aa3098d05dd4d1bf8892c9520ccfaa81d2fcc86 [none]
+[debug] [2026-05-21T19:56:08.617Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/6f8647b6bb07b4651ef4e3478aa3098d05dd4d1bf8892c9520ccfaa81d2fcc86 [stream]
+[debug] [2026-05-21T19:56:08.617Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/f328f9dc0ffead064d271642a4e5a30c000003abf9fe1a0b8593ba7d94f4a70f [none]
+[debug] [2026-05-21T19:56:08.617Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/f328f9dc0ffead064d271642a4e5a30c000003abf9fe1a0b8593ba7d94f4a70f [stream]
+[debug] [2026-05-21T19:56:08.617Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/9b9396a872132a46d884d0f117f4f8a4cbdf10c6993c109e35fc1a214952970e [none]
+[debug] [2026-05-21T19:56:08.617Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/9b9396a872132a46d884d0f117f4f8a4cbdf10c6993c109e35fc1a214952970e [stream]
+[debug] [2026-05-21T19:56:08.617Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/f3072473126bc33210ce7004efca852f98c05c2bfc4411096b27818c98801d56 [none]
+[debug] [2026-05-21T19:56:08.617Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/f3072473126bc33210ce7004efca852f98c05c2bfc4411096b27818c98801d56 [stream]
+[debug] [2026-05-21T19:56:08.618Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/9fbcbc3c5f33cec3aaa259148631867c2be3f6b42f6f79053f36f519ff28d42c [none]
+[debug] [2026-05-21T19:56:08.618Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/9fbcbc3c5f33cec3aaa259148631867c2be3f6b42f6f79053f36f519ff28d42c [stream]
+[debug] [2026-05-21T19:56:08.618Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/3f0a9fe9ccabfe334c7b1925414e7da5bbb2c1b095f609761dfa27ccf19ad5ea [none]
+[debug] [2026-05-21T19:56:08.618Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/3f0a9fe9ccabfe334c7b1925414e7da5bbb2c1b095f609761dfa27ccf19ad5ea [stream]
+[debug] [2026-05-21T19:56:08.618Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/5bfd9958a6bc493f9c113ceb8e60792cbaea1ada9ac33b029c9ac91a7c4182fd [none]
+[debug] [2026-05-21T19:56:08.618Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/5bfd9958a6bc493f9c113ceb8e60792cbaea1ada9ac33b029c9ac91a7c4182fd [stream]
+[debug] [2026-05-21T19:56:08.618Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/715aa29377ca4ab4a30f0700bedfa80e05c2df4a682c7abe9ace61d1060d9faf [none]
+[debug] [2026-05-21T19:56:08.618Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/715aa29377ca4ab4a30f0700bedfa80e05c2df4a682c7abe9ace61d1060d9faf [stream]
+[debug] [2026-05-21T19:56:08.618Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/d36a83afa9ff089856e280b30e21452a192d80c65d92c4cc0548647030df8a40 [none]
+[debug] [2026-05-21T19:56:08.618Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/d36a83afa9ff089856e280b30e21452a192d80c65d92c4cc0548647030df8a40 [stream]
+[debug] [2026-05-21T19:56:08.619Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/5ccce288a055606728295f81493ad7677acec24692368720b420cfb9676938ab [none]
+[debug] [2026-05-21T19:56:08.619Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/5ccce288a055606728295f81493ad7677acec24692368720b420cfb9676938ab [stream]
+[debug] [2026-05-21T19:56:08.619Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/91cbb941b95e9760a538088c27b66f901e7219a9ae0b6f225413f480983a5128 [none]
+[debug] [2026-05-21T19:56:08.619Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/91cbb941b95e9760a538088c27b66f901e7219a9ae0b6f225413f480983a5128 [stream]
+[debug] [2026-05-21T19:56:08.619Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/b69add035e9c7c4fdfede9d981a9a32e362c2018de0ae7b98666b6dc6127bf34 [none]
+[debug] [2026-05-21T19:56:08.619Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/b69add035e9c7c4fdfede9d981a9a32e362c2018de0ae7b98666b6dc6127bf34 [stream]
+[debug] [2026-05-21T19:56:08.619Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/c1262d33039b0af2f2fead01612d74ff14dc0ee2b68aa4dfb87d3d7305d24919 [none]
+[debug] [2026-05-21T19:56:08.619Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/c1262d33039b0af2f2fead01612d74ff14dc0ee2b68aa4dfb87d3d7305d24919 [stream]
+[debug] [2026-05-21T19:56:08.619Z] [hosting][populate queue][FINAL] {"max":646,"min":646,"avg":646,"active":0,"complete":1,"success":1,"errored":0,"retried":0,"total":1,"elapsed":657}
+[debug] [2026-05-21T19:56:08.619Z] [hosting] uploads queued: 55
+[info] i  hosting: uploading new files [0/55] (0%) 
+[info] i  hosting: uploading new files [0/55] (0%) 
+[info] i  hosting: uploading new files [0/55] (0%) 
+[info] i  hosting: uploading new files [0/55] (0%) 
+[info] i  hosting: uploading new files [0/55] (0%) 
+[info] i  hosting: uploading new files [0/55] (0%) 
+[info] i  hosting: uploading new files [0/55] (0%) 
+[info] i  hosting: uploading new files [0/55] (0%) 
+[info] i  hosting: uploading new files [0/55] (0%) 
+[info] i  hosting: uploading new files [0/55] (0%) 
+[info] i  hosting: uploading new files [0/55] (0%) 
+[info] i  hosting: uploading new files [0/55] (0%) 
+[info] i  hosting: uploading new files [0/55] (0%) 
+[info] i  hosting: uploading new files [0/55] (0%) 
+[info] i  hosting: uploading new files [0/55] (0%) 
+[info] i  hosting: uploading new files [0/55] (0%) 
+[info] i  hosting: uploading new files [0/55] (0%) 
+[info] i  hosting: uploading new files [0/55] (0%) 
+[info] i  hosting: uploading new files [0/55] (0%) 
+[info] i  hosting: uploading new files [0/55] (0%) 
+[debug] [2026-05-21T19:56:49.349Z] [uploadQueue] Retrying task e7c7b18ce9a84ec98da518ce5f97bd8045a44bfbe08e6f9dca04300b1eba7419
+[debug] [2026-05-21T19:56:49.350Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:49.350Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:56:49.350Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/e7c7b18ce9a84ec98da518ce5f97bd8045a44bfbe08e6f9dca04300b1eba7419 [none]
+[debug] [2026-05-21T19:56:49.350Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/e7c7b18ce9a84ec98da518ce5f97bd8045a44bfbe08e6f9dca04300b1eba7419 [stream]
+[info] i  hosting: uploading new files [0/55] (0%) 
+[info] i  hosting: uploading new files [0/55] (0%) 
+[info] i  hosting: uploading new files [0/55] (0%) 
+[info] i  hosting: uploading new files [0/55] (0%) 
+[info] i  hosting: uploading new files [0/55] (0%) 
+[info] i  hosting: uploading new files [0/55] (0%) 
+[info] i  hosting: uploading new files [0/55] (0%) 
+[info] i  hosting: uploading new files [0/55] (0%) 
+[info] i  hosting: uploading new files [0/55] (0%) 
+[debug] [2026-05-21T19:57:06.470Z] [uploadQueue] Retrying task 2134b1fe4dce0fb2c7043e9795a321d4ecc4d3e9ab78185336f2a9877d88fda9
+[debug] [2026-05-21T19:57:06.471Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:57:06.471Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:57:06.471Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/2134b1fe4dce0fb2c7043e9795a321d4ecc4d3e9ab78185336f2a9877d88fda9 [none]
+[debug] [2026-05-21T19:57:06.471Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/2134b1fe4dce0fb2c7043e9795a321d4ecc4d3e9ab78185336f2a9877d88fda9 [stream]
+[info] i  hosting: uploading new files [0/55] (0%) 
+[info] i  hosting: uploading new files [0/55] (0%) 
+[info] i  hosting: uploading new files [0/55] (0%) 
+[info] i  hosting: uploading new files [0/55] (0%) 
+[info] i  hosting: uploading new files [0/55] (0%) 
+[info] i  hosting: uploading new files [0/55] (0%) 
+[info] i  hosting: uploading new files [0/55] (0%) 
+[debug] [2026-05-21T19:57:20.328Z] [uploadQueue] Retrying task 3140cf550fceb45a8a9ebdab7eb84b3b2ac1cefb43c110c1638f990640d9c04a
+[debug] [2026-05-21T19:57:20.328Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:57:20.328Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:57:20.328Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/3140cf550fceb45a8a9ebdab7eb84b3b2ac1cefb43c110c1638f990640d9c04a [none]
+[debug] [2026-05-21T19:57:20.328Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/3140cf550fceb45a8a9ebdab7eb84b3b2ac1cefb43c110c1638f990640d9c04a [stream]
+[debug] [2026-05-21T19:57:21.189Z] [uploadQueue] Retrying task 88419db6f5bff18d984d5752646f8437342fe1ab7ee5c1545076027c20b58c48
+[debug] [2026-05-21T19:57:21.190Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:57:21.190Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:57:21.190Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/88419db6f5bff18d984d5752646f8437342fe1ab7ee5c1545076027c20b58c48 [none]
+[debug] [2026-05-21T19:57:21.190Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/88419db6f5bff18d984d5752646f8437342fe1ab7ee5c1545076027c20b58c48 [stream]
+[info] i  hosting: uploading new files [0/55] (0%) 
+[debug] [2026-05-21T19:57:23.269Z] [uploadQueue] Retrying task 9b9396a872132a46d884d0f117f4f8a4cbdf10c6993c109e35fc1a214952970e
+[debug] [2026-05-21T19:57:23.269Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:57:23.269Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:57:23.269Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/9b9396a872132a46d884d0f117f4f8a4cbdf10c6993c109e35fc1a214952970e [none]
+[debug] [2026-05-21T19:57:23.269Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/9b9396a872132a46d884d0f117f4f8a4cbdf10c6993c109e35fc1a214952970e [stream]
+[info] i  hosting: uploading new files [0/55] (0%) 
+[info] i  hosting: uploading new files [0/55] (0%) 
+[debug] [2026-05-21T19:57:27.828Z] [uploadQueue] Retrying task c009bf60bbebfbcb312a0629d7db3bfe35b87ffd968550ef717ab29fac4bd9fe
+[debug] [2026-05-21T19:57:27.828Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:57:27.828Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:57:27.828Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/c009bf60bbebfbcb312a0629d7db3bfe35b87ffd968550ef717ab29fac4bd9fe [none]
+[debug] [2026-05-21T19:57:27.828Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/c009bf60bbebfbcb312a0629d7db3bfe35b87ffd968550ef717ab29fac4bd9fe [stream]
+[info] i  hosting: uploading new files [0/55] (0%) 
+[debug] [2026-05-21T19:57:29.047Z] [uploadQueue] Retrying task 9d2c6212844b61fcf7916d9a652abb6eda07c9948164a0af30c7da46889b056b
+[debug] [2026-05-21T19:57:29.047Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:57:29.047Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:57:29.047Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/9d2c6212844b61fcf7916d9a652abb6eda07c9948164a0af30c7da46889b056b [none]
+[debug] [2026-05-21T19:57:29.047Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/9d2c6212844b61fcf7916d9a652abb6eda07c9948164a0af30c7da46889b056b [stream]
+[info] i  hosting: uploading new files [0/55] (0%) 
+[debug] [2026-05-21T19:57:30.494Z] [uploadQueue] Retrying task e7c7b18ce9a84ec98da518ce5f97bd8045a44bfbe08e6f9dca04300b1eba7419
+[debug] [2026-05-21T19:57:30.495Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:57:30.495Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:57:30.495Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/e7c7b18ce9a84ec98da518ce5f97bd8045a44bfbe08e6f9dca04300b1eba7419 [none]
+[debug] [2026-05-21T19:57:30.495Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/e7c7b18ce9a84ec98da518ce5f97bd8045a44bfbe08e6f9dca04300b1eba7419 [stream]
+[debug] [2026-05-21T19:57:31.628Z] [uploadQueue] Retrying task 10b3dbe2d637c65e4ef82ca0c7820107c579d0c57024de99ad302f56fb0a6a8e
+[debug] [2026-05-21T19:57:31.628Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:57:31.628Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:57:31.628Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/10b3dbe2d637c65e4ef82ca0c7820107c579d0c57024de99ad302f56fb0a6a8e [none]
+[debug] [2026-05-21T19:57:31.628Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/10b3dbe2d637c65e4ef82ca0c7820107c579d0c57024de99ad302f56fb0a6a8e [stream]
+[info] i  hosting: uploading new files [0/55] (0%) 
+[debug] [2026-05-21T19:57:33.048Z] [uploadQueue] Retrying task af54ff258c38856c49ad878182872c358a3b7bcc5306cb814dbde92c811446d3
+[debug] [2026-05-21T19:57:33.048Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:57:33.048Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:57:33.048Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/af54ff258c38856c49ad878182872c358a3b7bcc5306cb814dbde92c811446d3 [none]
+[debug] [2026-05-21T19:57:33.048Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/af54ff258c38856c49ad878182872c358a3b7bcc5306cb814dbde92c811446d3 [stream]
+[info] i  hosting: uploading new files [0/55] (0%) 
+[debug] [2026-05-21T19:57:35.168Z] [uploadQueue] Retrying task 724a9e46c4ccda7af1cfe35bc9b808854184a6ec490c7a26b08fbe48835e5912
+[debug] [2026-05-21T19:57:35.168Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:57:35.168Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:57:35.168Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/724a9e46c4ccda7af1cfe35bc9b808854184a6ec490c7a26b08fbe48835e5912 [none]
+[debug] [2026-05-21T19:57:35.168Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/724a9e46c4ccda7af1cfe35bc9b808854184a6ec490c7a26b08fbe48835e5912 [stream]
+[info] i  hosting: uploading new files [0/55] (0%) 
+[debug] [2026-05-21T19:57:37.689Z] [uploadQueue] Retrying task 7b84d177f32e45949f51ba0004fe6f1331e032128b43357d4149aa7042a34696
+[debug] [2026-05-21T19:57:37.689Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:57:37.689Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:57:37.689Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/7b84d177f32e45949f51ba0004fe6f1331e032128b43357d4149aa7042a34696 [none]
+[debug] [2026-05-21T19:57:37.689Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/7b84d177f32e45949f51ba0004fe6f1331e032128b43357d4149aa7042a34696 [stream]
+[debug] [2026-05-21T19:57:37.929Z] [uploadQueue] Retrying task cdcf2510067a94f5fa359d0e66f2cfff4b5ead509a4a73816a5fcf9299681674
+[debug] [2026-05-21T19:57:37.929Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:57:37.929Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:57:37.929Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/cdcf2510067a94f5fa359d0e66f2cfff4b5ead509a4a73816a5fcf9299681674 [none]
+[debug] [2026-05-21T19:57:37.929Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/cdcf2510067a94f5fa359d0e66f2cfff4b5ead509a4a73816a5fcf9299681674 [stream]
+[info] i  hosting: uploading new files [0/55] (0%) 
+[debug] [2026-05-21T19:57:39.007Z] [uploadQueue] Retrying task 4ffd1574482c0e58336ebddcc660da869d3ede47ac8fb06bb38b6950917d881a
+[debug] [2026-05-21T19:57:39.008Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:57:39.008Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:57:39.008Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/4ffd1574482c0e58336ebddcc660da869d3ede47ac8fb06bb38b6950917d881a [none]
+[debug] [2026-05-21T19:57:39.008Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/4ffd1574482c0e58336ebddcc660da869d3ede47ac8fb06bb38b6950917d881a [stream]
+[debug] [2026-05-21T19:57:39.068Z] [uploadQueue] Retrying task cb5e6e61bd494e1a8d393d3e0367cc6f850d31be4f4a1117eeb62a7bd52ed338
+[debug] [2026-05-21T19:57:39.068Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:57:39.068Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:57:39.068Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/cb5e6e61bd494e1a8d393d3e0367cc6f850d31be4f4a1117eeb62a7bd52ed338 [none]
+[debug] [2026-05-21T19:57:39.068Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/cb5e6e61bd494e1a8d393d3e0367cc6f850d31be4f4a1117eeb62a7bd52ed338 [stream]
+[info] i  hosting: uploading new files [0/55] (0%) 
+[debug] [2026-05-21T19:57:40.130Z] [uploadQueue] Retrying task b69add035e9c7c4fdfede9d981a9a32e362c2018de0ae7b98666b6dc6127bf34
+[debug] [2026-05-21T19:57:40.130Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:57:40.130Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:57:40.130Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/b69add035e9c7c4fdfede9d981a9a32e362c2018de0ae7b98666b6dc6127bf34 [none]
+[debug] [2026-05-21T19:57:40.130Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/b69add035e9c7c4fdfede9d981a9a32e362c2018de0ae7b98666b6dc6127bf34 [stream]
+[debug] [2026-05-21T19:57:41.189Z] [uploadQueue] Retrying task 5ccce288a055606728295f81493ad7677acec24692368720b420cfb9676938ab
+[debug] [2026-05-21T19:57:41.189Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:57:41.190Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:57:41.190Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/5ccce288a055606728295f81493ad7677acec24692368720b420cfb9676938ab [none]
+[debug] [2026-05-21T19:57:41.190Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/5ccce288a055606728295f81493ad7677acec24692368720b420cfb9676938ab [stream]
+[debug] [2026-05-21T19:57:41.971Z] [uploadQueue] Retrying task d049f865875dd63e8db5a521ad19c3c29b0fc457d5ed2c302be84118d9162566
+[debug] [2026-05-21T19:57:41.971Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:57:41.971Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:57:41.971Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/d049f865875dd63e8db5a521ad19c3c29b0fc457d5ed2c302be84118d9162566 [none]
+[debug] [2026-05-21T19:57:41.971Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/d049f865875dd63e8db5a521ad19c3c29b0fc457d5ed2c302be84118d9162566 [stream]
+[info] i  hosting: uploading new files [0/55] (0%) 
+[info] i  hosting: uploading new files [0/55] (0%) 
+[info] i  hosting: uploading new files [0/55] (0%) 
+[debug] [2026-05-21T19:57:47.648Z] [uploadQueue] Retrying task 9ed9ceb85d326a2eb45c79d5e197374b68d63df5dc4cb00f3748d5cd5f11c8e8
+[debug] [2026-05-21T19:57:47.649Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:57:47.649Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:57:47.649Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/9ed9ceb85d326a2eb45c79d5e197374b68d63df5dc4cb00f3748d5cd5f11c8e8 [none]
+[debug] [2026-05-21T19:57:47.649Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/9ed9ceb85d326a2eb45c79d5e197374b68d63df5dc4cb00f3748d5cd5f11c8e8 [stream]
+[info] i  hosting: uploading new files [0/55] (0%) 
+[info] i  hosting: uploading new files [0/55] (0%) 
+[debug] [2026-05-21T19:57:50.248Z] [uploadQueue] Retrying task d36a83afa9ff089856e280b30e21452a192d80c65d92c4cc0548647030df8a40
+[debug] [2026-05-21T19:57:50.249Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:57:50.249Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:57:50.249Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/d36a83afa9ff089856e280b30e21452a192d80c65d92c4cc0548647030df8a40 [none]
+[debug] [2026-05-21T19:57:50.249Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/d36a83afa9ff089856e280b30e21452a192d80c65d92c4cc0548647030df8a40 [stream]
+[debug] [2026-05-21T19:57:50.669Z] [uploadQueue] Retrying task c4b35a3d3c4bb61b592e76a64074a2c443bb06461620b6acba0adf755caa9134
+[debug] [2026-05-21T19:57:50.669Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:57:50.669Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:57:50.669Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/c4b35a3d3c4bb61b592e76a64074a2c443bb06461620b6acba0adf755caa9134 [none]
+[debug] [2026-05-21T19:57:50.669Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/c4b35a3d3c4bb61b592e76a64074a2c443bb06461620b6acba0adf755caa9134 [stream]
+[debug] [2026-05-21T19:57:51.568Z] [uploadQueue] Retrying task 12ad826df730c958abc6246b9bea6ab019b2703325709025afd1114e6e1728ee
+[debug] [2026-05-21T19:57:51.568Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:57:51.568Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:57:51.568Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/12ad826df730c958abc6246b9bea6ab019b2703325709025afd1114e6e1728ee [none]
+[debug] [2026-05-21T19:57:51.568Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/12ad826df730c958abc6246b9bea6ab019b2703325709025afd1114e6e1728ee [stream]
+[info] i  hosting: uploading new files [0/55] (0%) 
+[info] i  hosting: uploading new files [0/55] (0%) 
+[debug] [2026-05-21T19:57:54.071Z] [uploadQueue] Retrying task 6f8647b6bb07b4651ef4e3478aa3098d05dd4d1bf8892c9520ccfaa81d2fcc86
+[debug] [2026-05-21T19:57:54.071Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:57:54.071Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:57:54.071Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/6f8647b6bb07b4651ef4e3478aa3098d05dd4d1bf8892c9520ccfaa81d2fcc86 [none]
+[debug] [2026-05-21T19:57:54.071Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/6f8647b6bb07b4651ef4e3478aa3098d05dd4d1bf8892c9520ccfaa81d2fcc86 [stream]
+[info] i  hosting: uploading new files [0/55] (0%) 
+[debug] [2026-05-21T19:57:56.348Z] [uploadQueue] Retrying task abbee3c155a5c0cddcc19820c51baa148db810e85f1fdfaaa81cb7017149dd63
+[debug] [2026-05-21T19:57:56.348Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:57:56.348Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:57:56.348Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/abbee3c155a5c0cddcc19820c51baa148db810e85f1fdfaaa81cb7017149dd63 [none]
+[debug] [2026-05-21T19:57:56.348Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/abbee3c155a5c0cddcc19820c51baa148db810e85f1fdfaaa81cb7017149dd63 [stream]
+[debug] [2026-05-21T19:57:56.649Z] [uploadQueue] Retrying task b8b4d38f5ec422252c278039ae7b0e4364ea0849cb444b4b08c66f68404fa2b2
+[debug] [2026-05-21T19:57:56.649Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:57:56.650Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:57:56.650Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/b8b4d38f5ec422252c278039ae7b0e4364ea0849cb444b4b08c66f68404fa2b2 [none]
+[debug] [2026-05-21T19:57:56.650Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/b8b4d38f5ec422252c278039ae7b0e4364ea0849cb444b4b08c66f68404fa2b2 [stream]
+[debug] [2026-05-21T19:57:57.969Z] [uploadQueue] Retrying task 715aa29377ca4ab4a30f0700bedfa80e05c2df4a682c7abe9ace61d1060d9faf
+[debug] [2026-05-21T19:57:57.969Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:57:57.969Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:57:57.969Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/715aa29377ca4ab4a30f0700bedfa80e05c2df4a682c7abe9ace61d1060d9faf [none]
+[debug] [2026-05-21T19:57:57.969Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/715aa29377ca4ab4a30f0700bedfa80e05c2df4a682c7abe9ace61d1060d9faf [stream]
+[info] i  hosting: uploading new files [0/55] (0%) 
+[info] i  hosting: uploading new files [0/55] (0%) 
+[debug] [2026-05-21T19:58:00.728Z] [uploadQueue] Retrying task 00ccf07f060ac6dadbcd74bcd2dc105afa5251613c07742c063e98844a36f398
+[debug] [2026-05-21T19:58:00.728Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:58:00.728Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:58:00.729Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/00ccf07f060ac6dadbcd74bcd2dc105afa5251613c07742c063e98844a36f398 [none]
+[debug] [2026-05-21T19:58:00.729Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/00ccf07f060ac6dadbcd74bcd2dc105afa5251613c07742c063e98844a36f398 [stream]
+[info] i  hosting: uploading new files [0/55] (0%) 
+[debug] [2026-05-21T19:58:03.049Z] [uploadQueue] Retrying task 91cbb941b95e9760a538088c27b66f901e7219a9ae0b6f225413f480983a5128
+[debug] [2026-05-21T19:58:03.050Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:58:03.050Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:58:03.050Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/91cbb941b95e9760a538088c27b66f901e7219a9ae0b6f225413f480983a5128 [none]
+[debug] [2026-05-21T19:58:03.050Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/91cbb941b95e9760a538088c27b66f901e7219a9ae0b6f225413f480983a5128 [stream]
+[info] i  hosting: uploading new files [0/55] (0%) 
+[debug] [2026-05-21T19:58:04.733Z] [uploadQueue] Retrying task 2134b1fe4dce0fb2c7043e9795a321d4ecc4d3e9ab78185336f2a9877d88fda9
+[debug] [2026-05-21T19:58:04.733Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:58:04.733Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:58:04.733Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/2134b1fe4dce0fb2c7043e9795a321d4ecc4d3e9ab78185336f2a9877d88fda9 [none]
+[debug] [2026-05-21T19:58:04.733Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/2134b1fe4dce0fb2c7043e9795a321d4ecc4d3e9ab78185336f2a9877d88fda9 [stream]
+[info] i  hosting: uploading new files [0/55] (0%) 
+[debug] [2026-05-21T19:58:06.250Z] [uploadQueue] Retrying task 9fbcbc3c5f33cec3aaa259148631867c2be3f6b42f6f79053f36f519ff28d42c
+[debug] [2026-05-21T19:58:06.250Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:58:06.250Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:58:06.250Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/9fbcbc3c5f33cec3aaa259148631867c2be3f6b42f6f79053f36f519ff28d42c [none]
+[debug] [2026-05-21T19:58:06.250Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/9fbcbc3c5f33cec3aaa259148631867c2be3f6b42f6f79053f36f519ff28d42c [stream]
+[info] i  hosting: uploading new files [0/55] (0%) 
+[debug] [2026-05-21T19:58:08.710Z] [uploadQueue] Retrying task 3f0a9fe9ccabfe334c7b1925414e7da5bbb2c1b095f609761dfa27ccf19ad5ea
+[debug] [2026-05-21T19:58:08.710Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:58:08.710Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:58:08.710Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/3f0a9fe9ccabfe334c7b1925414e7da5bbb2c1b095f609761dfa27ccf19ad5ea [none]
+[debug] [2026-05-21T19:58:08.710Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/3f0a9fe9ccabfe334c7b1925414e7da5bbb2c1b095f609761dfa27ccf19ad5ea [stream]
+[info] i  hosting: uploading new files [0/55] (0%) 
+[debug] [2026-05-21T19:58:11.090Z] [uploadQueue] Retrying task e1825f47d29d39aaedbe0906c3ae766765a4ab785771cb669564c36add643c53
+[debug] [2026-05-21T19:58:11.091Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:58:11.091Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:58:11.091Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/e1825f47d29d39aaedbe0906c3ae766765a4ab785771cb669564c36add643c53 [none]
+[debug] [2026-05-21T19:58:11.091Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/e1825f47d29d39aaedbe0906c3ae766765a4ab785771cb669564c36add643c53 [stream]
+[debug] [2026-05-21T19:58:11.708Z] [uploadQueue] Retrying task feaa2edbbf4fe3524d47ddf365cd9daccb5c749d3b6f95da815ba9e551fdfb2a
+[debug] [2026-05-21T19:58:11.708Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:58:11.708Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:58:11.708Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/feaa2edbbf4fe3524d47ddf365cd9daccb5c749d3b6f95da815ba9e551fdfb2a [none]
+[debug] [2026-05-21T19:58:11.708Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/feaa2edbbf4fe3524d47ddf365cd9daccb5c749d3b6f95da815ba9e551fdfb2a [stream]
+[debug] [2026-05-21T19:58:11.748Z] [uploadQueue] Retrying task ec48b7af99b35a0f05fee75fb537359dfcd02541b5606bc9bffa14bc5770a001
+[debug] [2026-05-21T19:58:11.748Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:58:11.748Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:58:11.748Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/ec48b7af99b35a0f05fee75fb537359dfcd02541b5606bc9bffa14bc5770a001 [none]
+[debug] [2026-05-21T19:58:11.748Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/ec48b7af99b35a0f05fee75fb537359dfcd02541b5606bc9bffa14bc5770a001 [stream]
+[debug] [2026-05-21T19:58:11.928Z] [uploadQueue] Retrying task 2e4de7d80dd9d5b16b098b5445e113d1ea78919c9ded586a1ee6ec0de6238a0c
+[debug] [2026-05-21T19:58:11.928Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:58:11.928Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:58:11.928Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/2e4de7d80dd9d5b16b098b5445e113d1ea78919c9ded586a1ee6ec0de6238a0c [none]
+[debug] [2026-05-21T19:58:11.928Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/2e4de7d80dd9d5b16b098b5445e113d1ea78919c9ded586a1ee6ec0de6238a0c [stream]
+[info] i  hosting: uploading new files [0/55] (0%) 
+[debug] [2026-05-21T19:58:12.436Z] [uploadQueue] Retrying task e7c7b18ce9a84ec98da518ce5f97bd8045a44bfbe08e6f9dca04300b1eba7419
+[debug] [2026-05-21T19:58:12.436Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:58:12.436Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:58:12.436Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/e7c7b18ce9a84ec98da518ce5f97bd8045a44bfbe08e6f9dca04300b1eba7419 [none]
+[debug] [2026-05-21T19:58:12.436Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/e7c7b18ce9a84ec98da518ce5f97bd8045a44bfbe08e6f9dca04300b1eba7419 [stream]
+[debug] [2026-05-21T19:58:12.490Z] [uploadQueue] Retrying task 29957ee3001ea82e3812be9f546495200b470d1088e06ac3805ec0dca803b7fd
+[debug] [2026-05-21T19:58:12.490Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:58:12.490Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:58:12.490Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/29957ee3001ea82e3812be9f546495200b470d1088e06ac3805ec0dca803b7fd [none]
+[debug] [2026-05-21T19:58:12.490Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/29957ee3001ea82e3812be9f546495200b470d1088e06ac3805ec0dca803b7fd [stream]
+[debug] [2026-05-21T19:58:12.628Z] [uploadQueue] Retrying task 67cd7a380b9d1fdf448691088ecf4bb00226158bc351025e305c2ed82468eff2
+[debug] [2026-05-21T19:58:12.628Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:58:12.628Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:58:12.628Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/67cd7a380b9d1fdf448691088ecf4bb00226158bc351025e305c2ed82468eff2 [none]
+[debug] [2026-05-21T19:58:12.628Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/67cd7a380b9d1fdf448691088ecf4bb00226158bc351025e305c2ed82468eff2 [stream]
+[info] i  hosting: uploading new files [0/55] (0%) 
+[debug] [2026-05-21T19:58:14.768Z] [uploadQueue] Retrying task cfd6a6bba24050d9c0ec899cdec2c0276c8d444a18f6d7fab603cf2bd5d90e55
+[debug] [2026-05-21T19:58:14.769Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:58:14.769Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:58:14.769Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/cfd6a6bba24050d9c0ec899cdec2c0276c8d444a18f6d7fab603cf2bd5d90e55 [none]
+[debug] [2026-05-21T19:58:14.769Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/cfd6a6bba24050d9c0ec899cdec2c0276c8d444a18f6d7fab603cf2bd5d90e55 [stream]
+[info] i  hosting: uploading new files [0/55] (0%) 
+[debug] [2026-05-21T19:58:16.650Z] [uploadQueue] Retrying task 0c8effe546bec948f33312492eacc9c51e1b82758826d4d45724e35273973bb7
+[debug] [2026-05-21T19:58:16.650Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:58:16.650Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:58:16.650Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/0c8effe546bec948f33312492eacc9c51e1b82758826d4d45724e35273973bb7 [none]
+[debug] [2026-05-21T19:58:16.650Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/0c8effe546bec948f33312492eacc9c51e1b82758826d4d45724e35273973bb7 [stream]
+[debug] [2026-05-21T19:58:16.989Z] [uploadQueue] Retrying task 73adafefe9c9a6451cca27dc28c719a192c53be3852e2d16187ad15260fa4bf1
+[debug] [2026-05-21T19:58:16.989Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:58:16.989Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:58:16.989Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/73adafefe9c9a6451cca27dc28c719a192c53be3852e2d16187ad15260fa4bf1 [none]
+[debug] [2026-05-21T19:58:16.989Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/73adafefe9c9a6451cca27dc28c719a192c53be3852e2d16187ad15260fa4bf1 [stream]
+[debug] [2026-05-21T19:58:17.586Z] [uploadQueue] Retrying task e5b06ad600f55ebf3aed623f38d80a4e678403374bd3598c34b89187b1a061a7
+[debug] [2026-05-21T19:58:17.586Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:58:17.586Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:58:17.586Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/e5b06ad600f55ebf3aed623f38d80a4e678403374bd3598c34b89187b1a061a7 [none]
+[debug] [2026-05-21T19:58:17.586Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/e5b06ad600f55ebf3aed623f38d80a4e678403374bd3598c34b89187b1a061a7 [stream]
+[debug] [2026-05-21T19:58:17.828Z] [uploadQueue] Retrying task 2ec63752914d6eb55844aa14703cb595f0885027ee9a36f2f5f7d645de0ca858
+[debug] [2026-05-21T19:58:17.828Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:58:17.828Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:58:17.828Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/2ec63752914d6eb55844aa14703cb595f0885027ee9a36f2f5f7d645de0ca858 [none]
+[debug] [2026-05-21T19:58:17.828Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/2ec63752914d6eb55844aa14703cb595f0885027ee9a36f2f5f7d645de0ca858 [stream]
+[debug] [2026-05-21T19:58:17.988Z] [uploadQueue] Retrying task 202a7fdb5610defca398c60114134bdd5a138470cabbe1c4b58eb11ca35c3133
+[debug] [2026-05-21T19:58:17.988Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:58:17.988Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:58:17.988Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/202a7fdb5610defca398c60114134bdd5a138470cabbe1c4b58eb11ca35c3133 [none]
+[debug] [2026-05-21T19:58:17.988Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/202a7fdb5610defca398c60114134bdd5a138470cabbe1c4b58eb11ca35c3133 [stream]
+[info] i  hosting: uploading new files [0/55] (0%) 
+[debug] [2026-05-21T19:58:19.945Z] [uploadQueue] Retrying task 8b8a12d746c846ee8aae12e8e354992ab574596ef704dd3282b0986b6f06410d
+[debug] [2026-05-21T19:58:19.946Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:58:19.946Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:58:19.946Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/8b8a12d746c846ee8aae12e8e354992ab574596ef704dd3282b0986b6f06410d [none]
+[debug] [2026-05-21T19:58:19.946Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/8b8a12d746c846ee8aae12e8e354992ab574596ef704dd3282b0986b6f06410d [stream]
+[info] i  hosting: uploading new files [0/55] (0%) 
+[info] i  hosting: uploading new files [0/55] (0%) 
+[info] i  hosting: uploading new files [0/55] (0%) 
+[debug] [2026-05-21T19:58:24.491Z] [uploadQueue] Retrying task f328f9dc0ffead064d271642a4e5a30c000003abf9fe1a0b8593ba7d94f4a70f
+[debug] [2026-05-21T19:58:24.491Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:58:24.491Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:58:24.491Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/f328f9dc0ffead064d271642a4e5a30c000003abf9fe1a0b8593ba7d94f4a70f [none]
+[debug] [2026-05-21T19:58:24.491Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/f328f9dc0ffead064d271642a4e5a30c000003abf9fe1a0b8593ba7d94f4a70f [stream]
+[info] i  hosting: uploading new files [0/55] (0%) 
+[debug] [2026-05-21T19:58:27.109Z] [uploadQueue] Retrying task 02e24cd2cbeda7510b402ea28a138ae10a59f79941c210095da8ff4a6c53d544
+[debug] [2026-05-21T19:58:27.109Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:58:27.109Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:58:27.109Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/02e24cd2cbeda7510b402ea28a138ae10a59f79941c210095da8ff4a6c53d544 [none]
+[debug] [2026-05-21T19:58:27.109Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/02e24cd2cbeda7510b402ea28a138ae10a59f79941c210095da8ff4a6c53d544 [stream]
+[debug] [2026-05-21T19:58:27.489Z] [uploadQueue] Retrying task e604b0ab79e396180c38ac72f55c07aacaf65bcf6530b106c386274024aa4fad
+[debug] [2026-05-21T19:58:27.489Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:58:27.489Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:58:27.489Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/e604b0ab79e396180c38ac72f55c07aacaf65bcf6530b106c386274024aa4fad [none]
+[debug] [2026-05-21T19:58:27.489Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/e604b0ab79e396180c38ac72f55c07aacaf65bcf6530b106c386274024aa4fad [stream]
+[debug] [2026-05-21T19:58:27.531Z] [uploadQueue] Retrying task c1262d33039b0af2f2fead01612d74ff14dc0ee2b68aa4dfb87d3d7305d24919
+[debug] [2026-05-21T19:58:27.531Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:58:27.531Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:58:27.531Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/c1262d33039b0af2f2fead01612d74ff14dc0ee2b68aa4dfb87d3d7305d24919 [none]
+[debug] [2026-05-21T19:58:27.531Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/c1262d33039b0af2f2fead01612d74ff14dc0ee2b68aa4dfb87d3d7305d24919 [stream]
+[info] i  hosting: uploading new files [0/55] (0%) 
+[info] i  hosting: uploading new files [0/55] (0%) 
+[debug] [2026-05-21T19:58:30.788Z] [uploadQueue] Retrying task d28ad1554e4fdbc1aa2af12f62791aa129f49b6fa636b9de704ef031b4cc17e2
+[debug] [2026-05-21T19:58:30.789Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:58:30.789Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:58:30.789Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/d28ad1554e4fdbc1aa2af12f62791aa129f49b6fa636b9de704ef031b4cc17e2 [none]
+[debug] [2026-05-21T19:58:30.789Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/d28ad1554e4fdbc1aa2af12f62791aa129f49b6fa636b9de704ef031b4cc17e2 [stream]
+[debug] [2026-05-21T19:58:30.827Z] [uploadQueue] Retrying task 8792e071df7fd170874c228298dde8a9cdd8affb804aa49f0bbb59e75431c1f7
+[debug] [2026-05-21T19:58:30.827Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:58:30.827Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:58:30.827Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/8792e071df7fd170874c228298dde8a9cdd8affb804aa49f0bbb59e75431c1f7 [none]
+[debug] [2026-05-21T19:58:30.827Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/8792e071df7fd170874c228298dde8a9cdd8affb804aa49f0bbb59e75431c1f7 [stream]
+[debug] [2026-05-21T19:58:30.949Z] [uploadQueue] Retrying task 761fcdb3c8f12e8b90bb9d806c72cfee044a4b2f75b874fbe6201578c682a7c4
+[debug] [2026-05-21T19:58:30.949Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:58:30.949Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:58:30.949Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/761fcdb3c8f12e8b90bb9d806c72cfee044a4b2f75b874fbe6201578c682a7c4 [none]
+[debug] [2026-05-21T19:58:30.949Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/761fcdb3c8f12e8b90bb9d806c72cfee044a4b2f75b874fbe6201578c682a7c4 [stream]
+[info] i  hosting: uploading new files [0/55] (0%) 
+[debug] [2026-05-21T19:58:32.450Z] [uploadQueue] Retrying task 3140cf550fceb45a8a9ebdab7eb84b3b2ac1cefb43c110c1638f990640d9c04a
+[debug] [2026-05-21T19:58:32.450Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:58:32.450Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:58:32.450Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/3140cf550fceb45a8a9ebdab7eb84b3b2ac1cefb43c110c1638f990640d9c04a [none]
+[debug] [2026-05-21T19:58:32.450Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/3140cf550fceb45a8a9ebdab7eb84b3b2ac1cefb43c110c1638f990640d9c04a [stream]
+[info] i  hosting: uploading new files [0/55] (0%) 
+[debug] [2026-05-21T19:58:34.172Z] [uploadQueue] Retrying task 88419db6f5bff18d984d5752646f8437342fe1ab7ee5c1545076027c20b58c48
+[debug] [2026-05-21T19:58:34.172Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:58:34.172Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:58:34.172Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/88419db6f5bff18d984d5752646f8437342fe1ab7ee5c1545076027c20b58c48 [none]
+[debug] [2026-05-21T19:58:34.172Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/88419db6f5bff18d984d5752646f8437342fe1ab7ee5c1545076027c20b58c48 [stream]
+[info] i  hosting: uploading new files [0/55] (0%) 
+[info] i  hosting: uploading new files [0/55] (0%) 
+[debug] [2026-05-21T19:58:38.330Z] [uploadQueue] Retrying task 9b9396a872132a46d884d0f117f4f8a4cbdf10c6993c109e35fc1a214952970e
+[debug] [2026-05-21T19:58:38.330Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:58:38.330Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:58:38.330Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/9b9396a872132a46d884d0f117f4f8a4cbdf10c6993c109e35fc1a214952970e [none]
+[debug] [2026-05-21T19:58:38.330Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/9b9396a872132a46d884d0f117f4f8a4cbdf10c6993c109e35fc1a214952970e [stream]
+[info] i  hosting: uploading new files [0/55] (0%) 
+[info] i  hosting: uploading new files [0/55] (0%) 
+[debug] [2026-05-21T19:58:43.867Z] [uploadQueue] Retrying task 07f1c5e112d901bfafe99b9c9dec75ee24efa8dfe38bea4b51fdd4f677ea27a0
+[debug] [2026-05-21T19:58:43.867Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:58:43.867Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:58:43.867Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/07f1c5e112d901bfafe99b9c9dec75ee24efa8dfe38bea4b51fdd4f677ea27a0 [none]
+[debug] [2026-05-21T19:58:43.867Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/07f1c5e112d901bfafe99b9c9dec75ee24efa8dfe38bea4b51fdd4f677ea27a0 [stream]
+[info] i  hosting: uploading new files [0/55] (0%) 
+[debug] [2026-05-21T19:58:44.969Z] [uploadQueue] Retrying task 9ec76917e6bed162229edc54cf869d176b6bc2bab731160f64c622d2c72cb479
+[debug] [2026-05-21T19:58:44.969Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:58:44.969Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:58:44.969Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/9ec76917e6bed162229edc54cf869d176b6bc2bab731160f64c622d2c72cb479 [none]
+[debug] [2026-05-21T19:58:44.969Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/9ec76917e6bed162229edc54cf869d176b6bc2bab731160f64c622d2c72cb479 [stream]
+[info] i  hosting: uploading new files [0/55] (0%) 
+[debug] [2026-05-21T19:58:46.851Z] [uploadQueue] Retrying task 5bfd9958a6bc493f9c113ceb8e60792cbaea1ada9ac33b029c9ac91a7c4182fd
+[debug] [2026-05-21T19:58:46.851Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:58:46.851Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:58:46.851Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/5bfd9958a6bc493f9c113ceb8e60792cbaea1ada9ac33b029c9ac91a7c4182fd [none]
+[debug] [2026-05-21T19:58:46.851Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/5bfd9958a6bc493f9c113ceb8e60792cbaea1ada9ac33b029c9ac91a7c4182fd [stream]
+[debug] [2026-05-21T19:58:47.451Z] [uploadQueue] Retrying task c009bf60bbebfbcb312a0629d7db3bfe35b87ffd968550ef717ab29fac4bd9fe
+[debug] [2026-05-21T19:58:47.451Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:58:47.451Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:58:47.451Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/c009bf60bbebfbcb312a0629d7db3bfe35b87ffd968550ef717ab29fac4bd9fe [none]
+[debug] [2026-05-21T19:58:47.451Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/c009bf60bbebfbcb312a0629d7db3bfe35b87ffd968550ef717ab29fac4bd9fe [stream]
+[info] i  hosting: uploading new files [0/55] (0%) 
+[debug] [2026-05-21T19:58:49.894Z] [uploadQueue] Retrying task 9d2c6212844b61fcf7916d9a652abb6eda07c9948164a0af30c7da46889b056b
+[debug] [2026-05-21T19:58:49.895Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:58:49.895Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:58:49.895Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/9d2c6212844b61fcf7916d9a652abb6eda07c9948164a0af30c7da46889b056b [none]
+[debug] [2026-05-21T19:58:49.895Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/9d2c6212844b61fcf7916d9a652abb6eda07c9948164a0af30c7da46889b056b [stream]
+[info] i  hosting: uploading new files [0/55] (0%) 
+[debug] [2026-05-21T19:58:50.629Z] [uploadQueue] Retrying task ccf41a60a0bb4a541a9f857ea8ce6f207445abeca3be201ef2e0ebeb85fbba14
+[debug] [2026-05-21T19:58:50.630Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:58:50.630Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:58:50.630Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/ccf41a60a0bb4a541a9f857ea8ce6f207445abeca3be201ef2e0ebeb85fbba14 [none]
+[debug] [2026-05-21T19:58:50.630Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/ccf41a60a0bb4a541a9f857ea8ce6f207445abeca3be201ef2e0ebeb85fbba14 [stream]
+[info] i  hosting: uploading new files [0/55] (0%) 
+[info] i  hosting: uploading new files [0/55] (0%) 
+[debug] [2026-05-21T19:58:55.050Z] [uploadQueue] Retrying task 10b3dbe2d637c65e4ef82ca0c7820107c579d0c57024de99ad302f56fb0a6a8e
+[debug] [2026-05-21T19:58:55.050Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:58:55.050Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:58:55.050Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/10b3dbe2d637c65e4ef82ca0c7820107c579d0c57024de99ad302f56fb0a6a8e [none]
+[debug] [2026-05-21T19:58:55.051Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/10b3dbe2d637c65e4ef82ca0c7820107c579d0c57024de99ad302f56fb0a6a8e [stream]
+[debug] [2026-05-21T19:58:55.979Z] [uploadQueue] Retrying task e7c7b18ce9a84ec98da518ce5f97bd8045a44bfbe08e6f9dca04300b1eba7419
+[debug] [2026-05-21T19:58:55.979Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:58:55.979Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:58:55.979Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/e7c7b18ce9a84ec98da518ce5f97bd8045a44bfbe08e6f9dca04300b1eba7419 [none]
+[debug] [2026-05-21T19:58:55.979Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/e7c7b18ce9a84ec98da518ce5f97bd8045a44bfbe08e6f9dca04300b1eba7419 [stream]
+[info] i  hosting: uploading new files [0/55] (0%) 
+[debug] [2026-05-21T19:58:57.891Z] [uploadQueue] Retrying task af54ff258c38856c49ad878182872c358a3b7bcc5306cb814dbde92c811446d3
+[debug] [2026-05-21T19:58:57.892Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:58:57.892Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:58:57.892Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/af54ff258c38856c49ad878182872c358a3b7bcc5306cb814dbde92c811446d3 [none]
+[debug] [2026-05-21T19:58:57.892Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/af54ff258c38856c49ad878182872c358a3b7bcc5306cb814dbde92c811446d3 [stream]
+[info] i  hosting: uploading new files [0/55] (0%) 
+[debug] [2026-05-21T19:58:59.910Z] [uploadQueue] Retrying task f3072473126bc33210ce7004efca852f98c05c2bfc4411096b27818c98801d56
+[debug] [2026-05-21T19:58:59.910Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:58:59.910Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:58:59.910Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/f3072473126bc33210ce7004efca852f98c05c2bfc4411096b27818c98801d56 [none]
+[debug] [2026-05-21T19:58:59.910Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/f3072473126bc33210ce7004efca852f98c05c2bfc4411096b27818c98801d56 [stream]
+[info] i  hosting: uploading new files [0/55] (0%) 
+[info] i  hosting: uploading new files [0/55] (0%) 
+[debug] [2026-05-21T19:59:02.132Z] [uploadQueue] Retrying task 724a9e46c4ccda7af1cfe35bc9b808854184a6ec490c7a26b08fbe48835e5912
+[debug] [2026-05-21T19:59:02.132Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:59:02.132Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:59:02.132Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/724a9e46c4ccda7af1cfe35bc9b808854184a6ec490c7a26b08fbe48835e5912 [none]
+[debug] [2026-05-21T19:59:02.132Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/724a9e46c4ccda7af1cfe35bc9b808854184a6ec490c7a26b08fbe48835e5912 [stream]
+[debug] [2026-05-21T19:59:03.795Z] [uploadQueue] Retrying task 2134b1fe4dce0fb2c7043e9795a321d4ecc4d3e9ab78185336f2a9877d88fda9
+[debug] [2026-05-21T19:59:03.795Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:59:03.795Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:59:03.795Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/2134b1fe4dce0fb2c7043e9795a321d4ecc4d3e9ab78185336f2a9877d88fda9 [none]
+[debug] [2026-05-21T19:59:03.795Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/2134b1fe4dce0fb2c7043e9795a321d4ecc4d3e9ab78185336f2a9877d88fda9 [stream]
+[info] i  hosting: uploading new files [0/55] (0%) 
+[info] i  hosting: uploading new files [0/55] (0%) 
+[debug] [2026-05-21T19:59:07.170Z] [uploadQueue] Retrying task 7b84d177f32e45949f51ba0004fe6f1331e032128b43357d4149aa7042a34696
+[debug] [2026-05-21T19:59:07.170Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:59:07.170Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:59:07.170Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/7b84d177f32e45949f51ba0004fe6f1331e032128b43357d4149aa7042a34696 [none]
+[debug] [2026-05-21T19:59:07.171Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/7b84d177f32e45949f51ba0004fe6f1331e032128b43357d4149aa7042a34696 [stream]
+[debug] [2026-05-21T19:59:07.651Z] [uploadQueue] Retrying task cdcf2510067a94f5fa359d0e66f2cfff4b5ead509a4a73816a5fcf9299681674
+[debug] [2026-05-21T19:59:07.651Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:59:07.651Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:59:07.651Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/cdcf2510067a94f5fa359d0e66f2cfff4b5ead509a4a73816a5fcf9299681674 [none]
+[debug] [2026-05-21T19:59:07.651Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/cdcf2510067a94f5fa359d0e66f2cfff4b5ead509a4a73816a5fcf9299681674 [stream]
+[info] i  hosting: uploading new files [0/55] (0%) 
+[debug] [2026-05-21T19:59:09.810Z] [uploadQueue] Retrying task 4ffd1574482c0e58336ebddcc660da869d3ede47ac8fb06bb38b6950917d881a
+[debug] [2026-05-21T19:59:09.810Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:59:09.810Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:59:09.810Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/4ffd1574482c0e58336ebddcc660da869d3ede47ac8fb06bb38b6950917d881a [none]
+[debug] [2026-05-21T19:59:09.810Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/4ffd1574482c0e58336ebddcc660da869d3ede47ac8fb06bb38b6950917d881a [stream]
+[debug] [2026-05-21T19:59:09.932Z] [uploadQueue] Retrying task cb5e6e61bd494e1a8d393d3e0367cc6f850d31be4f4a1117eeb62a7bd52ed338
+[debug] [2026-05-21T19:59:09.932Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:59:09.932Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:59:09.932Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/cb5e6e61bd494e1a8d393d3e0367cc6f850d31be4f4a1117eeb62a7bd52ed338 [none]
+[debug] [2026-05-21T19:59:09.932Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/cb5e6e61bd494e1a8d393d3e0367cc6f850d31be4f4a1117eeb62a7bd52ed338 [stream]
+[info] i  hosting: uploading new files [0/55] (0%) 
+[info] i  hosting: uploading new files [0/55] (0%) 
+[debug] [2026-05-21T19:59:12.055Z] [uploadQueue] Retrying task b69add035e9c7c4fdfede9d981a9a32e362c2018de0ae7b98666b6dc6127bf34
+[debug] [2026-05-21T19:59:12.055Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:59:12.055Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:59:12.055Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/b69add035e9c7c4fdfede9d981a9a32e362c2018de0ae7b98666b6dc6127bf34 [none]
+[debug] [2026-05-21T19:59:12.055Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/b69add035e9c7c4fdfede9d981a9a32e362c2018de0ae7b98666b6dc6127bf34 [stream]
+[info] i  hosting: uploading new files [0/55] (0%) 
+[debug] [2026-05-21T19:59:14.173Z] [uploadQueue] Retrying task 5ccce288a055606728295f81493ad7677acec24692368720b420cfb9676938ab
+[debug] [2026-05-21T19:59:14.173Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:59:14.173Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:59:14.173Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/5ccce288a055606728295f81493ad7677acec24692368720b420cfb9676938ab [none]
+[debug] [2026-05-21T19:59:14.173Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/5ccce288a055606728295f81493ad7677acec24692368720b420cfb9676938ab [stream]
+[debug] [2026-05-21T19:59:15.733Z] [uploadQueue] Retrying task d049f865875dd63e8db5a521ad19c3c29b0fc457d5ed2c302be84118d9162566
+[debug] [2026-05-21T19:59:15.733Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:59:15.733Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:59:15.733Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/d049f865875dd63e8db5a521ad19c3c29b0fc457d5ed2c302be84118d9162566 [none]
+[debug] [2026-05-21T19:59:15.733Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/d049f865875dd63e8db5a521ad19c3c29b0fc457d5ed2c302be84118d9162566 [stream]
+[info] i  hosting: uploading new files [0/55] (0%) 
+[info] i  hosting: uploading new files [0/55] (0%) 
+[info] i  hosting: uploading new files [0/55] (0%) 
+[info] i  hosting: uploading new files [0/55] (0%) 
+[info] i  hosting: uploading new files [0/55] (0%) 
+[info] i  hosting: uploading new files [0/55] (0%) 
+[debug] [2026-05-21T19:59:27.091Z] [uploadQueue] Retrying task 9ed9ceb85d326a2eb45c79d5e197374b68d63df5dc4cb00f3748d5cd5f11c8e8
+[debug] [2026-05-21T19:59:27.091Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:59:27.091Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:59:27.091Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/9ed9ceb85d326a2eb45c79d5e197374b68d63df5dc4cb00f3748d5cd5f11c8e8 [none]
+[debug] [2026-05-21T19:59:27.091Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/9ed9ceb85d326a2eb45c79d5e197374b68d63df5dc4cb00f3748d5cd5f11c8e8 [stream]
+[info] i  hosting: uploading new files [0/55] (0%) 
+[info] i  hosting: uploading new files [0/55] (0%) 
+[info] i  hosting: uploading new files [0/55] (0%) 
+[debug] [2026-05-21T19:59:32.290Z] [uploadQueue] Retrying task d36a83afa9ff089856e280b30e21452a192d80c65d92c4cc0548647030df8a40
+[debug] [2026-05-21T19:59:32.290Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:59:32.290Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:59:32.290Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/d36a83afa9ff089856e280b30e21452a192d80c65d92c4cc0548647030df8a40 [none]
+[debug] [2026-05-21T19:59:32.290Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/d36a83afa9ff089856e280b30e21452a192d80c65d92c4cc0548647030df8a40 [stream]
+[debug] [2026-05-21T19:59:33.131Z] [uploadQueue] Retrying task c4b35a3d3c4bb61b592e76a64074a2c443bb06461620b6acba0adf755caa9134
+[debug] [2026-05-21T19:59:33.131Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:59:33.131Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:59:33.131Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/c4b35a3d3c4bb61b592e76a64074a2c443bb06461620b6acba0adf755caa9134 [none]
+[debug] [2026-05-21T19:59:33.131Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/c4b35a3d3c4bb61b592e76a64074a2c443bb06461620b6acba0adf755caa9134 [stream]
+[info] i  hosting: uploading new files [0/55] (0%) 
+[debug] [2026-05-21T19:59:34.929Z] [uploadQueue] Retrying task 12ad826df730c958abc6246b9bea6ab019b2703325709025afd1114e6e1728ee
+[debug] [2026-05-21T19:59:34.929Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:59:34.929Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:59:34.929Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/12ad826df730c958abc6246b9bea6ab019b2703325709025afd1114e6e1728ee [none]
+[debug] [2026-05-21T19:59:34.929Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/12ad826df730c958abc6246b9bea6ab019b2703325709025afd1114e6e1728ee [stream]
+[info] i  hosting: uploading new files [0/55] (0%) 
+[info] i  hosting: uploading new files [0/55] (0%) 
+[debug] [2026-05-21T19:59:39.935Z] [uploadQueue] Retrying task 6f8647b6bb07b4651ef4e3478aa3098d05dd4d1bf8892c9520ccfaa81d2fcc86
+[debug] [2026-05-21T19:59:39.935Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:59:39.935Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:59:39.935Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/6f8647b6bb07b4651ef4e3478aa3098d05dd4d1bf8892c9520ccfaa81d2fcc86 [none]
+[debug] [2026-05-21T19:59:39.935Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/6f8647b6bb07b4651ef4e3478aa3098d05dd4d1bf8892c9520ccfaa81d2fcc86 [stream]
+[info] i  hosting: uploading new files [0/55] (0%) 
+[info] i  hosting: uploading new files [0/55] (0%) 
+[debug] [2026-05-21T19:59:42.721Z] [uploadQueue] Retrying task e7c7b18ce9a84ec98da518ce5f97bd8045a44bfbe08e6f9dca04300b1eba7419
+[debug] [2026-05-21T19:59:42.721Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:59:42.721Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:59:42.721Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/e7c7b18ce9a84ec98da518ce5f97bd8045a44bfbe08e6f9dca04300b1eba7419 [none]
+[debug] [2026-05-21T19:59:42.721Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/e7c7b18ce9a84ec98da518ce5f97bd8045a44bfbe08e6f9dca04300b1eba7419 [stream]
+[info] i  hosting: uploading new files [0/55] (0%) 
+[debug] [2026-05-21T19:59:44.490Z] [uploadQueue] Retrying task abbee3c155a5c0cddcc19820c51baa148db810e85f1fdfaaa81cb7017149dd63
+[debug] [2026-05-21T19:59:44.490Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:59:44.490Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:59:44.490Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/abbee3c155a5c0cddcc19820c51baa148db810e85f1fdfaaa81cb7017149dd63 [none]
+[debug] [2026-05-21T19:59:44.490Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/abbee3c155a5c0cddcc19820c51baa148db810e85f1fdfaaa81cb7017149dd63 [stream]
+[debug] [2026-05-21T19:59:45.092Z] [uploadQueue] Retrying task b8b4d38f5ec422252c278039ae7b0e4364ea0849cb444b4b08c66f68404fa2b2
+[debug] [2026-05-21T19:59:45.092Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:59:45.092Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:59:45.092Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/b8b4d38f5ec422252c278039ae7b0e4364ea0849cb444b4b08c66f68404fa2b2 [none]
+[debug] [2026-05-21T19:59:45.092Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/b8b4d38f5ec422252c278039ae7b0e4364ea0849cb444b4b08c66f68404fa2b2 [stream]
+[debug] [2026-05-21T19:59:45.373Z] [uploadQueue] Retrying task 3140cf550fceb45a8a9ebdab7eb84b3b2ac1cefb43c110c1638f990640d9c04a
+[debug] [2026-05-21T19:59:45.373Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:59:45.373Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:59:45.373Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/3140cf550fceb45a8a9ebdab7eb84b3b2ac1cefb43c110c1638f990640d9c04a [none]
+[debug] [2026-05-21T19:59:45.373Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/3140cf550fceb45a8a9ebdab7eb84b3b2ac1cefb43c110c1638f990640d9c04a [stream]
+[info] i  hosting: uploading new files [0/55] (0%) 
+[debug] [2026-05-21T19:59:47.731Z] [uploadQueue] Retrying task 715aa29377ca4ab4a30f0700bedfa80e05c2df4a682c7abe9ace61d1060d9faf
+[debug] [2026-05-21T19:59:47.732Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:59:47.732Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:59:47.732Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/715aa29377ca4ab4a30f0700bedfa80e05c2df4a682c7abe9ace61d1060d9faf [none]
+[debug] [2026-05-21T19:59:47.732Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/715aa29377ca4ab4a30f0700bedfa80e05c2df4a682c7abe9ace61d1060d9faf [stream]
+[debug] [2026-05-21T19:59:47.952Z] [uploadQueue] Retrying task 88419db6f5bff18d984d5752646f8437342fe1ab7ee5c1545076027c20b58c48
+[debug] [2026-05-21T19:59:47.952Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:59:47.952Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:59:47.952Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/88419db6f5bff18d984d5752646f8437342fe1ab7ee5c1545076027c20b58c48 [none]
+[debug] [2026-05-21T19:59:47.952Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/88419db6f5bff18d984d5752646f8437342fe1ab7ee5c1545076027c20b58c48 [stream]
+[info] i  hosting: uploading new files [0/55] (0%) 
+[info] i  hosting: uploading new files [0/55] (0%) 
+[info] i  hosting: uploading new files [0/55] (0%) 
+[debug] [2026-05-21T19:59:53.251Z] [uploadQueue] Retrying task 00ccf07f060ac6dadbcd74bcd2dc105afa5251613c07742c063e98844a36f398
+[debug] [2026-05-21T19:59:53.251Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:59:53.251Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:59:53.251Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/00ccf07f060ac6dadbcd74bcd2dc105afa5251613c07742c063e98844a36f398 [none]
+[debug] [2026-05-21T19:59:53.251Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/00ccf07f060ac6dadbcd74bcd2dc105afa5251613c07742c063e98844a36f398 [stream]
+[info] i  hosting: uploading new files [0/55] (0%) 
+[debug] [2026-05-21T19:59:54.193Z] [uploadQueue] Retrying task 9b9396a872132a46d884d0f117f4f8a4cbdf10c6993c109e35fc1a214952970e
+[debug] [2026-05-21T19:59:54.193Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:59:54.193Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:59:54.193Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/9b9396a872132a46d884d0f117f4f8a4cbdf10c6993c109e35fc1a214952970e [none]
+[debug] [2026-05-21T19:59:54.193Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/9b9396a872132a46d884d0f117f4f8a4cbdf10c6993c109e35fc1a214952970e [stream]
+[info] i  hosting: uploading new files [0/55] (0%) 
+[debug] [2026-05-21T19:59:57.890Z] [uploadQueue] Retrying task 91cbb941b95e9760a538088c27b66f901e7219a9ae0b6f225413f480983a5128
+[debug] [2026-05-21T19:59:57.890Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:59:57.890Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T19:59:57.890Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/91cbb941b95e9760a538088c27b66f901e7219a9ae0b6f225413f480983a5128 [none]
+[debug] [2026-05-21T19:59:57.890Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/91cbb941b95e9760a538088c27b66f901e7219a9ae0b6f225413f480983a5128 [stream]
+[info] i  hosting: uploading new files [0/55] (0%) 
+[info] i  hosting: uploading new files [0/55] (0%) 
+[info] i  hosting: uploading new files [0/55] (0%) 
+[info] i  hosting: uploading new files [0/55] (0%) 
+[debug] [2026-05-21T20:00:04.294Z] [uploadQueue] Retrying task 9fbcbc3c5f33cec3aaa259148631867c2be3f6b42f6f79053f36f519ff28d42c
+[debug] [2026-05-21T20:00:04.294Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T20:00:04.294Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T20:00:04.294Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/9fbcbc3c5f33cec3aaa259148631867c2be3f6b42f6f79053f36f519ff28d42c [none]
+[debug] [2026-05-21T20:00:04.294Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/9fbcbc3c5f33cec3aaa259148631867c2be3f6b42f6f79053f36f519ff28d42c [stream]
+[debug] [2026-05-21T20:00:04.458Z] [uploadQueue] Retrying task 2134b1fe4dce0fb2c7043e9795a321d4ecc4d3e9ab78185336f2a9877d88fda9
+[debug] [2026-05-21T20:00:04.458Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T20:00:04.458Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T20:00:04.458Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/2134b1fe4dce0fb2c7043e9795a321d4ecc4d3e9ab78185336f2a9877d88fda9 [none]
+[debug] [2026-05-21T20:00:04.458Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/2134b1fe4dce0fb2c7043e9795a321d4ecc4d3e9ab78185336f2a9877d88fda9 [stream]
+[info] i  hosting: uploading new files [0/55] (0%) 
+[debug] [2026-05-21T20:00:07.874Z] [uploadQueue] Retrying task c009bf60bbebfbcb312a0629d7db3bfe35b87ffd968550ef717ab29fac4bd9fe
+[debug] [2026-05-21T20:00:07.874Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T20:00:07.874Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T20:00:07.874Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/c009bf60bbebfbcb312a0629d7db3bfe35b87ffd968550ef717ab29fac4bd9fe [none]
+[debug] [2026-05-21T20:00:07.874Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/c009bf60bbebfbcb312a0629d7db3bfe35b87ffd968550ef717ab29fac4bd9fe [stream]
+[info] i  hosting: uploading new files [0/55] (0%) 
+[debug] [2026-05-21T20:00:09.213Z] [uploadQueue] Retrying task 3f0a9fe9ccabfe334c7b1925414e7da5bbb2c1b095f609761dfa27ccf19ad5ea
+[debug] [2026-05-21T20:00:09.213Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T20:00:09.213Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T20:00:09.213Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/3f0a9fe9ccabfe334c7b1925414e7da5bbb2c1b095f609761dfa27ccf19ad5ea [none]
+[debug] [2026-05-21T20:00:09.213Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/3f0a9fe9ccabfe334c7b1925414e7da5bbb2c1b095f609761dfa27ccf19ad5ea [stream]
+[info] i  hosting: uploading new files [0/55] (0%) 
+[debug] [2026-05-21T20:00:11.537Z] [uploadQueue] Retrying task 9d2c6212844b61fcf7916d9a652abb6eda07c9948164a0af30c7da46889b056b
+[debug] [2026-05-21T20:00:11.537Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T20:00:11.537Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T20:00:11.537Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/9d2c6212844b61fcf7916d9a652abb6eda07c9948164a0af30c7da46889b056b [none]
+[debug] [2026-05-21T20:00:11.537Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/9d2c6212844b61fcf7916d9a652abb6eda07c9948164a0af30c7da46889b056b [stream]
+[info] i  hosting: uploading new files [0/55] (0%) 
+[debug] [2026-05-21T20:00:13.972Z] [uploadQueue] Retrying task e1825f47d29d39aaedbe0906c3ae766765a4ab785771cb669564c36add643c53
+[debug] [2026-05-21T20:00:13.972Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T20:00:13.972Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T20:00:13.972Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/e1825f47d29d39aaedbe0906c3ae766765a4ab785771cb669564c36add643c53 [none]
+[debug] [2026-05-21T20:00:13.972Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/e1825f47d29d39aaedbe0906c3ae766765a4ab785771cb669564c36add643c53 [stream]
+[info] i  hosting: uploading new files [0/55] (0%) 
+[debug] [2026-05-21T20:00:15.210Z] [uploadQueue] Retrying task feaa2edbbf4fe3524d47ddf365cd9daccb5c749d3b6f95da815ba9e551fdfb2a
+[debug] [2026-05-21T20:00:15.210Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T20:00:15.210Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T20:00:15.210Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/feaa2edbbf4fe3524d47ddf365cd9daccb5c749d3b6f95da815ba9e551fdfb2a [none]
+[debug] [2026-05-21T20:00:15.210Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/feaa2edbbf4fe3524d47ddf365cd9daccb5c749d3b6f95da815ba9e551fdfb2a [stream]
+[debug] [2026-05-21T20:00:15.288Z] [uploadQueue] Retrying task ec48b7af99b35a0f05fee75fb537359dfcd02541b5606bc9bffa14bc5770a001
+[debug] [2026-05-21T20:00:15.288Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T20:00:15.288Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T20:00:15.288Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/ec48b7af99b35a0f05fee75fb537359dfcd02541b5606bc9bffa14bc5770a001 [none]
+[debug] [2026-05-21T20:00:15.288Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/ec48b7af99b35a0f05fee75fb537359dfcd02541b5606bc9bffa14bc5770a001 [stream]
+[debug] [2026-05-21T20:00:15.649Z] [uploadQueue] Retrying task 2e4de7d80dd9d5b16b098b5445e113d1ea78919c9ded586a1ee6ec0de6238a0c
+[debug] [2026-05-21T20:00:15.650Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T20:00:15.650Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T20:00:15.650Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/2e4de7d80dd9d5b16b098b5445e113d1ea78919c9ded586a1ee6ec0de6238a0c [none]
+[debug] [2026-05-21T20:00:15.650Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/2e4de7d80dd9d5b16b098b5445e113d1ea78919c9ded586a1ee6ec0de6238a0c [stream]
+[info] i  hosting: uploading new files [0/55] (0%) 
+[debug] [2026-05-21T20:00:16.770Z] [uploadQueue] Retrying task 29957ee3001ea82e3812be9f546495200b470d1088e06ac3805ec0dca803b7fd
+[debug] [2026-05-21T20:00:16.770Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T20:00:16.770Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T20:00:16.771Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/29957ee3001ea82e3812be9f546495200b470d1088e06ac3805ec0dca803b7fd [none]
+[debug] [2026-05-21T20:00:16.771Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/29957ee3001ea82e3812be9f546495200b470d1088e06ac3805ec0dca803b7fd [stream]
+[debug] [2026-05-21T20:00:17.050Z] [uploadQueue] Retrying task 67cd7a380b9d1fdf448691088ecf4bb00226158bc351025e305c2ed82468eff2
+[debug] [2026-05-21T20:00:17.050Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T20:00:17.050Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T20:00:17.050Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/67cd7a380b9d1fdf448691088ecf4bb00226158bc351025e305c2ed82468eff2 [none]
+[debug] [2026-05-21T20:00:17.050Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/67cd7a380b9d1fdf448691088ecf4bb00226158bc351025e305c2ed82468eff2 [stream]
+[info] i  hosting: uploading new files [0/55] (0%) 
+[debug] [2026-05-21T20:00:19.271Z] [uploadQueue] Retrying task 10b3dbe2d637c65e4ef82ca0c7820107c579d0c57024de99ad302f56fb0a6a8e
+[debug] [2026-05-21T20:00:19.272Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T20:00:19.272Z] Checked if tokens are valid: true, expires at: 1779395783351
+[debug] [2026-05-21T20:00:19.272Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/10b3dbe2d637c65e4ef82ca0c7820107c579d0c57024de99ad302f56fb0a6a8e [none]
+[debug] [2026-05-21T20:00:19.272Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/vibe-x-app/versions/13ccb62212adea26/files/10b3dbe2d637c65e4ef82ca0c7820107c579d0c57024de99ad302f56fb0a6a8e [stream]
+[info] i  hosting: uploading new files [0/55] (0%) 
