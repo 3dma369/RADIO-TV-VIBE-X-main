@@ -1,0 +1,12 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Allow public read of all files (music, visuals, products)
+    match /{allPaths=**} {
+      allow read: if true;
+      // Allow public uploads for music (no auth required)
+      // In production, restrict this to your admin domain or use signed URLs
+      allow write: if true;
+    }
+  }
+}

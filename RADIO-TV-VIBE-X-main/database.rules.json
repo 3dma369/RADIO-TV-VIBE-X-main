@@ -1,0 +1,12 @@
+{
+  "rules": {
+    "presence": {
+      ".read": true,
+      ".write": true
+    },
+    "online_count": {
+      ".read": true,
+      ".write": true
+    }
+  }
+}

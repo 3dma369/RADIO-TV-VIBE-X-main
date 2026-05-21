@@ -1,0 +1,9 @@
+{
+  "name": "vibe-x-functions",
+  "version": "1.0.0",
+  "main": "lib/index.js",
+  "dependencies": {
+    "firebase-functions": "^4.5.0",
+    "stripe": "^22.1.1"
+  }
+}

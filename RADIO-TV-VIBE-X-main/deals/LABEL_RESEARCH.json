@@ -1,0 +1,402 @@
+[
+  {
+    "name": "God Mode The Label",
+    "genre": "Electronic/Hip Hop",
+    "location": "London, UK",
+    "website": "https://godmodethelabel.com",
+    "contact_email": null,
+    "why_good_fit_for_vibe_x": "London-based independent with sync opportunities and V Recordings heritage—perfect for TV/Radio exposure."
+  },
+  {
+    "name": "Keysound Recordings",
+    "genre": "Electronic/Dubstep/Grime",
+    "location": "London, UK",
+    "website": "https://keysoundrecordings.co.uk",
+    "contact_email": null,
+    "why_good_fit_for_vibe_x": "Dusk and Blackdown's label with Burial, Wen, Logos—strong cultural cache for urban/electronic programming."
+  },
+  {
+    "name": "Hotflush Recordings",
+    "genre": "Electronic/Deep House/Tech House",
+    "location": "UK",
+    "website": "https://hotflushrecordings.com",
+    "contact_email": null,
+    "why_good_fit_for_vibe_x": "Founded by Scuba in 2003—established electronic label seeking new revenue streams for artists."
+  },
+  {
+    "name": "3by3 Music",
+    "genre": "Electronic",
+    "location": "UK",
+    "website": "https://www.3by3music.com",
+    "contact_email": null,
+    "why_good_fit_for_vibe_x": "Independent UK blog-turned-label focused on provocative electronics—ideal for radio rotation."
+  },
+  {
+    "name": "DM.Recordings",
+    "genre": "House/Afro House/Electronic",
+    "location": "UK",
+    "website": "https://dmrecordings.com",
+    "contact_email": null,
+    "why_good_fit_for_vibe_x": "Specializes in afro house with cross-continental releases—growing catalog perfect for store/streaming."
+  },
+  {
+    "name": "Origins Inconclusive",
+    "genre": "Electronic/Multimedia",
+    "location": "London, UK",
+    "website": "https://originsinconclusive.com",
+    "contact_email": null,
+    "why_good_fit_for_vibe_x": "Global independent label based at Pancras Square—cross-media approach aligns with VIBE-X platform."
+  },
+  {
+    "name": "Brownswood Recordings",
+    "genre": "Electronic/Soul/R&B",
+    "location": "London, UK",
+    "website": "https://brownswoodrecordings.com",
+    "contact_email": null,
+    "why_good_fit_for_vibe_x": "Gilles Peterson's label with strong cultural programming—perfect for curated radio/store experience."
+  },
+  {
+    "name": "Bush Bash Recording",
+    "genre": "Urban/Grime/Street",
+    "location": "London, UK",
+    "website": "https://bushbashrecordings.com",
+    "contact_email": null,
+    "why_good_fit_for_vibe_x": "Black-owned independent championing raw UK sounds—authentic fit for urban music platform."
+  },
+  {
+    "name": "Kaya Kaya Records",
+    "genre": "Electronic/Indie",
+    "location": "London, UK",
+    "website": "https://kayakayarecords.co.uk",
+    "contact_email": null,
+    "why_good_fit_for_vibe_x": "Boutique London label founded by Cherish Kaya and Katy Partridge—small label eager for exposure."
+  },
+  {
+    "name": "Truant Recordings",
+    "genre": "Electronic/Alternative",
+    "location": "UK",
+    "website": "https://truantrecordings.com",
+    "contact_email": null,
+    "why_good_fit_for_vibe_x": "Founded by music supervisors—understands sync/licensing value for TV/radio platform."
+  },
+  {
+    "name": "Pangea Recordings",
+    "genre": "Electronic/Underground",
+    "location": "USA",
+    "website": "https://pangearecordings.com",
+    "contact_email": "info@pangearecordings.com",
+    "why_good_fit_for_vibe_x": "25+ years at forefront of underground electronic—demo-friendly with established artist pipeline."
+  },
+  {
+    "name": "Carpark Records",
+    "genre": "Electronic/IDM/Experimental",
+    "location": "Washington D.C./New York, USA",
+    "website": "https://www.carparkrecords.com",
+    "contact_email": null,
+    "why_good_fit_for_vibe_x": "Established 1999 indie with diverse roster—IDM/ambient fits electronic radio programming."
+  },
+  {
+    "name": "Interplanetary Records",
+    "genre": "Electronic/Synthesizer-driven",
+    "location": "San Francisco, CA",
+    "website": "https://interplanetaryrecords.com",
+    "contact_email": null,
+    "why_good_fit_for_vibe_x": "SF-based electronic label representing global artists—international catalog ideal for platform."
+  },
+  {
+    "name": "Zettabyte Records",
+    "genre": "Techno/Electronic",
+    "location": "San Francisco, CA",
+    "website": "http://www.zettabyterecords.com",
+    "contact_email": null,
+    "why_good_fit_for_vibe_x": "Underground techno label focusing on music-first submissions—smaller label seeking new outlets."
+  },
+  {
+    "name": "White Owl Records",
+    "genre": "Techno/Electronic",
+    "location": "New York, USA",
+    "website": "https://whiteowlrecords.xyz",
+    "contact_email": null,
+    "why_good_fit_for_vibe_x": "NYC techno label with live event series SIDECHAIN—active scene presence for platform exposure."
+  },
+  {
+    "name": "Cascine",
+    "genre": "Electronic/Pop",
+    "location": "USA",
+    "website": "https://cascine.us",
+    "contact_email": null,
+    "why_good_fit_for_vibe_x": "Boutique US label at intersection of electronic and pop—ideal for crossover radio content."
+  },
+  {
+    "name": "Warp Records",
+    "genre": "Electronic/Experimental",
+    "location": "USA/UK",
+    "website": "https://warp.net",
+    "contact_email": null,
+    "why_good_fit_for_vibe_x": "30+ year legacy label with groundbreaking artists—high-profile but open to platform partnerships."
+  },
+  {
+    "name": "Ufality Records",
+    "genre": "EDM/Electronic",
+    "location": "Chicago, IL",
+    "website": "https://ufality.com",
+    "contact_email": null,
+    "why_good_fit_for_vibe_x": "Full-service distribution network for EDM artists—connects fans and artists for platform value."
+  },
+  {
+    "name": "Joyful Noise Recordings",
+    "genre": "Electronic/Experimental",
+    "location": "USA",
+    "website": "https://www.joyfulnoiserecordings.com",
+    "contact_email": null,
+    "why_good_fit_for_vibe_x": "Art-over-commerce approach with adventurous musicians—cult following for niche radio content."
+  },
+  {
+    "name": "Wav. Haven Records",
+    "genre": "Electronic/Deep Grooves",
+    "location": "Tampa, FL",
+    "website": "https://www.wavhavenrecords.com",
+    "contact_email": null,
+    "why_good_fit_for_vibe_x": "Tampa's pulse in growing electronic scene—forward-thinking producers fit modern platform."
+  },
+  {
+    "name": "Finesse Foreva",
+    "genre": "Urban/Grime/UK Drill",
+    "location": "Croydon, UK",
+    "website": "https://www.finesseforeva.co.uk",
+    "contact_email": null,
+    "why_good_fit_for_vibe_x": "Croydon-based independent at heart of UK music scene—Dri/Hear/UK Rap genres align with urban platform."
+  },
+  {
+    "name": "Local Action",
+    "genre": "Electronic/Grime",
+    "location": "London, UK",
+    "website": "https://localactionrecords.co.uk",
+    "contact_email": null,
+    "why_good_fit_for_vibe_x": "London label with Deadboy, DJ Q, Jammz—strong grime/UK dance roster for radio programming."
+  },
+  {
+    "name": "No Hats No Hoods Records",
+    "genre": "Grime/Hip Hop/Publishing",
+    "location": "London, UK",
+    "website": "https://nohatsnohoods.com",
+    "contact_email": null,
+    "why_good_fit_for_vibe_x": "Born from Grime night Dirty Canvas in 2006—management + publishing company for fuller deals."
+  },
+  {
+    "name": "Pragmatic Theory Records",
+    "genre": "Hip Hop/Grime",
+    "location": "UK",
+    "website": "https://pragmatictheory.co.uk",
+    "contact_email": null,
+    "why_good_fit_for_vibe_x": "UK independent with vinyl releases—limited edition culture fits collectible merch opportunity."
+  },
+  {
+    "name": "Blah Records",
+    "genre": "Rap/Hip Hop/Alternative",
+    "location": "UK",
+    "website": "https://www.blahrecords.com",
+    "contact_email": null,
+    "why_good_fit_for_vibe_x": "Cult UK label with strong brand identity—alternative hip hop fits diverse radio format."
+  },
+  {
+    "name": "Receptor Records",
+    "genre": "Hip Hop/Rap",
+    "location": "UK",
+    "website": "https://receptor-records.com",
+    "contact_email": null,
+    "why_good_fit_for_vibe_x": "Raw honest UK hip hop—supremely talented emcees for authentic urban programming."
+  },
+  {
+    "name": "UC Records",
+    "genre": "Hip Hop",
+    "location": "London, UK",
+    "website": "https://uc-records.com",
+    "contact_email": null,
+    "why_good_fit_for_vibe_x": "Independent hip-hop label est. 2021—MCPS/PRS registered with blockchain-verified rights."
+  },
+  {
+    "name": "QRUK",
+    "genre": "Electronic/Urban",
+    "location": "UK",
+    "website": "https://www.qruk.co.uk",
+    "contact_email": null,
+    "why_good_fit_for_vibe_x": "UK independent with riddim/raggaeton releases—active catalog for radio/store rotation."
+  },
+  {
+    "name": "Synth Records",
+    "genre": "Dance/Electro House",
+    "location": "USA",
+    "website": "https://labelsbase.net/synth-records",
+    "contact_email": "info@synthrecords.com",
+    "why_good_fit_for_vibe_x": "Founded 2017 with info@synthrecords.com for demos—dance/electro house fits retail/streaming."
+  },
+  {
+    "name": "Groove Gusto Records",
+    "genre": "Electronica/Indie/Synth Pop",
+    "location": "USA",
+    "website": "https://groovegusto.com",
+    "contact_email": null,
+    "why_good_fit_for_vibe_x": "Contact form for demo submissions—electronica/synth pop ideal for curated store playlists."
+  },
+  {
+    "name": "Dog and King Records",
+    "genre": "Electronic/Pop",
+    "location": "USA",
+    "website": "https://www.dogandkingrecords.com",
+    "contact_email": "info@dogandkingrecords.com",
+    "why_good_fit_for_vibe_x": "Direct email contacts for A&R and submissions—artists/ licensing/press ready for platform deals."
+  },
+  {
+    "name": "Girlfriend Records",
+    "genre": "Synthwave/Indie Dance/Nu Disco",
+    "location": "San Jose, CA",
+    "website": "https://labelsbase.net/girlfriend-records",
+    "contact_email": "girlfriendrecordslovesyou@gmail.com",
+    "why_good_fit_for_vibe_x": "Active email girlfriendrecordslovesyou@gmail.com—synthwave/retrowave fits vintage radio aesthetic."
+  },
+  {
+    "name": "100% Electronica",
+    "genre": "Electronic/Vaporwave",
+    "location": "Brooklyn, NY",
+    "website": "https://www.100percentelectronica.com",
+    "contact_email": null,
+    "why_good_fit_for_vibe_x": "Founded 2015 by George Clanton—independent with personality for modern platform identity."
+  },
+  {
+    "name": "Eloquent Music",
+    "genre": "Synthpop",
+    "location": "USA",
+    "website": "https://eloquentmusic.com",
+    "contact_email": null,
+    "why_good_fit_for_vibe_x": "Modern synthpop with contact form—clean fit for pop/electronic radio format."
+  },
+  {
+    "name": "Ashé Records",
+    "genre": "Electronic/Soul",
+    "location": "USA",
+    "website": "https://asherecords.com",
+    "contact_email": null,
+    "why_good_fit_for_vibe_x": "Contact page available for submissions—soul/electronic catalog fits diverse programming."
+  },
+  {
+    "name": "Luxor Records",
+    "genre": "Electronic/Pop",
+    "location": "USA",
+    "website": "https://www.luxor-records.com",
+    "contact_email": "info@Luxor-Records.com",
+    "why_good_fit_for_vibe_x": "Artist submissions to info@Luxor-Records.com with header 'Artist Submissions'—pop/electronic pipeline."
+  },
+  {
+    "name": "Sunset Drip Records",
+    "genre": "R&B/Hip Hop/Electronic/Lo-fi",
+    "location": "San Francisco, CA",
+    "website": "https://www.sunsetdrip.com",
+    "contact_email": null,
+    "why_good_fit_for_vibe_x": "Bay Area independent seeking r&b/hip hop/electronic/lofi—lo-fi appeal for chill radio zones."
+  },
+  {
+    "name": "BlackSine",
+    "genre": "Electronic/Underground",
+    "location": "Denver, CO",
+    "website": "https://blacksine.org",
+    "contact_email": "blacksineorg@gmail.com",
+    "why_good_fit_for_vibe_x": "501(c)(3) incubator with resources for artists—underground electronic for niche radio programming."
+  },
+  {
+    "name": "Soul Step Records",
+    "genre": "Soul/Electronic",
+    "location": "USA",
+    "website": "http://www.soulsteprecords.com",
+    "contact_email": null,
+    "why_good_fit_for_vibe_x": "Email and social media for submissions—soul/electronic catalog for urban store programming."
+  },
+  {
+    "name": "Quinn Records",
+    "genre": "Blues/Gospel/Jazz/Soul",
+    "location": "USA",
+    "website": "https://quinnrecords.net",
+    "contact_email": "customerservice@quinnrecords.net",
+    "why_good_fit_for_vibe_x": "Authentic blues/gospel/jazz/soul—diverse genre spread for comprehensive radio content."
+  },
+  {
+    "name": "New Amsterdam Records",
+    "genre": "Electronic/Contemporary Classical",
+    "location": "USA",
+    "website": "https://www.newamsterdamrecords.com",
+    "contact_email": null,
+    "why_good_fit_for_vibe_x": "Submissions reviewed for contemporary releases—crossover appeal for curated platform."
+  },
+  {
+    "name": "Misra Records",
+    "genre": "Indie/Electronic",
+    "location": "USA",
+    "website": "https://misrarecords.com",
+    "contact_email": null,
+    "why_good_fit_for_vibe_x": "Rethinking indie label role in 2020s—artist-friendly approach for modern partnership deals."
+  },
+  {
+    "name": "Squareglass",
+    "genre": "Electronic/Indie",
+    "location": "UK",
+    "website": "https://www.squareglass.co.uk",
+    "contact_email": null,
+    "why_good_fit_for_vibe_x": "UK-based with strong visual branding—electronic/indie catalog for curated platform."
+  },
+  {
+    "name": "All Shades of The Drum Recordings",
+    "genre": "Afro House/Electronic",
+    "location": "UK",
+    "website": "https://allshadesmgmt.co.uk",
+    "contact_email": null,
+    "why_good_fit_for_vibe_x": "UK afro house specialist driving global electronic music—emerging artists pipeline for fresh content."
+  },
+  {
+    "name": "Ground Up Records",
+    "genre": "Electronic",
+    "location": "London, UK",
+    "website": "https://grounduprecords.co.uk",
+    "contact_email": null,
+    "why_good_fit_for_vibe_x": "Boutique London label for fresh talent—regular Spotify/Apple/Beatport features for retail presence."
+  },
+  {
+    "name": "Arkada Records",
+    "genre": "Electronic/Future Sounds",
+    "location": "London, UK",
+    "website": "https://arkadarecords.com",
+    "contact_email": null,
+    "why_good_fit_for_vibe_x": "Searching for unprecedented electronic future sounds—cutting-edge roster for modern platform."
+  },
+  {
+    "name": "Soulvent Records",
+    "genre": "Electronic/House",
+    "location": "East London, UK",
+    "website": "https://www.soulventrecords.com",
+    "contact_email": null,
+    "why_good_fit_for_vibe_x": "East London indie since 2014—championing young talent with house/electronic catalog."
+  },
+  {
+    "name": "CEL36 Records",
+    "genre": "Melodic Electronic/Techno",
+    "location": "UK",
+    "website": "https://cel36.com",
+    "contact_email": null,
+    "why_good_fit_for_vibe_x": "Melodic techno label with active releases—DEEK/Drag artists fit electronic radio format."
+  },
+  {
+    "name": "Echo Bass Records Ltd",
+    "genre": "Electronic",
+    "location": "London, UK",
+    "website": "https://www.echobassrecords.com",
+    "contact_email": null,
+    "why_good_fit_for_vibe_x": "Innovative modern approach to developing emerging talent—independent values for platform partnership."
+  },
+  {
+    "name": "Peach River",
+    "genre": "Electronic/Sync/Pop",
+    "location": "London, UK",
+    "website": "https://www.peachriver.co.uk",
+    "contact_email": null,
+    "why_good_fit_for_vibe_x": "Boutique sync/publishing house with diverse eclectic catalog—cutting-edge electronic for TV/Radio sync."
+  }
+]

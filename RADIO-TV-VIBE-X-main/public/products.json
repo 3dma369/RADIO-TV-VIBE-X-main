@@ -1,0 +1,77 @@
+[
+  {
+    "id": "prod_merch_001",
+    "name": "VIBE-X Tee",
+    "price": 29.99,
+    "image": "https://picsum.photos/seed/vibex-tee/400/400",
+    "category": "apparel",
+    "description": "Official VIBE-X t-shirt",
+    "stock": 50,
+    "sizes": ["S", "M", "L", "XL"]
+  },
+  {
+    "id": "prod_merch_002",
+    "name": "VIBE-X Hoodie",
+    "price": 59.99,
+    "image": "https://picsum.photos/seed/vibex-hoodie/400/400",
+    "category": "apparel",
+    "description": "VIBE-X hoodie - jungle green",
+    "stock": 30,
+    "sizes": ["S", "M", "L", "XL"]
+  },
+  {
+    "id": "prod_merch_003",
+    "name": "VIBE-X Cap",
+    "price": 24.99,
+    "image": "https://picsum.photos/seed/vibex-cap/400/400",
+    "category": "accessories",
+    "description": "VIBE-X snapback cap",
+    "stock": 100
+  },
+  {
+    "id": "prod_ticket_001",
+    "name": "VIBE-X Festival 2026 - VIP",
+    "price": 49.99,
+    "image": "https://picsum.photos/seed/vibexfest/400/400",
+    "category": "ticket",
+    "description": "VIP Access - All stages included",
+    "stock": 100,
+    "isTicket": true,
+    "eventDate": "2026-07-15",
+    "location": "London, UK"
+  },
+  {
+    "id": "prod_ticket_002",
+    "name": "VIBE-X Festival 2026 - General",
+    "price": 29.99,
+    "image": "https://picsum.photos/seed/vibexfest2/400/400",
+    "category": "ticket",
+    "description": "General Admission",
+    "stock": 500,
+    "isTicket": true,
+    "eventDate": "2026-07-15",
+    "location": "London, UK"
+  },
+  {
+    "id": "prod_digital_001",
+    "name": "Jungle Essentials Vol.1",
+    "price": 9.99,
+    "image": "https://picsum.photos/seed/jungle1/400/400",
+    "category": "digital",
+    "description": "Digital Album - 15 tracks",
+    "stock": 999,
+    "isDigital": true,
+    "downloadUrl": "/music_mp3/MASSIVE.mp3"
+  },
+  {
+    "id": "prod_digital_002",
+    "name": "Jungle Essentials Vol.2",
+    "price": 9.99,
+    "image": "https://picsum.photos/seed/jungle2/400/400",
+    "category": "digital",
+    "description": "Digital Album - 15 tracks",
+    "stock": 999,
+    "isDigital": true,
+    "downloadUrl": "/music_mp3/MASSIVE.mp3"
+  }
+]
