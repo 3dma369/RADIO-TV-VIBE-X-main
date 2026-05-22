@@ -287,7 +287,7 @@ export function StationProvider({ children }: { children: ReactNode }) {
   const [activeMood, setActiveMood] = useState<'relax' | 'working' | 'exercise' | 'home' | 'chilling' | 'getting-ready' | null>(null);
 
   // DJ Shuffle mode
-  const [shuffleMode, setShuffleMode] = useState(false);
+  const [shuffleMode, setShuffleMode] = useState(true);
   const recentTracks = useRef<string[]>([]); // last 3 played to avoid repeat
 
   // Computed mooded playlist
