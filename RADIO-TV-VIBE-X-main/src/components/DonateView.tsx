@@ -15,9 +15,10 @@ const DONATION_TIERS = [
 ];
 
 const CRYPTO_ADDRESSES = [
-  { name: 'Ethereum / Polygon', address: '0x71C7656EC7ab88b098defB751B7401B5f6d8976F', icon: 'ETH' },
-  { name: 'Solana', address: '7xKX8C2n2P4G6X7Y8Z9A1B2C3D4E5F6G7H8I9J0K', icon: 'SOL' },
-  { name: 'Bitcoin', address: 'bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh', icon: 'BTC' },
+  { name: 'Ethereum / Línea / Polygon', address: '0xa6898b0E7d169bFCD53d92287A7034828E7F46E9', icon: 'ETH' },
+  { name: 'Bitcoin', address: 'bc1q0zfd97g0gcy96hhmsdqgzrsjcn52y733xvj2rn', icon: 'BTC' },
+  { name: 'Solana', address: '5ubc3KwrWZX5sxjZLx6JwgAXDnreYnjzWARAxPKzLJFG', icon: 'SOL' },
+  { name: 'Tron', address: 'TMkmBx9WyAPmLbeGivsmhx3fCQxaMExF4p', icon: 'TRX' },
 ];
 
 // Google SVG icon
