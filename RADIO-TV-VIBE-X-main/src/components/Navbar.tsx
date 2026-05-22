@@ -34,11 +34,7 @@ export default function Navbar() {
     <nav className="fixed top-0 left-0 right-0 z-50 px-6 py-4">
       <div className="max-w-7xl mx-auto flex items-center justify-between glass rounded-2xl px-6 py-3">
         <Link to="/" className="flex items-center gap-2 group">
-          <div className="relative">
-            <Radio className="w-8 h-8 text-neon-green group-hover:scale-110 transition-transform" />
-            <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full animate-pulse border-2 border-black" />
-          </div>
-          <img src="/logo.png" alt="VIBE-X" className="h-10 w-auto object-contain" />
+          <img src="/logo.jpg" alt="VIBE-X" className="h-10 w-auto object-contain" />
         </Link>
 
         {/* Desktop Nav */}
