@@ -300,57 +300,9 @@ export default function RadioView() {
               </div>
             )}
 
-            {/* Visual Slideshow Layer - rotates brand visuals behind track info */}
-            <VisualSlideshow />
-
-            {/* Overlay Info */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent p-8 flex flex-col justify-end">
-              <div className="flex items-end justify-between">
-                <div>
-                  <div className="flex items-center gap-2 mb-2">
-                    {activeMood ? (
-                      <>
-                        {(() => {
-                          const moodData = MOODS.find(m => m.id === activeMood);
-                          return moodData ? (
-                            <span 
-                              className={cn("px-2 py-0.5 text-black text-[10px] font-bold rounded uppercase tracking-wider animate-pulse")}
-                              style={{ backgroundColor: `var(--tw-${moodData.id}-color, #888)` }}
-                            >
-                              {moodData.label} Mode
-                            </span>
-                          ) : null;
-                        })()}
-                      </>
-                    ) : (
-                      <span className="px-2 py-0.5 bg-neon-green text-black text-[10px] font-bold rounded uppercase tracking-wider animate-pulse">
-                        Live Now
-                      </span>
-                    )}
-                    <span className="text-white/50 text-xs font-mono uppercase tracking-widest">
-                      {currentTrack.genre}
-                    </span>
-                  </div>
-                  <h1 className="text-2xl md:text-3xl font-bold tracking-tighter mb-1 neon-text">
-                    {currentTrack.title}
-                  </h1>
-                  <p className="text-base text-white/70 font-medium">
-                    {currentTrack.artist}
-                  </p>
-                </div>
-                
-                <div className="hidden md:flex items-center gap-6">
-                  {isAdmin && (
-                    <div className="text-right">
-                      <p className="text-[10px] text-neon-green/60 uppercase tracking-widest mb-1">Live Listeners</p>
-                      <div className="flex items-center gap-2 text-neon-green">
-                        <Users className="w-4 h-4" />
-                        <span className="font-mono font-bold">{listenerCount}</span>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
+            {/* Overlay Info - REMOVED: track info moved to Info Bar */}
+            <div className="absolute inset-0 pointer-events-none">
+              <VisualSlideshow />
             </div>
 
             {/* Play/Pause Large Overlay (Mobile) */}
@@ -362,6 +314,40 @@ export default function RadioView() {
                 {isPlaying ? <Pause className="w-10 h-10 fill-current" /> : <Play className="w-10 h-10 fill-current ml-1" />}
               </div>
             </button>
+          </div>
+
+          {/* Track Info Bar */}
+          <div className="glass rounded-2xl px-6 py-4 flex flex-wrap items-center justify-between gap-4">
+            <div className="flex items-center gap-6">
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 bg-neon-green rounded-full animate-pulse" />
+                <span className="text-neon-green font-bold text-lg tracking-tight">{currentTrack.title}</span>
+              </div>
+              <div className="h-6 w-px bg-white/10" />
+              <div className="flex items-center gap-2">
+                <span className="text-white/50 text-sm font-medium">{currentTrack.artist}</span>
+              </div>
+            </div>
+            <div className="flex items-center gap-3">
+              {currentTrack.energy && (
+                <div className="flex items-center gap-2">
+                  <Zap className="w-4 h-4 text-neon-green" />
+                  <div className="flex gap-1">
+                    {[1,2,3,4,5].map(i => (
+                      <div key={i} className={cn("w-1.5 h-4 rounded-full", i <= (currentTrack.energy || 3) ? "bg-neon-green" : "bg-white/20")} />
+                    ))}
+                  </div>
+                </div>
+              )}
+              <div className="flex items-center gap-1.5">
+                <span className="text-[10px] text-white/30 font-mono uppercase">STYLE</span>
+                <div className="flex gap-1">
+                  <div className="w-3 h-3 rounded-sm bg-neon-green" />
+                  <div className="w-3 h-3 rounded-sm bg-orange-500" />
+                  <div className="w-3 h-3 rounded-sm bg-purple-500" />
+                </div>
+              </div>
+            </div>
           </div>
 
           {/* Controls Bar */}

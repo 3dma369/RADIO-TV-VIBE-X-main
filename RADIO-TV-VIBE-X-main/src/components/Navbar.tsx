@@ -38,7 +38,7 @@ export default function Navbar() {
             <Radio className="w-8 h-8 text-neon-green group-hover:scale-110 transition-transform" />
             <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full animate-pulse border-2 border-black" />
           </div>
-          <img src="/logo.png" alt="VIBE-X" className="h-10 w-auto object-contain" />
+          <span className="text-white font-bold text-lg tracking-wide group-hover:text-neon-green transition-colors drop-shadow-[0_0_8px_rgba(0,255,102,0.6)]">VIBE-X</span>
         </Link>
 
         {/* Desktop Nav */}

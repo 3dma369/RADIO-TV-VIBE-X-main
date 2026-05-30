@@ -5,12 +5,21 @@ import Database from 'better-sqlite3';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 import Stripe from 'stripe';
+import { initializeApp } from 'firebase/app';
+import { getFirestore, collection, addDoc, serverTimestamp } from 'firebase/firestore';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const app = express();
 const db = new Database('station.db');
+
+// Firebase for metrics logging
+const firebaseConfig = { projectId: 'vibe-x-app' };
+const { initializeApp: initFb } = await import('firebase/app');
+const { getFirestore: getFbDb } = await import('firebase/firestore');
+const fbApp = initFb(firebaseConfig);
+const metricsDb = getFbDb(fbApp);
 
 // Stripe configuration - GET THIS FROM DASHBOARD.STRIPE.COM > DEVELOPERS > API KEYS
 // Use STRIPE_SECRET_KEY from environment or .env file
@@ -338,9 +347,25 @@ app.post('/api/stripe/webhook', express.raw({ type: 'application/json' }), async
 
   // Handle events
   switch (event.type) {
-    case 'payment_intent.succeeded':
-      console.log('Payment succeeded:', (event.data.object as any).id);
+    case 'payment_intent.succeeded': {
+      const pi = event.data.object as any;
+      const amount = pi.amount / 100; // cents → dollars
+      console.log('Payment succeeded:', pi.id, '—', amount, 'USD');
+      try {
+        await addDoc(collection(metricsDb, 'payments'), {
+          paymentIntentId: pi.id,
+          amount,
+          currency: pi.currency,
+          status: pi.status,
+          metadata: pi.metadata || {},
+          timestamp: serverTimestamp(),
+        });
+        console.log('[Metrics] Payment logged to Firestore');
+      } catch (e) {
+        console.warn('[Metrics] Failed to log payment:', e);
+      }
       break;
+    }
     case 'payment_intent.payment_failed':
       console.error('Payment failed:', (event.data.object as any).id);
       break;

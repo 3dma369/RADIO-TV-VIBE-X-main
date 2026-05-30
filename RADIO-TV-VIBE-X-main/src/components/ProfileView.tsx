@@ -6,6 +6,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useProfile } from '../context/ProfileContext';
+import type { UserProfile } from '../types';
 
 type Tab = 'profile' | 'addresses' | 'payments' | 'orders' | 'donations' | 'settings';
 

@@ -42,6 +42,7 @@ import {
   Film
 } from 'lucide-react';
 import { cn } from '../utils';
+import MetricsDashboard from './MetricsDashboard';
 // @ts-ignore
 // Lazy-load confetti to prevent page crash on initialization errors
 const Confetti = React.lazy(() => import('canvas-confetti'));
@@ -136,7 +137,6 @@ export default function AdminView() {
           <div className="flex-grow">
             <div className="glass rounded-[40px] p-8 min-h-[600px]">
               {activeTab === 'metrics' && <MetricsDashboard />}
-              {activeTab === 'shop' && <ShopManager />}
               {activeTab === 'schedule' && <ScheduleManager />}
               {activeTab === 'djs' && <DJManager />}
               {activeTab === 'stream' && <StreamManager />}
@@ -152,42 +152,6 @@ export default function AdminView() {
   );
 }
 
-function MetricsDashboard() {
-  const { listenerCount } = useStation();
-  const stats = [
-    { name: 'Active Listeners', value: listenerCount.toString(), change: 'LIVE', icon: Users, color: 'text-neon-blue' },
-    { name: 'Avg. Session', value: '48m', change: '+5%', icon: Activity, color: 'text-neon-pink' },
-    { name: 'Revenue', value: '$12,450', change: '+18%', icon: DollarSign, color: 'text-neon-green' },
-    { name: 'Page Views', value: '156k', change: '+24%', icon: Eye, color: 'text-white' },
-  ];
-
-  return (
-    <div className="space-y-8">
-      <h3 className="text-3xl font-bold tracking-tighter uppercase mb-8">Station Performance</h3>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {stats.map((stat) => (
-          <div key={stat.name} className="bg-white/5 border border-white/10 rounded-3xl p-6">
-            <div className={cn("w-10 h-10 rounded-xl glass flex items-center justify-center mb-4", stat.color)}>
-              <stat.icon className="w-5 h-5" />
-            </div>
-            <p className="text-xs font-bold text-white/40 uppercase tracking-widest mb-1">{stat.name}</p>
-            <div className="flex items-baseline gap-3">
-              <span className="text-2xl font-bold tracking-tight">{stat.value}</span>
-              <span className="text-[10px] font-bold text-neon-green">{stat.change}</span>
-            </div>
-          </div>
-        ))}
-      </div>
-      
-      <div className="glass rounded-3xl p-8 h-64 flex items-center justify-center text-white/20 border-dashed border-2">
-        <div className="text-center">
-          <TrendingUp className="w-12 h-12 mx-auto mb-4 opacity-20" />
-          <p className="font-mono text-xs uppercase tracking-[0.2em]">Real-time listener chart placeholder</p>
-        </div>
-      </div>
-    </div>
-  );
-}
 
 function FileUpload({ onUpload, label, accept = "image/*" }: {
   onUpload: (url: string, file?: File) => void;

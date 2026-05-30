@@ -63,6 +63,9 @@ export interface Track {
   artist: string;
   duration: string;
   genre: string;
+  bpm?: number;
+  key?: string;
+  energy?: number;
   videoUrl?: string;
   audioUrl?: string;
   visualUrl?: string;

@@ -1,1 +1,6 @@
-{"projects":{"default":"vibe-x-app"},"targets":{}}
+{
+  "projects": {
+    "default": "vibe-x-app"
+  },
+  "targets": {}
+}

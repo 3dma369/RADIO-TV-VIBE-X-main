@@ -1,0 +1,9 @@
+**/node_modules/**
+**/music/**
+**/music_mp3/**
+**/.firebaserc
+**/database.rules.json
+**/firestore.rules
+**/storage.rules
+**/*.log
+**/.git/**
