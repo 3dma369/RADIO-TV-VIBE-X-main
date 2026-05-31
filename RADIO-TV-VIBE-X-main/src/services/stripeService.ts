@@ -2,7 +2,7 @@ import { loadStripe, Stripe } from '@stripe/stripe-js';
 import { CartItem, ShippingAddress } from '../types';
 
 // Stripe publishable key from env
-const STRIPE_PUBLISHABLE_KEY = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || 'pk_live_51TZLjgRhdimqqZ8bczdAVrMAFg8PnJse5u3yFerSNP3hLMquUVQbgYCgtlaZp9r1npY0ojm2YWEuotgDr2wS5nRO00CvYtFiIr';
+const STRIPE_PUBLISHABLE_KEY = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY;
 
 let stripePromise: Promise<Stripe | null> | null = null;
 
