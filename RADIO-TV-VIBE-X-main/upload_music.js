@@ -2,14 +2,15 @@ const { initializeApp } = require('firebase/app');
 const { getStorage, ref, uploadBytes, getDownloadURL } = require('firebase/storage');
 const path = require('path');
 const fs = require('fs');
+require('dotenv').config();
 
 const firebaseConfig = {
-  apiKey: "AIzaSyC0cz4RkKF4m3FD0P6n9skA8jCUJroVLdc",
-  authDomain: "vibe-x-app.web.app",
-  projectId: "vibe-x-app",
-  storageBucket: "vibe-x-app.firebasestorage.app",
-  messagingSenderId: "426023723852",
-  appId: "1:426023723852:web:d230ae1574bdae0847a5e9",
+  apiKey: process.env.VITE_FIREBASE_API_KEY || "AIzaSyC0cz4RkKF4m3FD0P6n9skA8jCUJroVLdc",
+  authDomain: process.env.VITE_FIREBASE_AUTH_DOMAIN || "vibe-x-app.web.app",
+  projectId: process.env.VITE_FIREBASE_PROJECT_ID || "vibe-x-app",
+  storageBucket: process.env.VITE_FIREBASE_STORAGE_BUCKET || "vibe-x-app.firebasestorage.app",
+  messagingSenderId: process.env.VITE_FIREBASE_MESSAGING_SENDER_ID || "426023723852",
+  appId: process.env.VITE_FIREBASE_APP_ID || "1:426023723852:web:d230ae1574bdae0847a5e9",
 };
 
 const app = initializeApp(firebaseConfig);

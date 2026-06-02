@@ -5,12 +5,12 @@ import { getDatabase, ref, onDisconnect, onValue, set, remove, get, serverTimest
 import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "firebase/storage";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyC0cz4RkKF4m3FD0P6n9skA8jCUJroVLdc",
-  authDomain: "vibe-x-app.web.app",
-  projectId: "vibe-x-app",
-  storageBucket: "vibe-x-app.firebasestorage.app",
-  messagingSenderId: "426023723852",
-  appId: "1:426023723852:web:d230ae1574bdae0847a5e9",
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || "vibe-x-app.web.app",
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || "vibe-x-app",
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || "vibe-x-app.firebasestorage.app",
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || "426023723852",
+  appId: import.meta.env.VITE_FIREBASE_APP_ID || "1:426023723852:web:d230ae1574bdae0847a5e9",
 };
 
 // Use getApps() to prevent duplicate init — critical for bundled builds
