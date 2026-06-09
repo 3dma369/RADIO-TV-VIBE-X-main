@@ -14,3 +14,6 @@ service-account*.json
 firebase-debug.log
 .firebase/
 .dist-music-backup/
+
+# Music backup folder (moved out of public/ to keep deploys small)
+media-backup/

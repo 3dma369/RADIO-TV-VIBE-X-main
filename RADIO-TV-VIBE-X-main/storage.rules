@@ -1,12 +1,30 @@
 rules_version = '2';
 service firebase.storage {
   match /b/{bucket}/o {
-    // Allow public read of all files (music, visuals, products)
-    match /{allPaths=**} {
+    // Public assets (music, images, products) - READ ONLY for everyone
+    match /public/{allPaths=**} {
       allow read: if true;
-      // Allow public uploads for music (no auth required)
-      // In production, restrict this to your admin domain or use signed URLs
-      allow write: if true;
+      // Only authenticated users can upload to public
+      allow write: if request.auth != null
+                   && request.resource.size < 50 * 1024 * 1024; // 50MB max
+    }
+
+    // User uploads (avatars, profile pics) - auth required
+    match /users/{userId}/{allPaths=**} {
+      allow read: if true; // Public read so others can see profiles
+      allow write: if request.auth != null
+                   && request.auth.uid == userId
+                   && request.resource.size < 10 * 1024 * 1024; // 10MB max
+    }
+
+    // Admin-only paths (backups, config, system files)
+    match /admin/{allPaths=**} {
+      allow read, write: if false; // Use Admin SDK only, never client
+    }
+
+    // Default deny - all other paths require explicit auth
+    match /{allPaths=**} {
+      allow read, write: if false;
     }
   }
 }
