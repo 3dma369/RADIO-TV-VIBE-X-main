@@ -1,20 +1,6 @@
 {
   "rules": {
-    "presence": {
-      ".read": "auth != null",
-      ".write": "auth != null"
-    },
-    "online_count": {
-      ".read": "auth != null",
-      ".write": "auth != null"
-    },
-    "rooms": {
-      ".read": "auth != null",
-      ".write": "auth != null"
-    },
-    "messages": {
-      ".read": "auth != null",
-      ".write": "auth != null"
-    }
+    ".read": false,
+    ".write": false
   }
 }
