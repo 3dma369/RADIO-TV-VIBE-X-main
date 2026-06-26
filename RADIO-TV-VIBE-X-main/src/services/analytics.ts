@@ -1,8 +1,11 @@
 /**
  * VIBE-X Analytics Service
  * Wraps Google Analytics 4 (GA4) for tracking page views, events, and user engagement.
+ * ALSO mirrors page views + engagement to Firestore so the Admin Suite metrics show real data.
  * GA4 property ID: G-W5YZ2YJWT1
  */
+
+import { db, collection, addDoc, serverTimestamp, app } from '../firebaseConfig';
 
 type EventParams = Record<string, string | number | boolean>;
 
@@ -21,12 +24,63 @@ function gtag(command: string, ...args: unknown[]) {
   }
 }
 
+// ─── Firestore mirror (best-effort, never blocks UI) ───────────────────────
+
+// Get the Firestore project ID from the Firebase app config — needed for the
+// REST API fallback (so writes work even if the WebChannel connection fails).
+const FIRESTORE_PROJECT = app.options.projectId || 'vibe-x-app';
+const FIRESTORE_DATABASE = '(default)';
+const FIRESTORE_BASE = `https://firestore.googleapis.com/v1/projects/${FIRESTORE_PROJECT}/databases/${FIRESTORE_DATABASE}/documents`;
+
+/**
+ * Write a document to Firestore using whichever path works:
+ *   1. The Firebase SDK (preferred — realtime listeners + offline cache)
+ *   2. REST API fallback (if SDK import fails for any reason)
+ * Errors are swallowed so analytics never break the UI.
+ */
+async function safeWrite(collectionName: string, payload: Record<string, any>): Promise<void> {
+  // Try SDK first
+  if (db) {
+    try {
+      await addDoc(collection(db, collectionName), { ...payload, timestamp: serverTimestamp() });
+      return;
+    } catch (e: any) {
+      console.warn(`[Analytics] SDK write to ${collectionName} failed, trying REST:`, e?.message || e);
+    }
+  }
+  // REST fallback — generates a doc ID server-side via POST to the collection.
+  try {
+    const fields: Record<string, any> = {};
+    for (const [k, v] of Object.entries(payload)) {
+      if (v === undefined || v === null) continue;
+      if (typeof v === 'string') fields[k] = { stringValue: v };
+      else if (typeof v === 'number') fields[k] = { doubleValue: v };
+      else if (typeof v === 'boolean') fields[k] = { booleanValue: v };
+    }
+    // serverTimestamp() resolves to a real ISO timestamp on the client
+    fields.timestamp = { timestampValue: new Date().toISOString() };
+    await fetch(`${FIRESTORE_BASE}/${collectionName}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ fields }),
+    });
+  } catch (e: any) {
+    console.warn(`[Analytics] REST write to ${collectionName} also failed:`, e?.message || e);
+  }
+}
+
 // Track a page view (called on route changes)
+// Writes to BOTH GA4 AND Firestore `pageViews` collection.
 export function trackPageView(path: string, title?: string) {
   gtag('event', 'page_view', {
     page_path: path,
     page_title: title || document.title,
     page_location: window.location.href,
+  });
+  safeWrite('pageViews', {
+    path,
+    title: title || document.title,
+    userAgent: navigator.userAgent?.slice(0, 200),
   });
 }
 
@@ -41,12 +95,24 @@ export function trackEngagement(metric: string, value: number) {
     engagement_metric: metric,
     value,
   });
+  // sessionHistory: every active_session heartbeat becomes a session record
+  if (metric === 'active_session') {
+    safeWrite('sessionHistory', { durationSeconds: Math.floor(value / 1000) });
+  }
 }
 
 // Track music playback
-export function trackPlay(trackTitle: string, artist: string, genre?: string) {
+// Writes to both GA4 AND Firestore `listenerHistory` (with trackId so the Admin Suite
+// can compute top tracks from real play counts).
+export function trackPlay(trackTitle: string, artist: string, genre?: string, trackId?: string) {
   trackEvent('play_track', {
     track_title: trackTitle,
+    artist,
+    genre: genre || 'unknown',
+  });
+  safeWrite('listenerHistory', {
+    trackId: trackId || null,
+    trackTitle,
     artist,
     genre: genre || 'unknown',
   });

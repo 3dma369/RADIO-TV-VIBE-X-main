@@ -82,8 +82,13 @@ export const updateProduct = async (
 ): Promise<void> => {
   try {
     const docRef = doc(db, PRODUCTS_COLLECTION, productId);
+    // Firestore v9 rejects `undefined` field values — strip them before write.
+    const cleaned: Record<string, any> = {};
+    for (const [k, v] of Object.entries(updates)) {
+      if (v !== undefined) cleaned[k] = v;
+    }
     await updateDoc(docRef, {
-      ...updates,
+      ...cleaned,
       updatedAt: serverTimestamp(),
     });
   } catch (error) {

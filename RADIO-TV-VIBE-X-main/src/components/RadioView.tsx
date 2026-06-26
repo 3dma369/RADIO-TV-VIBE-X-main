@@ -1,19 +1,27 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'motion/react';
-import { Play, Pause, SkipForward, Volume2, Users, MessageSquare, Share2, Disc, ThumbsUp, ThumbsDown, X, Zap, Coffee, Dumbbell, Home, Glasses, Clock, Radio, Wifi, Shuffle } from 'lucide-react';
+import { Play, Pause, SkipForward, Volume2, Users, MessageSquare, Share2, Disc, ThumbsUp, ThumbsDown, X, Zap, Coffee, Dumbbell, Home, Glasses, Clock, Radio, Wifi, Shuffle, ChevronLeft, ChevronRight } from 'lucide-react';
 import { cn } from '../utils';
-import VisualSlideshow from './VisualSlideshow';
+import TheWindow from './TheWindow';
+import NewsletterSignup from './NewsletterSignup';
 
 import { useStation } from '../context/StationContext';
 import { useAuth } from '../context/AuthContext';
+import { probeServerFileDurations, getCachedDuration } from '../services/serverConfig';
 
 const MOODS = [
-  { id: 'relax', label: 'Relax', icon: Coffee, color: 'from-blue-500/20 to-cyan-500/20 border-blue-500/30', activeColor: 'bg-blue-500', description: 'Lounge music' },
-  { id: 'working', label: 'Working', icon: Clock, color: 'from-yellow-500/20 to-orange-500/20 border-yellow-500/30', activeColor: 'bg-yellow-500', description: 'Electronic launch, slow electronic' },
-  { id: 'exercise', label: 'Exercise', icon: Dumbbell, color: 'from-red-500/20 to-pink-500/20 border-red-500/30', activeColor: 'bg-red-500', description: 'Jungle, Drum n Bass' },
-  { id: 'home', label: 'Home', icon: Home, color: 'from-green-500/20 to-emerald-500/20 border-green-500/30', activeColor: 'bg-green-500', description: 'House music' },
-  { id: 'chilling', label: 'Chilling', icon: Glasses, color: 'from-purple-500/20 to-violet-500/20 border-purple-500/30', activeColor: 'bg-purple-500', description: 'Trance' },
-  { id: 'getting-ready', label: 'Getting Ready', icon: Zap, color: 'from-neon-green/20 to-neon-blue/20 border-neon-green/30', activeColor: 'bg-neon-green', description: 'Techno / Tech House / House' },
+  // ── Working first: real folders with actual content ────────────────
+  { id: 'jungle-dnb',  label: 'Jungle-DnB', icon: Disc, color: 'from-blue-500/20 to-cyan-500/20 border-blue-500/30', activeColor: 'bg-blue-500', description: 'Mac server · jungle-dnb/' },
+  { id: 'house',       label: 'House',      icon: Disc, color: 'from-yellow-500/20 to-orange-500/20 border-yellow-500/30', activeColor: 'bg-yellow-500', description: 'Server 2 · HOUSE/' },
+  { id: 'lounge',      label: 'Lounge',     icon: Disc, color: 'from-amber-500/20 to-yellow-500/20 border-amber-500/30', activeColor: 'bg-amber-500', description: 'Server 2 · LOUNGE/' },
+  { id: 'eighties-nineties-2000s', label: '80 / 90 / 2000', icon: Disc, color: 'from-pink-500/20 to-rose-500/20 border-pink-500/30', activeColor: 'bg-pink-500', description: 'Server 2 · 80\'s90\'s 2000/' },
+  { id: 'chill',       label: 'Chill',       icon: Disc, color: 'from-sky-500/20 to-blue-500/20 border-sky-500/30', activeColor: 'bg-sky-500', description: 'Server 2 · chill/' },
+  // ── Mac-fallback last: no dedicated Server 2 folder, falls back to Mac all/ ──
+  { id: 'trance',      label: 'Trance',     icon: Disc, color: 'from-red-500/20 to-pink-500/20 border-red-500/30', activeColor: 'bg-red-500', description: 'Mac server · trance/' },
+  { id: 'alternative', label: 'Alternative', icon: Disc, color: 'from-green-500/20 to-emerald-500/20 border-green-500/30', activeColor: 'bg-green-500', description: 'Mac server · all/' },
+  { id: 'jazz',        label: 'Jazz',       icon: Disc, color: 'from-purple-500/20 to-violet-500/20 border-purple-500/30', activeColor: 'bg-purple-500', description: 'Mac server · lounge/' },
+  { id: 'blues',       label: 'Blues',      icon: Disc, color: 'from-neon-green/20 to-neon-blue/20 border-neon-green/30', activeColor: 'bg-neon-green', description: 'Mac server · all/' },
+  { id: 'mc-theme',    label: 'M&C Theme',  icon: Disc, color: 'from-orange-500/20 to-amber-500/20 border-orange-500/30', activeColor: 'bg-orange-500', description: 'Movie & cartoon theme songs' },
 ] as const;
 
 type MoodId = typeof MOODS[number]['id'];
@@ -89,6 +97,34 @@ function LiveStreamPlayer() {
 function MoodSelector() {
   const { activeMood, setActiveMood, playlist } = useStation();
   const [showInfo, setShowInfo] = useState(false);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(true);
+
+  const updateScrollState = () => {
+    const el = scrollRef.current;
+    if (!el) return;
+    setCanScrollLeft(el.scrollLeft > 5);
+    setCanScrollRight(el.scrollLeft + el.clientWidth < el.scrollWidth - 5);
+  };
+
+  useEffect(() => {
+    updateScrollState();
+    const el = scrollRef.current;
+    if (!el) return;
+    el.addEventListener('scroll', updateScrollState, { passive: true });
+    window.addEventListener('resize', updateScrollState);
+    return () => {
+      el.removeEventListener('scroll', updateScrollState);
+      window.removeEventListener('resize', updateScrollState);
+    };
+  }, []);
+
+  const scrollBy = (dir: 1 | -1) => {
+    const el = scrollRef.current;
+    if (!el) return;
+    el.scrollBy({ left: dir * el.clientWidth * 0.8, behavior: 'smooth' });
+  };
 
   const activeMoodData = MOODS.find(m => m.id === activeMood);
   const moodTrackCount = activeMood ? playlist.filter(t => t.mood === activeMood).length : 0;
@@ -102,14 +138,31 @@ function MoodSelector() {
             <p className="text-[10px] text-white/30 mt-0.5">{activeMoodData.description} — {moodTrackCount} tracks</p>
           )}
         </div>
-        {activeMood && (
-          <button onClick={() => setActiveMood(null)} className="flex items-center gap-1 text-[10px] font-bold text-white/40 hover:text-white/70 uppercase tracking-widest transition-colors">
-            <X className="w-3 h-3" /> Clear
+        </div>
+
+      <div className="relative">
+        {canScrollLeft && (
+          <button
+            onClick={() => scrollBy(-1)}
+            aria-label="Scroll moods left"
+            className="absolute left-0 top-0 bottom-2 z-10 w-10 flex items-center justify-center bg-gradient-to-r from-black/80 via-black/40 to-transparent hover:from-black/90 transition-all"
+          >
+            <ChevronLeft className="w-5 h-5 text-white/80" />
           </button>
         )}
-      </div>
-
-      <div className="grid grid-cols-3 md:grid-cols-6 gap-2">
+        {canScrollRight && (
+          <button
+            onClick={() => scrollBy(1)}
+            aria-label="Scroll moods right"
+            className="absolute right-0 top-0 bottom-2 z-10 w-10 flex items-center justify-center bg-gradient-to-l from-black/80 via-black/40 to-transparent hover:from-black/90 transition-all animate-pulse"
+          >
+            <ChevronRight className="w-5 h-5 text-white/80" />
+          </button>
+        )}
+        <div
+          ref={scrollRef}
+          className="flex gap-2 overflow-x-auto overflow-y-hidden pb-2 -mx-1 px-1 snap-x snap-mandatory scroll-smooth vibe-mood-scroll"
+        >
         {MOODS.map((mood) => {
           const isActive = activeMood === mood.id;
           const trackCount = playlist.filter(t => t.mood === mood.id).length;
@@ -122,7 +175,7 @@ function MoodSelector() {
                 setTimeout(() => setShowInfo(false), 2000);
               }}
               className={cn(
-                "relative flex flex-col items-center gap-2 p-3 rounded-xl border transition-all duration-200",
+                "relative flex flex-col items-center gap-2 p-3 rounded-xl border transition-all duration-200 shrink-0 w-[110px] snap-start",
                 isActive ? `${mood.color} border-current bg-white/5 shadow-lg` : "bg-white/5 border-white/10 hover:border-white/30"
               )}
             >
@@ -132,6 +185,7 @@ function MoodSelector() {
             </button>
           );
         })}
+        </div>
       </div>
     </div>
   );
@@ -149,6 +203,18 @@ export default function RadioView() {
   const { currentUser, isAdmin } = useAuth();
   const videoRef = useRef<HTMLVideoElement>(null);
   const [chatInput, setChatInput] = useState("");
+  const [, setDurationTick] = useState(0);  // forces re-render when duration cache updates
+
+  // Probe real durations for server-file tracks so Up Next shows "3:42" not "0:00"
+  useEffect(() => {
+    const serverTracks = playlist.filter(t => (t as any).serverFile);
+    if (serverTracks.length === 0) return;
+    let cancelled = false;
+    probeServerFileDurations(serverTracks).then(() => {
+      if (!cancelled) setDurationTick(n => n + 1);
+    });
+    return () => { cancelled = true; };
+  }, [playlist.length]);
 
   // If live mode, show live stream player instead
   if (isLive) {
@@ -302,7 +368,7 @@ export default function RadioView() {
 
             {/* Overlay Info - REMOVED: track info moved to Info Bar */}
             <div className="absolute inset-0 pointer-events-none">
-              <VisualSlideshow />
+              <TheWindow fallback="all" />
             </div>
 
             {/* Play/Pause Large Overlay (Mobile) */}
@@ -323,10 +389,14 @@ export default function RadioView() {
                 <div className="w-2 h-2 bg-neon-green rounded-full animate-pulse" />
                 <span className="text-neon-green font-bold text-lg tracking-tight">{currentTrack.title}</span>
               </div>
-              <div className="h-6 w-px bg-white/10" />
-              <div className="flex items-center gap-2">
-                <span className="text-white/50 text-sm font-medium">{currentTrack.artist}</span>
-              </div>
+              {currentTrack.artist && currentTrack.artist !== 'Local Server' && (
+                <>
+                  <div className="h-6 w-px bg-white/10" />
+                  <div className="flex items-center gap-2">
+                    <span className="text-white/50 text-sm font-medium">{currentTrack.artist}</span>
+                  </div>
+                </>
+              )}
             </div>
             <div className="flex items-center gap-3">
               {currentTrack.energy && (
@@ -441,7 +511,6 @@ export default function RadioView() {
           <div className="glass rounded-3xl p-6">
             <div className="flex items-center justify-between mb-6">
               <h3 className="font-bold uppercase tracking-widest text-xs text-white/50">Up Next</h3>
-              <span className="text-[10px] text-white/30 font-mono">{currentTrackIndex + 1} / {displayPlaylist.length}</span>
             </div>
             <div className="space-y-4">
               {displayPlaylist.length === 0 ? (
@@ -497,9 +566,11 @@ export default function RadioView() {
                       <h4 className={cn("font-bold text-sm truncate", idx === currentTrackIndex ? "text-neon-green" : "text-white")}>
                         {track.title}
                       </h4>
-                      <p className="text-xs text-white/50 truncate">{track.artist}</p>
+                      {track.artist && track.artist !== 'Local Server' && (
+                        <p className="text-xs text-white/50 truncate">{track.artist}</p>
+                      )}
                     </div>
-                    <span className="text-[10px] font-mono text-white/30">{track.duration}</span>
+                    <span className="text-[10px] font-mono text-white/30">{(track.audioUrl && getCachedDuration(track.audioUrl)) || track.duration}</span>
                   </div>
                 ));
               })()}
@@ -508,6 +579,12 @@ export default function RadioView() {
         </div>
 
       </div>
+
+      {/* Newsletter — full-width OUTSIDE the 3-col grid so it doesn't get squeezed to 1/3 width on lg screens */}
+      <div className="max-w-7xl mx-auto mt-12 px-2">
+        <NewsletterSignup source="radio_view" variant="banner" />
+      </div>
+
     </motion.div>
   );
 }

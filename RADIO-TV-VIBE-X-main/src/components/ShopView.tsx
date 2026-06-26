@@ -3,7 +3,7 @@ import confetti from 'canvas-confetti';
 
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { ShoppingCart, Plus, Minus, X, ArrowRight, Tag, CheckCircle, Loader2, CreditCard } from 'lucide-react';
+import { ShoppingCart, Plus, Minus, X, ArrowRight, Tag, CheckCircle, Loader2, CreditCard, Star } from 'lucide-react';
 import { cn } from '../utils';
 import { Product, CartItem } from '../types';
 
@@ -155,41 +155,85 @@ export default function ShopView() {
         )}
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredProducts.map((product) => (
+          {filteredProducts.map((product) => {
+            const discounted = product.discountPercent && product.discountPercent > 0
+              ? Math.max(0, +(product.price * (1 - product.discountPercent / 100)).toFixed(2))
+              : product.price;
+            const rating = typeof product.rating === 'number' && product.rating > 0 ? product.rating : null;
+            const outOfStock = product.stock !== undefined && product.stock <= 0;
+            return (
             <motion.div
               layout
               key={product.id}
               className="glass rounded-3xl overflow-hidden group"
             >
-              <div className="aspect-square overflow-hidden relative">
-                <img 
-                  src={product.image} 
-                  alt={product.name} 
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+              <div className="aspect-square overflow-hidden relative bg-black/30">
+                <img
+                  src={product.image}
+                  alt={product.name}
+                  className="w-full h-full object-contain p-2 group-hover:scale-105 transition-transform duration-500"
                   referrerPolicy="no-referrer"
+                  onError={(e) => {
+                    const t = e.currentTarget;
+                    if (!t.dataset.fallback) {
+                      t.dataset.fallback = '1';
+                      t.src = 'https://firebasestorage.googleapis.com/v0/b/vibe-x-app.firebasestorage.app/o/products%2Fvibex-placeholder.png?alt=media';
+                    }
+                  }}
                 />
+                {/* Discount badge */}
+                {product.discountPercent && product.discountPercent > 0 && (
+                  <div className="absolute top-4 left-4 bg-neon-green text-black px-3 py-1 rounded-full text-xs font-black shadow-lg shadow-neon-green/30">
+                    −{product.discountPercent}% OFF
+                  </div>
+                )}
+                {outOfStock && (
+                  <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
+                    <span className="bg-rose-500 text-white px-4 py-2 rounded-full text-xs font-black uppercase tracking-widest">Sold Out</span>
+                  </div>
+                )}
                 <div className="absolute top-4 right-4">
-                  <span className="bg-black/50 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold text-neon-green border border-neon-green/30">
-                    ${product.price}
-                  </span>
+                  {product.discountPercent && product.discountPercent > 0 ? (
+                    <div className="text-right">
+                      <div className="text-[10px] text-white/40 line-through font-bold">${product.price}</div>
+                      <div className="bg-black/50 backdrop-blur-md px-3 py-1 rounded-full text-xs font-black text-neon-green border border-neon-green/30">${discounted}</div>
+                    </div>
+                  ) : (
+                    <span className="bg-black/50 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold text-neon-green border border-neon-green/30">
+                      ${product.price}
+                    </span>
+                  )}
                 </div>
               </div>
               <div className="p-6">
-                <div className="flex items-center gap-2 mb-2">
-                  <Tag className="w-3 h-3 text-white/30" />
-                  <span className="text-[10px] uppercase tracking-widest text-white/30 font-bold">{product.category}</span>
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-2">
+                    <Tag className="w-3 h-3 text-white/30" />
+                    <span className="text-[10px] uppercase tracking-widest text-white/30 font-bold">{product.category}</span>
+                  </div>
+                  {rating !== null && (
+                    <div className="flex items-center gap-1 text-amber-400">
+                      <Star className="w-3 h-3 fill-current" />
+                      <span className="text-[10px] font-bold">{rating.toFixed(1)}</span>
+                    </div>
+                  )}
                 </div>
-                <h3 className="text-xl font-bold mb-6 group-hover:text-neon-green transition-colors">{product.name}</h3>
-                <button 
+                <h3 className="text-xl font-bold mb-2 group-hover:text-neon-green transition-colors">{product.name}</h3>
+                {product.info && (
+                  <p className="text-xs text-white/50 mb-4 line-clamp-2">{product.info}</p>
+                )}
+                <button
                   onClick={() => addToCart(product)}
-                  className="w-full bg-white/5 border border-white/10 hover:bg-neon-green hover:text-black hover:border-neon-green py-3 rounded-2xl font-bold transition-all flex items-center justify-center gap-2 group/btn"
+                  disabled={outOfStock}
+                  className="w-full bg-white/5 border border-white/10 hover:bg-neon-green hover:text-black hover:border-neon-green disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-white/5 disabled:hover:text-white disabled:hover:border-white/10 py-3 rounded-2xl font-bold transition-all flex items-center justify-center gap-2 group/btn"
                 >
                   <ShoppingCart className="w-4 h-4 group-hover/btn:scale-110 transition-transform" />
-                  ADD TO CART
+                  {outOfStock ? 'OUT OF STOCK' : 'ADD TO CART'}
                 </button>
               </div>
             </motion.div>
-          ))}
+            );
+          })}
         </div>
       </div>
 

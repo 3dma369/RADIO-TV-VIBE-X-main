@@ -5,7 +5,6 @@ import {
   ShoppingBag, 
   Calendar, 
   Users, 
-  Video, 
   Music, 
   TrendingUp, 
   Plus, 
@@ -39,24 +38,41 @@ import {
   Folder,
   FileAudio,
   Image,
-  Film
+  Film,
+  RefreshCw,
+  Copy,
+  ExternalLink,
+  Megaphone,
+  PlayCircle,
+  PauseCircle,
+  SkipForward
 } from 'lucide-react';
 import { cn } from '../utils';
-import MetricsDashboard from './MetricsDashboard';
+import VisualsManager from './VisualsManager';
+import CommercialsManager from './CommercialsManager';
+import { ImageUploadField } from './ImageUploadField';
+import { AdminDashboard } from '../../admin-suite/AdminDashboard';
+import { OpsConsole } from '../../empire-ops/OpsConsole';
+import ConsentManager from './ConsentManager';
 // @ts-ignore
 // Lazy-load confetti to prevent page crash on initialization errors
 const Confetti = React.lazy(() => import('canvas-confetti'));
 
+import { db, storage } from '../firebaseConfig';
+import { vibeXConfig } from '../../admin.config';
+import { vibeXOpsConfig } from '../../empire.config';
 import { useAuth } from '../context/AuthContext';
 import { useStation } from '../context/StationContext';
 import { Product, DJ, ScheduleEntry, Track } from '../types';
-import { uploadToStorage, sanitizePathSegment } from '../firebaseConfig';
+import { uploadToStorage, deleteFromStorage, listFolder, sanitizePathSegment } from '../firebaseConfig';
+import SourcesManager from './SourcesManager';
+import { Server } from 'lucide-react';
 
-type Tab = 'metrics' | 'shop' | 'schedule' | 'djs' | 'stream' | 'playlist' | 'storage' | 'donors' | 'settings';
+type Tab = 'metrics' | 'shop' | 'schedule' | 'djs' | 'playlist' | 'visuals' | 'commercials' | 'storage' | 'donors' | 'settings' | 'sources';
 
 export default function AdminView() {
   const [activeTab, setActiveTab] = useState<Tab>('metrics');
-  const { logout } = useAuth();
+  const { logout, currentUser } = useAuth();
   const { isLoading } = useStation();
 
   const tabs = [
@@ -64,10 +80,12 @@ export default function AdminView() {
     { id: 'shop', name: 'Shop', icon: ShoppingBag },
     { id: 'schedule', name: 'Schedule', icon: Calendar },
     { id: 'djs', name: 'DJs', icon: Users },
-    { id: 'stream', name: 'Stream', icon: Video },
     { id: 'playlist', name: 'Playlist', icon: ListMusic },
+    { id: 'visuals', name: 'Visuals', icon: ImageIcon },
+    { id: 'commercials', name: 'Commercials', icon: Megaphone },
     { id: 'storage', name: 'Storage', icon: FolderOpen },
     { id: 'donors', name: 'Donors', icon: Heart },
+    { id: 'sources', name: 'Sources', icon: Server },
     { id: 'settings', name: 'Settings', icon: Settings },
   ];
 
@@ -136,13 +154,21 @@ export default function AdminView() {
           {/* Content Area */}
           <div className="flex-grow">
             <div className="glass rounded-[40px] p-8 min-h-[600px]">
-              {activeTab === 'metrics' && <MetricsDashboard />}
+              {activeTab === 'metrics' && (
+                <div className="space-y-8">
+                  <AdminDashboard config={vibeXConfig} currentUser={currentUser ? { fullName: currentUser.displayName, email: currentUser.email, id: currentUser.uid } : null} db={db} />
+                  <ConsentManager />
+                </div>
+              )}
+              {activeTab === 'shop' && <OpsConsole config={vibeXOpsConfig} db={db} storage={storage} />}
               {activeTab === 'schedule' && <ScheduleManager />}
               {activeTab === 'djs' && <DJManager />}
-              {activeTab === 'stream' && <StreamManager />}
               {activeTab === 'playlist' && <PlaylistManager />}
+              {activeTab === 'visuals' && <VisualsManager />}
+              {activeTab === 'commercials' && <CommercialsManager />}
               {activeTab === 'storage' && <StorageManager />}
               {activeTab === 'donors' && <DonorManager />}
+              {activeTab === 'sources' && <SourcesManager />}
               {activeTab === 'settings' && <SettingsManager />}
             </div>
           </div>
@@ -153,10 +179,11 @@ export default function AdminView() {
 }
 
 
-function FileUpload({ onUpload, label, accept = "image/*" }: {
+function FileUpload({ onUpload, label, accept = "image/*", storageFolder = "music" }: {
   onUpload: (url: string, file?: File) => void;
   label: string;
   accept?: string;
+  storageFolder?: string;  // 'music' | 'products' | 'dj-photos' | 'thumbnails' | etc.
 }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -178,10 +205,10 @@ function FileUpload({ onUpload, label, accept = "image/*" }: {
     setProgress('Uploading to Firebase...');
 
     try {
-      // Build storage path: music/Artist-Title-timestamp.ext
+      // Build storage path based on the folder hint
       const safeName = sanitizePathSegment(file.name.replace(/\.[^/.]+$/, ''));
       const ext = file.name.split('.').pop() || 'bin';
-      const path = `music/${safeName}-${Date.now()}.${ext}`;
+      const path = `${storageFolder}/${safeName}-${Date.now()}.${ext}`;
 
       const url = await uploadToStorage(path, file);
       setProgress('Done!');
@@ -293,23 +320,48 @@ function ShopManager() {
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [uploadedImageUrl, setUploadedImageUrl] = useState<string>('');
+  const [uploadedImagePath, setUploadedImagePath] = useState<string>('');
   const [confirmingId, setConfirmingId] = useState<string | null>(null);
 
-  const handleSave = (e: React.FormEvent<HTMLFormElement>) => {
+  /** Strip undefined values before sending to Firestore (v9 rejects them). */
+function cleanProduct(p: Product): Record<string, any> {
+  const out: Record<string, any> = {};
+  for (const [k, v] of Object.entries(p)) {
+    if (v !== undefined) out[k] = v;
+  }
+  return out;
+}
+
+const handleSave = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
+    const discountPct = parseFloat((formData.get('discountPercent') as string) || '0');
+    const ratingVal = parseFloat((formData.get('rating') as string) || '0');
     const productData: Product = {
       id: editingProduct?.id || Date.now().toString(),
       name: formData.get('name') as string,
       price: parseFloat(formData.get('price') as string),
       image: uploadedImageUrl || formData.get('image') as string,
       category: formData.get('category') as Product['category'],
+      stock: parseInt((formData.get('stock') as string) || '0', 10),
+      discountPercent: isNaN(discountPct) ? 0 : discountPct,
+      rating: isNaN(ratingVal) ? 0 : Math.max(0, Math.min(5, ratingVal)),
+      info: (formData.get('info') as string) || '',
     };
+    if (uploadedImagePath) productData.imagePath = uploadedImagePath;
+    else delete productData.imagePath;
+
+    // Clean all products in the array (other products may have undefined fields from old Firestore docs)
+    const cleanedProducts = products.map(p =>
+      p.id === editingProduct?.id
+        ? cleanProduct(productData)
+        : cleanProduct(p as Product)
+    );
 
     if (editingProduct) {
-      updateProducts(products.map(p => p.id === editingProduct.id ? productData : p));
+      updateProducts(cleanedProducts as any);
     } else {
-      updateProducts([...products, productData]);
+      updateProducts([...cleanedProducts, cleanProduct(productData)] as any);
     }
     setIsModalOpen(false);
     setEditingProduct(null);
@@ -324,8 +376,8 @@ function ShopManager() {
     <div className="space-y-6">
       <div className="flex items-center justify-between mb-8">
         <h3 className="text-3xl font-bold tracking-tighter uppercase">Manage Products</h3>
-        <button 
-          onClick={() => { setEditingProduct(null); setUploadedImageUrl(''); setIsModalOpen(true); }}
+        <button
+          onClick={() => { setEditingProduct(null); setUploadedImageUrl(''); setUploadedImagePath(''); setIsModalOpen(true); }}
           className="bg-neon-green text-black px-6 py-2 rounded-xl font-bold text-sm flex items-center gap-2"
         >
           <Plus className="w-4 h-4" /> ADD PRODUCT
@@ -334,27 +386,31 @@ function ShopManager() {
 
       <div className="grid gap-4">
         {products.map((product) => (
-          <div key={product.id} className="bg-white/5 border border-white/10 rounded-2xl p-4 flex items-center justify-between gap-4">
-            <div className="flex items-center gap-4">
-              <img src={product.image} className="w-12 h-12 rounded-lg object-cover" referrerPolicy="no-referrer" />
-              <div>
-                <h4 className="font-bold text-sm">{product.name}</h4>
-                <p className="text-xs text-white/40">${product.price} • {product.category}</p>
+          <div key={product.id} className="group bg-white/5 border border-white/10 rounded-2xl p-4 flex items-center justify-between gap-4">
+            <div className="flex items-center gap-4 min-w-0 flex-1">
+              <img src={product.image} className="w-12 h-12 rounded-lg object-cover flex-shrink-0" referrerPolicy="no-referrer" />
+              <div className="min-w-0">
+                <h4 className="font-bold text-sm truncate">{product.name}</h4>
+                <p className="text-xs text-white/40">
+                  ${product.price}
+                  {product.discountPercent ? <span className="ml-1 text-neon-green">−{product.discountPercent}%</span> : null}
+                  {' • '}{product.category}
+                  {product.stock !== undefined ? ` • ${product.stock} in stock` : ''}
+                  {product.rating ? ` • ★${product.rating}` : ''}
+                </p>
               </div>
             </div>
-            <div className={cn(
-              "flex gap-2 items-center transition-opacity",
-              confirmingId === product.id ? "opacity-100" : "opacity-0 group-hover:opacity-100"
-            )}>
-              <button 
-                onClick={() => { setEditingProduct(product); setUploadedImageUrl(product.image); setIsModalOpen(true); }}
-                className="p-2 glass rounded-lg hover:text-neon-green transition-all"
+            <div className="flex gap-2 items-center flex-shrink-0 opacity-100">
+              <button
+                onClick={() => { setEditingProduct(product); setUploadedImageUrl(product.image); setUploadedImagePath((product as any).imagePath || ''); setIsModalOpen(true); }}
+                className="p-2 glass rounded-lg hover:text-neon-green transition-all flex items-center gap-1.5 text-xs font-bold"
+                aria-label={`Edit ${product.name}`}
               >
-                <Edit2 className="w-4 h-4" />
+                <Edit2 className="w-4 h-4" /> EDIT
               </button>
-              <DeleteButton 
-                onDelete={() => handleDelete(product.id)} 
-                confirmMessage="Delete Product" 
+              <DeleteButton
+                onDelete={() => handleDelete(product.id)}
+                confirmMessage="Delete Product"
                 onConfirmingChange={(isConfirming) => setConfirmingId(isConfirming ? product.id : null)}
               />
             </div>
@@ -362,7 +418,7 @@ function ShopManager() {
         ))}
       </div>
 
-      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title={editingProduct ? "Edit Product" : "Add Product"}>
+      <Modal isOpen={isModalOpen} onClose={() => { setIsModalOpen(false); setEditingProduct(null); setUploadedImageUrl(''); setUploadedImagePath(''); }} title={editingProduct ? "Edit Product" : "Add Product"}>
         <form onSubmit={handleSave} className="space-y-4">
           <div className="space-y-2">
             <label className="text-[10px] font-bold text-white/40 uppercase tracking-widest">Product Name</label>
@@ -374,28 +430,66 @@ function ShopManager() {
               <input name="price" type="number" step="0.01" defaultValue={editingProduct?.price} required className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-neon-green/50" />
             </div>
             <div className="space-y-2">
+              <label className="text-[10px] font-bold text-white/40 uppercase tracking-widest">Quantity (Stock)</label>
+              <input name="stock" type="number" min="0" defaultValue={editingProduct?.stock ?? 0} className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-neon-green/50" />
+            </div>
+          </div>
+          <div className="grid grid-cols-3 gap-4">
+            <div className="space-y-2">
               <label className="text-[10px] font-bold text-white/40 uppercase tracking-widest">Category</label>
               <select name="category" defaultValue={editingProduct?.category || 'apparel'} className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-neon-green/50">
                 <option value="apparel">Apparel</option>
                 <option value="accessories">Accessories</option>
                 <option value="digital">Digital</option>
+                <option value="music">Music</option>
+                <option value="swag">Swag</option>
+                <option value="vinyl">Vinyl</option>
+                <option value="ticket">Ticket</option>
               </select>
             </div>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <label className="text-[10px] font-bold text-white/40 uppercase tracking-widest">Image URL</label>
-              <input 
-                name="image" 
-                value={uploadedImageUrl} 
-                onChange={(e) => setUploadedImageUrl(e.target.value)}
-                placeholder="https://..."
-                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-neon-green/50" 
-              />
+              <label className="text-[10px] font-bold text-white/40 uppercase tracking-widest">Discount (%)</label>
+              <input name="discountPercent" type="number" min="0" max="100" step="1" defaultValue={editingProduct?.discountPercent ?? 0} className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-neon-green/50" />
             </div>
-            <FileUpload label="Or Upload Image" onUpload={setUploadedImageUrl} />
+            <div className="space-y-2">
+              <label className="text-[10px] font-bold text-white/40 uppercase tracking-widest">Rating (0–5)</label>
+              <input name="rating" type="number" min="0" max="5" step="0.1" defaultValue={editingProduct?.rating ?? 0} className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-neon-green/50" />
+            </div>
           </div>
+
+          <div className="space-y-2">
+            <label className="text-[10px] font-bold text-white/40 uppercase tracking-widest">Product Info / Description</label>
+            <textarea
+              name="info"
+              defaultValue={editingProduct?.info || ''}
+              rows={3}
+              placeholder="Marketing copy, sizing, specs, anything you want shoppers to know…"
+              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-neon-green/50 resize-y"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-[10px] font-bold text-white/40 uppercase tracking-widest">Image URL</label>
+            <input
+              name="image"
+              value={uploadedImageUrl}
+              onChange={(e) => { setUploadedImageUrl(e.target.value); setUploadedImagePath(''); }}
+              placeholder="https://..."
+              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-neon-green/50"
+            />
+          </div>
+
+          <ImageUploadField
+              label="🖼️ Upload Image (drag-drop or click) — uploads to your Mac"
+              collection="vibe_x_products"
+              docId={editingProduct?.id || 'new'}
+              value={uploadedImageUrl}
+              storagePath={uploadedImagePath}
+              onChange={(d) => {
+                setUploadedImageUrl(d.url || '');
+                setUploadedImagePath(d.path || '');
+              }}
+            />
 
           {uploadedImageUrl && (
             <div className="mt-2 flex justify-center">
@@ -527,6 +621,7 @@ function DJManager() {
   const [editingDJ, setEditingDJ] = useState<DJ | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [uploadedImageUrl, setUploadedImageUrl] = useState<string>('');
+  const [uploadedImagePath, setUploadedImagePath] = useState<string>('');
   const [confirmingId, setConfirmingId] = useState<string | null>(null);
 
   const handleSave = (e: React.FormEvent<HTMLFormElement>) => {
@@ -537,6 +632,7 @@ function DJManager() {
       name: formData.get('name') as string,
       bio: formData.get('bio') as string,
       image: uploadedImageUrl || formData.get('image') as string,
+      imagePath: uploadedImagePath || undefined,
       specialty: formData.get('specialty') as string,
       socials: {
         twitter: formData.get('twitter') as string,
@@ -564,7 +660,7 @@ function DJManager() {
       <div className="flex items-center justify-between mb-8">
         <h3 className="text-3xl font-bold tracking-tighter uppercase">DJ Roster</h3>
         <button 
-          onClick={() => { setEditingDJ(null); setUploadedImageUrl(''); setIsModalOpen(true); }}
+          onClick={() => { setEditingDJ(null); setUploadedImageUrl(''); setUploadedImagePath(''); setIsModalOpen(true); }}
           className="bg-neon-green text-black px-6 py-2 rounded-xl font-bold text-sm flex items-center gap-2"
         >
           <Plus className="w-4 h-4" /> ADD DJ
@@ -585,7 +681,7 @@ function DJManager() {
               "flex gap-2 items-center transition-opacity",
               confirmingId === dj.id ? "opacity-100" : "opacity-0 group-hover:opacity-100"
             )}>
-              <button onClick={() => { setEditingDJ(dj); setUploadedImageUrl(dj.image); setIsModalOpen(true); }} className="p-2 glass rounded-lg hover:text-neon-green"><Edit2 className="w-4 h-4" /></button>
+              <button onClick={() => { setEditingDJ(dj); setUploadedImageUrl(dj.image); setUploadedImagePath(dj.imagePath || ''); setIsModalOpen(true); }} className="p-2 glass rounded-lg hover:text-neon-green"><Edit2 className="w-4 h-4" /></button>
               <DeleteButton 
                 onDelete={() => handleDelete(dj.id)} 
                 confirmMessage="Remove DJ" 
@@ -596,7 +692,7 @@ function DJManager() {
         ))}
       </div>
 
-      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title={editingDJ ? "Edit DJ" : "Add DJ"}>
+      <Modal isOpen={isModalOpen} onClose={() => { setIsModalOpen(false); setEditingDJ(null); setUploadedImageUrl(''); setUploadedImagePath(''); }} title={editingDJ ? "Edit DJ" : "Add DJ"}>
         <form onSubmit={handleSave} className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
@@ -613,19 +709,28 @@ function DJManager() {
             <textarea name="bio" defaultValue={editingDJ?.bio} required rows={3} className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-neon-green/50 resize-none" />
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <label className="text-[10px] font-bold text-white/40 uppercase tracking-widest">Image URL</label>
-              <input 
-                name="image" 
-                value={uploadedImageUrl} 
-                onChange={(e) => setUploadedImageUrl(e.target.value)}
-                placeholder="https://..."
-                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-neon-green/50" 
-              />
-            </div>
-            <FileUpload label="Or Upload Photo" onUpload={setUploadedImageUrl} />
+          <div className="space-y-2">
+            <label className="text-[10px] font-bold text-white/40 uppercase tracking-widest">Image URL</label>
+            <input
+              name="image"
+              value={uploadedImageUrl}
+              onChange={(e) => { setUploadedImageUrl(e.target.value); setUploadedImagePath(''); }}
+              placeholder="https://..."
+              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-neon-green/50"
+            />
           </div>
+
+          <ImageUploadField
+              label="🖼️ Upload Photo (drag-drop or click) — uploads to your Mac"
+              collection="vibe_x_djs"
+              docId={editingDJ?.id || 'new'}
+              value={uploadedImageUrl}
+              storagePath={uploadedImagePath}
+              onChange={(d) => {
+                setUploadedImageUrl(d.url || '');
+                setUploadedImagePath(d.path || '');
+              }}
+            />
 
           <div className="grid grid-cols-3 gap-4">
             <div className="space-y-2">
@@ -650,339 +755,6 @@ function DJManager() {
   );
 }
 
-function StreamManager() {
-  const { streamSource, updateStreamSource, playlist, updatePlaylist } = useStation();
-  const [editingTrack, setEditingTrack] = useState<Track | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [uploadedMediaUrl, setUploadedMediaUrl] = useState<string>('');
-  const [uploadedAudioUrl, setUploadedAudioUrl] = useState<string>('');
-  const [uploadedVisualUrl, setUploadedVisualUrl] = useState<string>('');
-  const [confirmingId, setConfirmingId] = useState<string | null>(null);
-
-  const [trackTitle, setTrackTitle] = useState('');
-  const [trackArtist, setTrackArtist] = useState('');
-  const [trackDuration, setTrackDuration] = useState('');
-  const [trackGenre, setTrackGenre] = useState('');
-
-  const handleSourceUpdate = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    updateStreamSource({
-      ...streamSource,
-      url: formData.get('url') as string,
-    });
-    alert('Stream source updated!');
-  };
-
-  const extractTrackData = (url: string, file?: File) => {
-    if (!file) return;
-    
-    // Attempt basic ID3/Filename parsing "Artist - Title"
-    const nameStr = file.name.replace(/\.[^/.]+$/, ""); // strip extension
-    const nameParts = nameStr.split('-');
-    
-    if (nameParts.length >= 2) {
-      if (!trackArtist) setTrackArtist(nameParts[0].trim());
-      if (!trackTitle) setTrackTitle(nameParts.slice(1).join('-').trim());
-    } else {
-      if (!trackTitle) setTrackTitle(nameStr);
-    }
-
-    // Auto audio duration
-    const audio = new Audio(url);
-    audio.addEventListener('loadedmetadata', () => {
-      if (!isFinite(audio.duration)) return;
-      const mins = Math.floor(audio.duration / 60);
-      const secs = Math.floor(audio.duration % 60);
-      const formatted = `${mins}:${secs.toString().padStart(2, '0')}`;
-      if (!trackDuration) setTrackDuration(formatted);
-    });
-  };
-
-  const handleCombinedUpload = (url: string, file?: File) => {
-    setUploadedMediaUrl(url);
-    extractTrackData(url, file);
-  };
-
-  const handleAudioUpload = (url: string, file?: File) => {
-    setUploadedAudioUrl(url);
-    extractTrackData(url, file);
-  };
-
-  const handleTrackSave = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const trackData: Track = {
-      id: editingTrack?.id || Date.now().toString(),
-      title: formData.get('title') as string,
-      artist: formData.get('artist') as string,
-      duration: formData.get('duration') as string,
-      genre: formData.get('genre') as string,
-      videoUrl: uploadedMediaUrl || formData.get('videoUrl') as string,
-      audioUrl: uploadedAudioUrl || formData.get('audioUrl') as string,
-      visualUrl: uploadedVisualUrl || formData.get('visualUrl') as string,
-    };
-
-    if (editingTrack) {
-      updatePlaylist(playlist.map(t => t.id === editingTrack.id ? trackData : t));
-    } else {
-      updatePlaylist([...playlist, trackData]);
-    }
-    setIsModalOpen(false);
-    setEditingTrack(null);
-    setUploadedMediaUrl('');
-    setUploadedAudioUrl('');
-    setUploadedVisualUrl('');
-  };
-
-  const handleTrackDelete = (id: string) => {
-    updatePlaylist(playlist.filter(t => t.id !== id));
-  };
-
-  const openModal = (track: Track | null = null) => {
-    setEditingTrack(track);
-    setUploadedMediaUrl(track?.videoUrl || '');
-    setUploadedAudioUrl(track?.audioUrl || '');
-    setUploadedVisualUrl(track?.visualUrl || '');
-    setTrackTitle(track?.title || '');
-    setTrackArtist(track?.artist || '');
-    setTrackDuration(track?.duration || '');
-    setTrackGenre(track?.genre || '');
-    setIsModalOpen(true);
-  };
-
-  return (
-    <div className="space-y-8">
-      <div>
-        <h3 className="text-3xl font-bold tracking-tighter uppercase mb-8">Stream Configuration</h3>
-
-        {/* YouTube Live Setup */}
-        <div className="space-y-6 mb-8">
-          <div className="glass rounded-2xl p-6 border border-white/10">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 rounded-xl bg-red-600/20 flex items-center justify-center">
-                <Radio className="w-6 h-6 text-red-500" />
-              </div>
-              <div>
-                <h4 className="font-bold text-sm uppercase tracking-widest">YouTube Live</h4>
-                <p className="text-[10px] text-white/40 mt-0.5">OBS → YouTube → VIBE-X auto-switch</p>
-              </div>
-            </div>
-
-            <div className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <label className="text-[10px] font-bold text-white/40 uppercase tracking-widest">YouTube Video ID</label>
-                  <input
-                    type="text"
-                    value={streamSource.youtubeVideoId || ''}
-                    onChange={(e) => {
-                      const videoId = e.target.value.replace(/https?:\/\/.*youtube\.com\/watch\?v=/, '').replace(/.*youtu\.be\//, '').split('&')[0];
-                      updateStreamSource({ ...streamSource, youtubeVideoId: videoId, platform: 'youtube', type: 'stream', isActive: true });
-                    }}
-                    placeholder="dQw4w9WgXcQ or full YouTube URL"
-                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-red-500/50 transition-colors font-mono"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <label className="text-[10px] font-bold text-white/40 uppercase tracking-widest">Stream Status</label>
-                  <div className="flex items-center gap-3 h-[46px]">
-                    <div className={cn(
-                      "flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-widest",
-                      streamSource.youtubeVideoId ? "bg-red-600/20 text-red-500" : "bg-white/5 text-white/30"
-                    )}>
-                      <div className={cn("w-2 h-2 rounded-full", streamSource.youtubeVideoId ? "bg-red-600 animate-pulse" : "bg-white/20")} />
-                      {streamSource.youtubeVideoId ? 'Ready to Go Live' : 'No Video ID'}
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-black/20 rounded-xl p-4 space-y-2">
-                <p className="text-[10px] text-white/40 font-bold uppercase tracking-widest mb-3">Setup Guide</p>
-                <div className="text-xs text-white/50 space-y-1.5 font-mono">
-                  <p><span className="text-neon-green">1.</span> Open OBS on the ComfyUI PC (10.0.0.69)</p>
-                  <p><span className="text-neon-green">2.</span> In OBS: Settings → Stream → Service: YouTube</p>
-                  <p><span className="text-neon-green">3.</span> Connect your @3volution_tv YouTube account</p>
-                  <p><span className="text-neon-green">4.</span> Copy your <span className="text-white/70">Stream Key</span> from youtube.com/livestreaming</p>
-                  <p><span className="text-neon-green">5.</span> Paste the video ID above (from the YouTube stream URL)</p>
-                  <p><span className="text-neon-green">6.</span> Start streaming in OBS — VIBE-X auto-switches to live</p>
-                </div>
-              </div>
-
-              {streamSource.youtubeVideoId && (
-                <div className="flex items-center gap-3">
-                  <a
-                    href={`https://youtu.be/${streamSource.youtubeVideoId}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 px-4 py-2 bg-red-600/20 hover:bg-red-600/30 border border-red-500/30 rounded-xl text-red-400 text-xs font-bold transition-all"
-                  >
-                    <Radio className="w-4 h-4" /> View on YouTube ↗
-                  </a>
-                  <span className="text-white/30 text-xs">Video ID: <span className="font-mono text-white/50">{streamSource.youtubeVideoId}</span></span>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-
-        <div className="h-px bg-white/10 mb-8" />
-
-        <div className="space-y-6">
-          <form onSubmit={handleSourceUpdate} className="space-y-4">
-            <label className="text-xs font-bold text-white/40 uppercase tracking-widest">Fallback Stream URL (RTMP/HLS/Video Link)</label>
-            <div className="flex flex-col md:flex-row gap-4">
-              <input 
-                name="url"
-                type="text" 
-                defaultValue={streamSource.url}
-                placeholder="https://stream.provider.com/live/vibe-x" 
-                className="flex-grow bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-sm focus:outline-none focus:border-neon-green/50 transition-colors"
-              />
-              <button type="submit" className="bg-neon-green text-black px-8 py-4 rounded-2xl font-bold text-sm shadow-[0_0_20px_rgba(0,255,0,0.2)]">
-                UPDATE SOURCE
-              </button>
-            </div>
-          </form>
-
-          <div className="h-px bg-white/10" />
-
-          <div className="space-y-6">
-            <div className="flex items-center justify-between">
-              <h4 className="text-xl font-bold tracking-tight uppercase">Auto-Pilot Playlist (24/7)</h4>
-              <button 
-                onClick={() => openModal()}
-                className="bg-white/5 border border-white/10 px-4 py-2 rounded-xl text-xs font-bold hover:border-neon-green/50 transition-all"
-              >
-                ADD MEDIA LINK
-              </button>
-            </div>
-            <p className="text-sm text-white/40">These links will play automatically in sequence when no live stream is detected. Supports MP3, MP4, and YouTube/Vimeo links.</p>
-            
-            <div className="space-y-3">
-              {playlist.map((item, idx) => (
-                <div key={item.id} className="bg-white/5 border border-white/10 rounded-2xl p-4 flex items-center justify-between group">
-                  <div className="flex items-center gap-4">
-                    <div className="w-8 h-8 rounded-lg glass flex items-center justify-center text-white/30 font-mono text-[10px]">
-                      {idx + 1}
-                    </div>
-                    <div>
-                      <p className="text-sm font-bold">{item.title}</p>
-                      <div className="flex gap-2 mt-1">
-                        {item.videoUrl && (
-                          <span className="text-[8px] px-1.5 py-0.5 bg-white/10 rounded font-mono text-white/40 uppercase">Combined</span>
-                        )}
-                        {item.audioUrl && (
-                          <span className="text-[8px] px-1.5 py-0.5 bg-neon-blue/20 text-neon-blue rounded font-mono uppercase">Audio</span>
-                        )}
-                        {item.visualUrl && (
-                          <span className="text-[8px] px-1.5 py-0.5 bg-neon-pink/20 text-neon-pink rounded font-mono uppercase">Visual</span>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                  <div className={cn(
-                    "flex gap-2 items-center transition-opacity",
-                    confirmingId === item.id ? "opacity-100" : "opacity-0 group-hover:opacity-100"
-                  )}>
-                    <button onClick={() => openModal(item)} className="p-2 hover:text-neon-green"><Edit2 className="w-3 h-3" /></button>
-                    <DeleteButton 
-                      onDelete={() => handleTrackDelete(item.id)} 
-                      confirmMessage="Remove Track" 
-                      onConfirmingChange={(isConfirming) => setConfirmingId(isConfirming ? item.id : null)}
-                    />
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title={editingTrack ? "Edit Track" : "Add Track"}>
-        <form onSubmit={handleTrackSave} className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <label className="text-[10px] font-bold text-white/40 uppercase tracking-widest">Title</label>
-              <input name="title" value={trackTitle} onChange={e => setTrackTitle(e.target.value)} required className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-neon-green/50" />
-            </div>
-            <div className="space-y-2">
-              <label className="text-[10px] font-bold text-white/40 uppercase tracking-widest">Artist</label>
-              <input name="artist" value={trackArtist} onChange={e => setTrackArtist(e.target.value)} required className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-neon-green/50" />
-            </div>
-          </div>
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <label className="text-[10px] font-bold text-white/40 uppercase tracking-widest">Duration</label>
-              <input name="duration" placeholder="4:20" value={trackDuration} onChange={e => setTrackDuration(e.target.value)} required className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-neon-green/50" />
-            </div>
-            <div className="space-y-2">
-              <label className="text-[10px] font-bold text-white/40 uppercase tracking-widest">Genre</label>
-              <input name="genre" value={trackGenre} onChange={e => setTrackGenre(e.target.value)} required className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-neon-green/50" />
-            </div>
-          </div>
-          
-          <div className="h-px bg-white/10 my-4" />
-          
-          <div className="space-y-4">
-            <h5 className="text-[10px] font-bold text-neon-green uppercase tracking-widest">Option A: Combined Video/Audio</h5>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <label className="text-[10px] font-bold text-white/40 uppercase tracking-widest">Video URL</label>
-                <input 
-                  name="videoUrl" 
-                  value={uploadedMediaUrl} 
-                  onChange={(e) => setUploadedMediaUrl(e.target.value)}
-                  placeholder="https://..."
-                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-neon-green/50" 
-                />
-              </div>
-              <FileUpload label="Upload Combined" onUpload={handleCombinedUpload} accept="video/*" />
-            </div>
-          </div>
-
-          <div className="h-px bg-white/10 my-4" />
-
-          <div className="space-y-4">
-            <h5 className="text-[10px] font-bold text-neon-blue uppercase tracking-widest">Option B: Separate Audio & Visual</h5>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <label className="text-[10px] font-bold text-white/40 uppercase tracking-widest">Audio URL</label>
-                <input 
-                  name="audioUrl" 
-                  value={uploadedAudioUrl} 
-                  onChange={(e) => setUploadedAudioUrl(e.target.value)}
-                  placeholder="https://..."
-                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-neon-green/50" 
-                />
-              </div>
-              <FileUpload label="Upload Audio" onUpload={handleAudioUpload} accept="audio/*" />
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <label className="text-[10px] font-bold text-white/40 uppercase tracking-widest">Visual URL</label>
-                <input 
-                  name="visualUrl" 
-                  value={uploadedVisualUrl} 
-                  onChange={(e) => setUploadedVisualUrl(e.target.value)}
-                  placeholder="https://..."
-                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-neon-green/50" 
-                />
-              </div>
-              <FileUpload label="Upload Visual" onUpload={setUploadedVisualUrl} accept="video/*,image/*" />
-            </div>
-          </div>
-
-          <button type="submit" className="w-full bg-neon-green text-black py-4 rounded-xl font-bold mt-4 flex items-center justify-center gap-2">
-            <Save className="w-4 h-4" /> SAVE TRACK
-          </button>
-        </form>
-      </Modal>
-    </div>
-  );
-}
-
 function PlaylistManager() {
   const { playlist, updatePlaylist } = useStation();
   const [editingTrack, setEditingTrack] = useState<Track | null>(null);
@@ -1000,12 +772,15 @@ function PlaylistManager() {
   const [editingOrder, setEditingOrder] = useState(false);
 
   const MOODS = [
-    { id: 'relax', label: 'Relax' },
-    { id: 'working', label: 'Working' },
-    { id: 'exercise', label: 'Exercise' },
-    { id: 'home', label: 'Home' },
-    { id: 'chilling', label: 'Chilling' },
-    { id: 'getting-ready', label: 'Getting Ready' },
+    { id: 'jungle-dnb',  label: 'Jungle-DnB' },
+    { id: 'house',       label: 'House' },
+    { id: 'trance',      label: 'Trance' },
+    { id: 'alternative', label: 'Alternative' },
+    { id: 'jazz',        label: 'Jazz' },
+    { id: 'blues',       label: 'Blues' },
+    { id: 'mc-theme',    label: 'M&C Theme' },
+    { id: 'eighties-nineties-2000s', label: '80 / 90 / 2000' },
+    { id: 'chill', label: 'Image' },
   ] as const;
 
   const filteredPlaylist = filterMood === 'all' ? playlist : playlist.filter(t => t.mood === filterMood);
@@ -1028,19 +803,29 @@ function PlaylistManager() {
     if (!file) return;
     const nameStr = file.name.replace(/\.[^/.]+$/, "");
     const nameParts = nameStr.split('-');
-    if (nameParts.length >= 2) {
-      if (!trackArtist) setTrackArtist(nameParts[0].trim());
-      if (!trackTitle) setTrackTitle(nameParts.slice(1).join('-').trim());
-    } else {
-      if (!trackTitle) setTrackTitle(nameStr);
-    }
+    setTrackTitle(prev => {
+      if (prev) return prev;
+      if (nameParts.length >= 2) {
+        return nameParts.slice(1).join('-').trim();
+      }
+      return nameStr;
+    });
+    setTrackArtist(prev => {
+      if (prev) return prev;
+      if (nameParts.length >= 2) {
+        return nameParts[0].trim();
+      }
+      return '';
+    });
+    // Only auto-detect duration for audio files
+    if (!file.type.startsWith('audio/')) return;
     const audio = new Audio(url);
     audio.addEventListener('loadedmetadata', () => {
       if (!isFinite(audio.duration)) return;
       const mins = Math.floor(audio.duration / 60);
       const secs = Math.floor(audio.duration % 60);
       const formatted = `${mins}:${secs.toString().padStart(2, '0')}`;
-      if (!trackDuration) setTrackDuration(formatted);
+      setTrackDuration(prev => prev || formatted);
     });
   };
 
@@ -1109,31 +894,33 @@ function PlaylistManager() {
 
   return (
     <div className="space-y-8">
-      <div className="flex items-end justify-between">
-        <div>
-          <h3 className="text-3xl font-bold tracking-tighter uppercase mb-2">Playlist Manager</h3>
-          <p className="text-sm text-white/40">{playlist.length} tracks — drag to reorder, tag with moods</p>
-        </div>
-        <div className="flex items-center gap-2">
-          {playlist.length > 1 && (
-            <button
-              onClick={() => setEditingOrder(!editingOrder)}
-              className={cn("flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-widest border transition-all",
-                editingOrder ? 'bg-neon-green text-black border-neon-green' : 'bg-white/5 text-white/50 border-white/10 hover:border-white/30'
-              )}
-            >
-              <ListMusic className="w-4 h-4" /> {editingOrder ? 'Done Reordering' : 'Reorder Tracks'}
+      <div className="sticky top-20 z-30 -mx-8 px-8 pt-2 pb-4 bg-dark-bg/95 backdrop-blur-md border-b border-white/10">
+        <div className="flex items-end justify-between">
+          <div>
+            <h3 className="text-3xl font-bold tracking-tighter uppercase mb-2 text-white">Playlist Manager</h3>
+            <p className="text-sm text-white/60">{playlist.length} tracks — drag to reorder, tag with moods</p>
+          </div>
+          <div className="flex items-center gap-2">
+            {playlist.length > 1 && (
+              <button
+                onClick={() => setEditingOrder(!editingOrder)}
+                className={cn("flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-widest border transition-all",
+                  editingOrder ? 'bg-neon-green text-black border-neon-green' : 'bg-white/5 text-white/50 border-white/10 hover:border-white/30'
+                )}
+              >
+                <ListMusic className="w-4 h-4" /> {editingOrder ? 'Done Reordering' : 'Reorder Tracks'}
+              </button>
+            )}
+            <button onClick={() => openModal()} className="bg-neon-green text-black px-4 py-2 rounded-xl font-bold text-xs flex items-center gap-2">
+              <Plus className="w-4 h-4" /> ADD TRACK
             </button>
-          )}
-          <button onClick={() => openModal()} className="bg-neon-green text-black px-4 py-2 rounded-xl font-bold text-xs flex items-center gap-2">
-            <Plus className="w-4 h-4" /> ADD TRACK
-          </button>
+          </div>
         </div>
       </div>
 
       {/* Filter bar */}
       <div className="flex flex-wrap items-center gap-3">
-        <span className="text-[10px] font-bold text-white/30 uppercase tracking-widest">Filter:</span>
+        <span className="text-[10px] font-bold text-white/60 uppercase tracking-widest">Filter:</span>
         <button
           onClick={() => setFilterMood('all')}
           className={cn("px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-widest border transition-all",
@@ -1216,13 +1003,13 @@ function PlaylistManager() {
               {/* Track info */}
               <div className="flex-grow min-w-0">
                 <div className="flex items-center gap-2 flex-wrap">
-                  <p className="text-sm font-bold truncate">{item.title}</p>
-                  <span className="text-white/30 text-xs font-mono">{item.duration}</span>
+                  <p className="text-sm font-bold truncate text-white">{item.title}</p>
+                  <span className="text-white/60 text-xs font-mono">{item.duration}</span>
                 </div>
                 <div className="flex items-center gap-2 mt-1 flex-wrap">
-                  <span className="text-[10px] text-white/40">{item.artist}</span>
-                  <span className="text-white/10">•</span>
-                  <span className="text-[10px] text-white/30">{item.genre}</span>
+                  <span className="text-[10px] text-white/70 font-bold">{item.artist}</span>
+                  <span className="text-white/30">•</span>
+                  <span className="text-[10px] text-white/60">{item.genre}</span>
                   {getMediaTypeBadge(item)}
                   {item.mood && (
                     <span className={cn('text-[8px] px-1.5 py-0.5 rounded border uppercase font-bold tracking-widest', moodBadgeColor(item.mood))}>
@@ -1358,18 +1145,86 @@ function PlaylistManager() {
 
           <div className="space-y-4">
             <div className="space-y-2">
-              <label className="text-[10px] font-bold text-white/40 uppercase tracking-widest">Media URL</label>
-              <input name="videoUrl" value={uploadedMediaUrl} onChange={e => setUploadedMediaUrl(e.target.value)} placeholder="https://..." className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-neon-green/50" />
+              <label className="text-[10px] font-bold text-white/40 uppercase tracking-widest">Video / Media</label>
+              <input name="videoUrl" value={uploadedMediaUrl} onChange={e => setUploadedMediaUrl(e.target.value)} placeholder="https://... (full music video)" className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-neon-green/50" />
+              <FileUpload
+                label="Or upload video (mp4/webm/mov — up to 500MB)"
+                accept="video/*"
+                onUpload={(url, file) => {
+                  setUploadedMediaUrl(url);
+                  extractTrackData(url, file);
+                }}
+              />
+              {uploadedMediaUrl && (
+                <div className="mt-2 flex items-center gap-2 text-[10px] text-white/40">
+                  <span className="font-mono truncate">{uploadedMediaUrl}</span>
+                  <button type="button" onClick={() => setUploadedMediaUrl('')} className="text-red-400 hover:text-red-300">×</button>
+                </div>
+              )}
             </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <label className="text-[10px] font-bold text-white/40 uppercase tracking-widest">Audio URL</label>
-                <input name="audioUrl" value={uploadedAudioUrl} onChange={e => setUploadedAudioUrl(e.target.value)} placeholder="https://..." className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-neon-green/50" />
-              </div>
-              <div className="space-y-2">
-                <label className="text-[10px] font-bold text-white/40 uppercase tracking-widest">Visual URL</label>
-                <input name="visualUrl" value={uploadedVisualUrl} onChange={e => setUploadedVisualUrl(e.target.value)} placeholder="https://..." className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-neon-green/50" />
-              </div>
+
+            <div className="space-y-2">
+              <label className="text-[10px] font-bold text-white/40 uppercase tracking-widest">Audio</label>
+              <input name="audioUrl" value={uploadedAudioUrl} onChange={e => setUploadedAudioUrl(e.target.value)} placeholder="https://... (mp3, wav, aac)" className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-neon-green/50" />
+
+              {/* Browse Local Server folder picker */}
+              <LocalServerBrowser
+                folder="Music"
+                accept={/\.(mp3|m4a|aac|ogg|wav)$/i}
+                label="🎧 Browse local Mac music library"
+                onPick={(url, name) => {
+                  setUploadedAudioUrl(url.startsWith('http') ? url : `http://10.0.0.161:344${url}`);
+                  extractTrackData(url, undefined);
+                }}
+              />
+
+              <FileUpload
+                label="Or upload audio (mp3/wav/aac — up to 500MB)"
+                accept="audio/*"
+                onUpload={(url, file) => {
+                  setUploadedAudioUrl(url);
+                  extractTrackData(url, file);
+                }}
+              />
+              {uploadedAudioUrl && (
+                <div className="mt-2 flex items-center gap-2 text-[10px] text-white/40">
+                  <span className="font-mono truncate">{uploadedAudioUrl}</span>
+                  <button type="button" onClick={() => setUploadedAudioUrl('')} className="text-red-400 hover:text-red-300">×</button>
+                </div>
+              )}
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-[10px] font-bold text-white/40 uppercase tracking-widest">Visual / Cover Art</label>
+              <input name="visualUrl" value={uploadedVisualUrl} onChange={e => setUploadedVisualUrl(e.target.value)} placeholder="https://... (album art, jpg/png)" className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-neon-green/50" />
+
+              {/* Browse Local Server folder picker — for visuals */}
+              <LocalServerBrowser
+                folder="Logos"
+                accept={/\.(png|jpg|jpeg|webp|gif|svg)$/i}
+                label="🖼️  Browse local Mac logos folder"
+                onPick={(url) => setUploadedVisualUrl(url.startsWith('http') ? url : `http://10.0.0.161:344${url}`)}
+              />
+              <LocalServerBrowser
+                folder="Videos"
+                accept={/\.(mp4|webm|mov)$/i}
+                label="🎬 Browse local Mac video clips folder"
+                onPick={(url) => setUploadedMediaUrl(url.startsWith('http') ? url : `http://10.0.0.161:344${url}`)}
+              />
+              <FileUpload
+                label="Or upload cover art (jpg/png/webp — up to 500MB)"
+                accept="image/*"
+                onUpload={(url, file) => {
+                  setUploadedVisualUrl(url);
+                  extractTrackData(url, file);
+                }}
+              />
+              {uploadedVisualUrl && (
+                <div className="mt-2 flex items-center gap-3">
+                  <img src={uploadedVisualUrl} alt="cover" className="w-16 h-16 rounded-lg object-cover border border-white/10" referrerPolicy="no-referrer" />
+                  <button type="button" onClick={() => setUploadedVisualUrl('')} className="text-red-400 hover:text-red-300 text-[10px] font-bold uppercase tracking-widest">Remove</button>
+                </div>
+              )}
             </div>
           </div>
 
@@ -1438,47 +1293,45 @@ function DonorManager() {
 
 function StorageManager() {
   const [activeFolder, setActiveFolder] = useState<string>('visuals');
-  const [files, setFiles] = useState<{name: string; url: string; size: string}[]>([]);
+  const [files, setFiles] = useState<{name: string; url: string; size: string; fullPath: string; updated: string}[]>([]);
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
-  const [uploadProgress, setUploadProgress] = useState<string>('');
+  const [uploadProgress, setUploadProgress] = useState<{current: number; total: number; pct: number; name: string} | null>(null);
   const [message, setMessage] = useState<{type: 'success'|'error', text: string} | null>(null);
+  const [deletingPath, setDeletingPath] = useState<string | null>(null);
 
   const STORAGE_FOLDERS = [
-    { id: 'music', label: 'Music', icon: FileAudio, extensions: ['.mp3', '.mp4', '.wav', '.aac'] },
-    { id: 'visuals', label: 'Visuals', icon: Film, extensions: ['.mp4', '.webm', '.mov'] },
-    { id: 'logos', label: 'Logos', icon: ImageIcon, extensions: ['.png', '.jpg', '.svg', '.webp'] },
-    { id: 'thumbnails', label: 'Thumbnails', icon: Image, extensions: ['.png', '.jpg', '.webp'] },
-    { id: 'ads', label: 'Ads', icon: Film, extensions: ['.mp4', '.webm'] },
-    { id: 'banners', label: 'Banners', icon: Image, extensions: ['.png', '.jpg', '.webp'] },
+    { id: 'music', label: 'Music', icon: FileAudio, accept: 'audio/*,video/*,.mp3,.wav,.aac,.flac,.m4a', extensions: '.mp3, .wav, .aac, .mp4' },
+    { id: 'visuals', label: 'Visuals', icon: Film, accept: 'video/*', extensions: '.mp4, .webm, .mov' },
+    { id: 'logos', label: 'Logos', icon: ImageIcon, accept: 'image/png,image/jpeg,image/svg+xml,image/webp', extensions: '.png, .jpg, .svg, .webp' },
+    { id: 'thumbnails', label: 'Thumbnails', icon: Image, accept: 'image/png,image/jpeg,image/webp', extensions: '.png, .jpg, .webp' },
+    { id: 'ads', label: 'Ads', icon: Film, accept: 'video/*', extensions: '.mp4, .webm' },
+    { id: 'banners', label: 'Banners', icon: Image, accept: 'image/png,image/jpeg,image/webp', extensions: '.png, .jpg, .webp' },
   ];
 
   const folder = STORAGE_FOLDERS.find(f => f.id === activeFolder)!;
 
-  useEffect(() => {
-    async function loadFiles() {
-      setLoading(true);
-      try {
-        const bucket = 'vibe-x-app.firebasestorage.app';
-        const url = `https://firebasestorage.googleapis.com/v0/b/${bucket}/o?prefix=${activeFolder}%2F`;
-        const res = await fetch(url);
-        const data = await res.json();
-        if (data.items) {
-          setFiles(data.items.map((item: any) => ({
-            name: item.name.replace(`${activeFolder}/`, ''),
-            url: `https://firebasestorage.googleapis.com/v0/b/${bucket}/o/${encodeURIComponent(item.name)}?alt=media`,
-            size: item.size ? `${(Number(item.size) / 1024 / 1024).toFixed(1)} MB` : 'Unknown',
-            fullPath: item.name,
-          })));
-        } else {
-          setFiles([]);
-        }
-      } catch {
-        setFiles([]);
-      }
-      setLoading(false);
+  const refresh = async () => {
+    setLoading(true);
+    try {
+      const items = await listFolder(`${activeFolder}/`);
+      setFiles(items.map(item => ({
+        name: item.name,
+        url: item.url,
+        size: item.size ? `${(item.size / 1024 / 1024).toFixed(2)} MB` : 'Unknown',
+        fullPath: item.fullPath,
+        updated: item.updated,
+      })));
+    } catch (err: any) {
+      // Permission denied / not signed in / etc.
+      setFiles([]);
+      setMessage({ type: 'error', text: `Could not list /${activeFolder}/: ${err?.message || 'auth required'}` });
     }
-    loadFiles();
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    refresh();
   }, [activeFolder]);
 
   async function handleUpload(e: React.ChangeEvent<HTMLInputElement>) {
@@ -1486,68 +1339,115 @@ function StorageManager() {
     if (!uploadedFiles || uploadedFiles.length === 0) return;
     setUploading(true);
     setMessage(null);
+    let successCount = 0;
+    let failCount = 0;
     try {
-      const bucket = 'vibe-x-app.firebasestorage.app';
       for (let i = 0; i < uploadedFiles.length; i++) {
         const file = uploadedFiles[i];
-        setUploadProgress(`Uploading ${file.name}... (${i + 1}/${uploadedFiles.length})`);
-        const path = `${activeFolder}/${file.name}`;
-        const uploadUrl = `https://firebasestorage.googleapis.com/v0/b/${bucket}/o?uploadType=media&name=${encodeURIComponent(path)}`;
-        const res = await fetch(uploadUrl, { method: 'POST', headers: { 'Content-Type': file.type }, body: file });
-        if (!res.ok) throw new Error(`Upload failed: ${res.statusText}`);
+        const safeName = sanitizePathSegment(file.name.replace(/\.[^/.]+$/, ''));
+        const ext = file.name.split('.').pop() || 'bin';
+        const path = `${activeFolder}/${safeName}-${Date.now()}.${ext}`;
+        setUploadProgress({ current: i + 1, total: uploadedFiles.length, pct: 0, name: file.name });
+        try {
+          await uploadToStorage(path, file, (pct) => {
+            setUploadProgress({ current: i + 1, total: uploadedFiles.length, pct, name: file.name });
+          });
+          successCount++;
+        } catch (err: any) {
+          failCount++;
+          console.error(`Upload ${file.name} failed:`, err);
+        }
       }
-      setMessage({ type: 'success', text: `${uploadedFiles.length} file(s) uploaded to /${activeFolder}/` });
-      // Refresh
-      const url = `https://firebasestorage.googleapis.com/v0/b/${bucket}/o?prefix=${activeFolder}%2F`;
-      const res = await fetch(url);
-      const data = await res.json();
-      if (data.items) {
-        setFiles(data.items.map((item: any) => ({
-          name: item.name.replace(`${activeFolder}/`, ''),
-          url: `https://firebasestorage.googleapis.com/v0/b/${bucket}/o/${encodeURIComponent(item.name)}?alt=media`,
-          size: item.size ? `${(Number(item.size) / 1024 / 1024).toFixed(1)} MB` : 'Unknown',
-          fullPath: item.name,
-        })));
+      if (failCount === 0) {
+        setMessage({ type: 'success', text: `${successCount} file(s) uploaded to /${activeFolder}/` });
+      } else if (successCount === 0) {
+        setMessage({ type: 'error', text: `All ${failCount} upload(s) failed — check Firebase Storage rules and your auth` });
+      } else {
+        setMessage({ type: 'error', text: `${successCount} uploaded, ${failCount} failed` });
       }
+      await refresh();
     } catch (err: any) {
-      setMessage({ type: 'error', text: err.message || 'Upload failed' });
+      setMessage({ type: 'error', text: err?.message || 'Upload failed' });
     }
     setUploading(false);
-    setUploadProgress('');
+    setUploadProgress(null);
     (e.target as HTMLInputElement).value = '';
   }
 
+  async function handleDelete(file: { fullPath: string; name: string }) {
+    if (!confirm(`Delete ${file.name}? This cannot be undone.`)) return;
+    setDeletingPath(file.fullPath);
+    try {
+      await deleteFromStorage(file.fullPath);
+      setMessage({ type: 'success', text: `Deleted ${file.name}` });
+      await refresh();
+    } catch (err: any) {
+      setMessage({ type: 'error', text: `Delete failed: ${err?.message || 'permission denied'}` });
+    }
+    setDeletingPath(null);
+  }
+
+  function copyUrl(url: string) {
+    navigator.clipboard?.writeText(url).then(
+      () => setMessage({ type: 'success', text: 'URL copied to clipboard' }),
+      () => setMessage({ type: 'error', text: 'Copy failed — select & copy manually' })
+    );
+  }
+
+  const Icon = folder.icon;
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
         <h3 className="text-2xl font-bold">Storage Manager</h3>
-        <label className="flex items-center gap-2 px-4 py-2 bg-neon-green text-black rounded-xl text-sm font-bold cursor-pointer hover:bg-neon-green/90 transition-colors">
+        <label className={cn("flex items-center gap-2 px-4 py-2 bg-neon-green text-black rounded-xl text-sm font-bold transition-colors",
+          uploading ? "opacity-50 cursor-wait" : "cursor-pointer hover:bg-neon-green/90"
+        )}>
           <Upload className="w-4 h-4" />
-          Upload File
-          <input type="file" multiple accept={folder.extensions.join(',')} className="hidden" onChange={handleUpload} disabled={uploading} />
+          {uploading ? 'Uploading…' : 'Upload File'}
+          <input
+            type="file"
+            multiple
+            accept={folder.accept}
+            className="hidden"
+            onChange={handleUpload}
+            disabled={uploading}
+          />
         </label>
       </div>
 
-      {uploading && (
-        <div className="glass rounded-xl p-4 mb-4 flex items-center gap-3 text-neon-green border border-neon-green/30">
-          <Loader2 className="w-4 h-4 animate-spin" />
-          <span className="text-sm">{uploadProgress}</span>
+      {uploading && uploadProgress && (
+        <div className="glass rounded-xl p-4 mb-4 border border-neon-green/30">
+          <div className="flex items-center gap-3 text-neon-green mb-2">
+            <Loader2 className="w-4 h-4 animate-spin" />
+            <span className="text-sm font-bold">
+              Uploading {uploadProgress.current}/{uploadProgress.total}: {uploadProgress.name}
+            </span>
+            <span className="ml-auto text-xs font-mono">{uploadProgress.pct}%</span>
+          </div>
+          <div className="w-full bg-white/10 rounded-full h-1.5 overflow-hidden">
+            <div
+              className="bg-neon-green h-full transition-all duration-200"
+              style={{ width: `${uploadProgress.pct}%` }}
+            />
+          </div>
         </div>
       )}
       {message && (
-        <div className={`glass rounded-xl p-4 mb-4 ${message.type === 'success' ? 'border-neon-green/30 text-neon-green' : 'border-red-500/30 text-red-400'}`}>
+        <div className={cn("glass rounded-xl p-4 mb-4 border",
+          message.type === 'success' ? 'border-neon-green/30 text-neon-green' : 'border-red-500/30 text-red-400'
+        )}>
           <p className="text-sm">{message.text}</p>
         </div>
       )}
 
       <div className="grid grid-cols-3 md:grid-cols-6 gap-3 mb-6">
         {STORAGE_FOLDERS.map(f => {
-          const Icon = f.icon;
+          const FIcon = f.icon;
           return (
             <button key={f.id} onClick={() => setActiveFolder(f.id)}
               className={cn("glass rounded-2xl p-4 flex flex-col items-center gap-2 transition-all hover:border-neon-green/30",
                 activeFolder === f.id ? "border-neon-green bg-neon-green/10" : "border-white/10")}>
-              <Icon className={cn("w-5 h-5", activeFolder === f.id ? "text-neon-green" : "text-white/40")} />
+              <FIcon className={cn("w-5 h-5", activeFolder === f.id ? "text-neon-green" : "text-white/40")} />
               <span className="text-xs font-bold uppercase tracking-wider">{f.label}</span>
             </button>
           );
@@ -1556,31 +1456,50 @@ function StorageManager() {
 
       <div className="glass rounded-3xl p-6">
         <div className="flex items-center gap-3 mb-4 pb-4 border-b border-white/10">
-          <folder.icon className="w-5 h-5 text-neon-green" />
+          <Icon className="w-5 h-5 text-neon-green" />
           <div>
             <h4 className="font-bold">/{activeFolder}/</h4>
-            <p className="text-xs text-white/40">{folder.extensions.join(', ')}</p>
+            <p className="text-xs text-white/40">{folder.extensions}</p>
           </div>
-          <span className="ml-auto text-xs font-mono text-white/30">{files.length} files</span>
+          <button onClick={refresh} disabled={loading} className="ml-auto p-2 glass rounded-lg hover:bg-white/5 transition-colors" title="Refresh">
+            <RefreshCw className={cn("w-4 h-4", loading && "animate-spin")} />
+          </button>
+          <span className="text-xs font-mono text-white/30">{files.length} files</span>
         </div>
         {loading ? (
           <div className="flex items-center gap-3 text-white/40 text-sm py-8"><Loader2 className="w-4 h-4 animate-spin" /> Loading files...</div>
         ) : files.length === 0 ? (
           <div className="text-center py-12 text-white/30">
-            <folder.icon className="w-12 h-12 mx-auto mb-3 opacity-20" />
+            <Icon className="w-12 h-12 mx-auto mb-3 opacity-20" />
             <p className="text-sm">No files in /{activeFolder}/</p>
             <p className="text-xs mt-1 text-white/20">Upload files using the button above</p>
           </div>
         ) : (
-          <div className="space-y-2 max-h-80 overflow-y-auto">
+          <div className="space-y-2 max-h-[480px] overflow-y-auto">
             {files.map(file => (
-              <div key={file.name} className="flex items-center gap-3 p-3 bg-white/5 rounded-xl hover:bg-white/10 transition-colors">
-                <folder.icon className="w-4 h-4 text-white/40 flex-shrink-0" />
+              <div key={file.fullPath} className="flex items-center gap-3 p-3 bg-white/5 rounded-xl hover:bg-white/10 transition-colors group">
+                <Icon className="w-4 h-4 text-white/40 flex-shrink-0" />
                 <div className="flex-grow min-w-0">
                   <p className="text-sm font-mono truncate">{file.name}</p>
-                  <p className="text-xs text-white/30">{file.size}</p>
+                  <p className="text-xs text-white/30">
+                    {file.size}
+                    {file.updated && <span className="ml-2">· {new Date(file.updated).toLocaleDateString()}</span>}
+                  </p>
                 </div>
-                <a href={file.url} target="_blank" rel="noopener noreferrer" className="text-xs text-neon-green hover:underline flex-shrink-0">View</a>
+                <button onClick={() => copyUrl(file.url)} className="p-2 glass rounded-lg hover:text-neon-green transition-colors" title="Copy URL">
+                  <Copy className="w-3.5 h-3.5" />
+                </button>
+                <a href={file.url} target="_blank" rel="noopener noreferrer" className="p-2 glass rounded-lg hover:text-neon-green transition-colors" title="Open in new tab">
+                  <ExternalLink className="w-3.5 h-3.5" />
+                </a>
+                <button
+                  onClick={() => handleDelete(file)}
+                  disabled={deletingPath === file.fullPath}
+                  className="p-2 glass rounded-lg hover:text-red-400 transition-colors disabled:opacity-50"
+                  title="Delete"
+                >
+                  {deletingPath === file.fullPath ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Trash2 className="w-3.5 h-3.5" />}
+                </button>
               </div>
             ))}
           </div>
@@ -1741,5 +1660,128 @@ function Modal({ isOpen, onClose, title, children }: { isOpen: boolean, onClose:
         </>
       )}
     </AnimatePresence>
+  );
+}
+
+// ───────────────────────────────────────────────────────────────────────────
+// LocalServerBrowser — collapsible file/folder picker that talks to the
+// Mac's local music server (music-server.cjs running on port 344)
+// Walks folder tree, lets admin pick a file and write its URL into the form.
+// ───────────────────────────────────────────────────────────────────────────
+const LOCAL_SERVER_BASES = [
+  `http://localhost:344`,
+  `http://10.0.0.161:344`,
+  `http://10.0.0.83:344`,
+  `http://333Es-Mac-mini.local:344`,
+];
+
+function LocalServerBrowser({ folder, accept, label, onPick }: {
+  folder: string;
+  accept: RegExp;
+  label: string;
+  onPick: (url: string, name: string) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const [serverBase, setServerBase] = useState<string | null>(null);
+  const [checking, setChecking] = useState(false);
+  const [currentPath, setCurrentPath] = useState(folder);
+  const [items, setItems] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [err, setErr] = useState<string | null>(null);
+
+  const ensureServer = async () => {
+    if (serverBase || checking) return serverBase;
+    setChecking(true);
+    for (const base of LOCAL_SERVER_BASES) {
+      try {
+        const r = await fetch(`${base}/__health`, { signal: AbortSignal.timeout(1500) });
+        if (r.ok) { setServerBase(base); setChecking(false); return base; }
+      } catch {}
+    }
+    setChecking(false);
+    setErr('Local server not reachable — make sure music-server.cjs is running on the Mac (port 344).');
+    return null;
+  };
+
+  const loadFolder = async (path: string) => {
+    const base = serverBase || await ensureServer();
+    if (!base) return;
+    setLoading(true);
+    setErr(null);
+    try {
+      const r = await fetch(`${base}/__list/${encodeURI(path)}`, { signal: AbortSignal.timeout(4000) });
+      const data = await r.json();
+      setItems(data.items || []);
+      setCurrentPath(path);
+    } catch (e: any) {
+      setErr(`Failed to list ${path}: ${e.message}`);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const onOpen = async () => {
+    const next = !open;
+    setOpen(next);
+    if (next) {
+      const base = await ensureServer();
+      if (base) await loadFolder(folder);
+    }
+  };
+
+  const filtered = items.filter(i => i.type === 'folder' || accept.test(i.name));
+
+  return (
+    <div className="border border-white/10 rounded-xl overflow-hidden">
+      <button type="button" onClick={onOpen} className="w-full px-3 py-2 flex items-center justify-between bg-white/5 hover:bg-white/10 transition-colors text-left">
+        <span className="text-xs text-white/70 font-bold">{label}</span>
+        <span className="text-[10px] text-white/40 uppercase tracking-widest">{open ? '▲ Close' : '▼ Browse'}</span>
+      </button>
+      {open && (
+        <div className="p-3 bg-black/40 max-h-72 overflow-y-auto">
+          {checking && <p className="text-[10px] text-white/40">Reaching Mac local server…</p>}
+          {err && <p className="text-[10px] text-red-400">{err}</p>}
+          {loading && <p className="text-[10px] text-white/40">Loading {currentPath}…</p>}
+          {!loading && serverBase && (
+            <>
+              <div className="text-[9px] text-white/30 font-mono mb-2">📁 {currentPath}/ &nbsp;•&nbsp; {serverBase}</div>
+              {currentPath !== folder && (
+                <button type="button" onClick={() => loadFolder(folder)} className="block w-full text-left px-2 py-1 text-[10px] text-neon-green hover:bg-white/5 rounded">← Back to {folder}</button>
+              )}
+              {filtered.length === 0 && <p className="text-[10px] text-white/40 px-2 py-1">No matching files in this folder.</p>}
+              {filtered.map((it) => (
+                <div key={it.name} className="flex items-center gap-2 px-2 py-1.5 hover:bg-white/5 rounded">
+                  {it.type === 'folder' ? (
+                    <button type="button" onClick={() => loadFolder(`${currentPath}/${it.name}`)} className="flex-1 text-left text-xs text-neon-blue font-mono">
+                      📁 {it.name}/
+                    </button>
+                  ) : (
+                    <>
+                      <button
+                        type="button"
+                        onClick={() => onPick(it.url, it.name)}
+                        className="flex-1 text-left text-xs text-white/80 font-mono truncate hover:text-neon-green"
+                        title={it.url}
+                      >
+                        🎵 {it.name}
+                      </button>
+                      <span className="text-[9px] text-white/30 font-mono">{(it.size / 1024 / 1024).toFixed(1)} MB</span>
+                      <button
+                        type="button"
+                        onClick={() => window.open(`${serverBase}${it.url}`, '_blank')}
+                        className="text-[9px] text-white/30 hover:text-neon-green px-1"
+                        title="Preview"
+                      >
+                        ▶
+                      </button>
+                    </>
+                  )}
+                </div>
+              ))}
+            </>
+          )}
+        </div>
+      )}
+    </div>
   );
 }

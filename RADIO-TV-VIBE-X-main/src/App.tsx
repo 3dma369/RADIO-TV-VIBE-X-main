@@ -1,11 +1,11 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
 import { Radio, ShoppingBag, Heart, Menu, X, Play, Pause, SkipForward, Volume2, ExternalLink, Github, Twitter, Instagram } from 'lucide-react';
 import { cn } from './utils';
-import { motion, AnimatePresence } from 'motion/react';
 
 // Components
 import RadioView from './components/RadioView';
+import TVView from './components/TVView';
 import ShopView from './components/ShopView';
 import DonateView from './components/DonateView';
 import ScheduleView from './components/ScheduleView';
@@ -15,10 +15,12 @@ import LoginView from './components/LoginView';
 import PurchasesView from './components/PurchasesView';
 import ProfileView from './components/ProfileView';
 import Navbar from './components/Navbar';
+import ConsentPortal from './components/ConsentPortal';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { StationProvider } from './context/StationContext';
 import { ProfileProvider } from './context/ProfileContext';
 import GlobalAudioPlayer from './components/GlobalAudioPlayer';
+import NewsletterPopup from './components/NewsletterPopup';
 import { Navigate } from 'react-router-dom';
 import { trackPageView, trackEngagement } from './services/analytics';
 
@@ -40,7 +42,7 @@ function ProtectedRoute({ children, requireAdmin = false }: { children: React.Re
 // Tracks page views on route change + engagement heartbeats
 function AnalyticsTracker() {
   const location = useLocation();
-  const lastPath = useRef(location.pathname);
+  const lastPath = useRef<string | null>(null);  // null = first run, must record initial path
 
   useEffect(() => {
     if (location.pathname !== lastPath.current) {
@@ -71,35 +73,37 @@ export default function App() {
             <div className="min-h-screen flex flex-col">
               <Navbar />
               <main className="flex-grow pt-20">
-                <AnimatePresence mode="wait">
-                  <Routes>
-                    <Route path="/" element={<RadioView />} />
-                    <Route path="/shop" element={<ShopView />} />
-                    <Route path="/donate" element={<DonateView />} />
-                    <Route path="/schedule" element={<ScheduleView />} />
-                    <Route path="/djs" element={<DJsView />} />
-                    <Route path="/login" element={<LoginView />} />
-                    <Route
-                      path="/admin"
-                      element={
-                        <ProtectedRoute requireAdmin={true}>
-                          <AdminView />
-                        </ProtectedRoute>
-                      }
-                    />
-                    <Route path="/purchases" element={<PurchasesView />} />
-                    <Route
-                      path="/profile"
-                      element={
-                        <ProtectedRoute>
-                          <ProfileView />
-                        </ProtectedRoute>
-                      }
-                    />
-                  </Routes>
-                </AnimatePresence>
+                <Routes>
+                  <Route path="/" element={<RadioView />} />
+                  <Route path="/tv" element={<TVView />} />
+                  <Route path="/shop" element={<ShopView />} />
+                  <Route path="/donate" element={<DonateView />} />
+                  <Route path="/schedule" element={<ScheduleView />} />
+                  <Route path="/djs" element={<DJsView />} />
+                  <Route path="/login" element={<LoginView />} />
+                  <Route path="/consent" element={<ConsentPortal />} />
+                  <Route
+                    path="/admin"
+                    element={
+                      <ProtectedRoute requireAdmin={true}>
+                        <AdminView />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route path="/purchases" element={<PurchasesView />} />
+                  <Route
+                    path="/profile"
+                    element={
+                      <ProtectedRoute>
+                        <ProfileView />
+                      </ProtectedRoute>
+                    }
+                  />
+                </Routes>
               </main>
               <Footer />
+              {/* Email capture popup — appears 30s after first visit (or on exit-intent) */}
+              <NewsletterPopup source="vibe_x_main" trigger="time" delayMs={30000} />
             </div>
           </Router>
         </ProfileProvider>
@@ -134,7 +138,6 @@ function Footer() {
           <ul className="space-y-2 text-sm">
             <li><Link to="/shop" className="hover:text-neon-green transition-colors">Merch Store</Link></li>
             <li><Link to="/donate" className="hover:text-neon-green transition-colors">Support Us</Link></li>
-            <li><Link to="/admin" className="hover:text-neon-green transition-colors">Admin Portal</Link></li>
           </ul>
         </div>
         <div>

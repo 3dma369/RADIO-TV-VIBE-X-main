@@ -159,9 +159,9 @@ export default function LoginView() {
             <div className="pt-4 border-t border-white/10">
               <p className="text-[10px] text-center text-white/20 font-mono leading-relaxed">
                 {mode === 'signin' ? (
-                  <>Don't have an account? <button onClick={() => setMode('signup')} className="text-neon-green hover:underline">Sign up</button></>
+                  <>Don't have an account? <button type="button" onClick={() => setMode('signup')} className="text-neon-green hover:underline">Sign up</button></>
                 ) : (
-                  <>Already have an account? <button onClick={() => setMode('signin')} className="text-neon-green hover:underline">Sign in</button></>
+                  <>Already have an account? <button type="button" onClick={() => setMode('signin')} className="text-neon-green hover:underline">Sign in</button></>
                 )}
               </p>
             </div>

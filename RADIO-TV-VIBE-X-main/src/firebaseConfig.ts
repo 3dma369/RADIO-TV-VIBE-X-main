@@ -1,8 +1,8 @@
 import { initializeApp, getApps } from "firebase/app";
-import { getAuth, GoogleAuthProvider, signInWithRedirect, signOut, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, User } from "firebase/auth";
-import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, limit, getDocs, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, User } from "firebase/auth";
+import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, limit, getDocs, doc, getDoc, setDoc, updateDoc, deleteDoc, Unsubscribe } from "firebase/firestore";
 import { getDatabase, ref, onDisconnect, onValue, set, remove, get, serverTimestamp as rtdbTimestamp } from "firebase/database";
-import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "firebase/storage";
+import { getStorage, ref as fbStorageRef, uploadBytes, uploadBytesResumable, getDownloadURL, deleteObject, getMetadata, listAll } from "firebase/storage";
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -22,10 +22,12 @@ export const db = getFirestore(app);
 export const rtdb = getDatabase(app);
 export const storage = getStorage(app);
 
-export { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithRedirect };
+export { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup };
 
 // Firestore
-export { collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, limit, getDocs, doc, getDoc, setDoc, updateDoc };
+export { collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, limit, getDocs, doc, getDoc, setDoc, updateDoc, deleteDoc };
+export { app };
+export type { Unsubscribe };
 
 // RTDB
 export const presenceRef = (sessionId: string) => ref(rtdb, `presence/${sessionId}`);
@@ -37,7 +39,7 @@ googleProvider.setCustomParameters({ prompt: 'select_account' });
 
 export const signInWithGoogle = async () => {
   try {
-    await signInWithRedirect(auth, googleProvider);
+    await signInWithPopup(auth, googleProvider);
   } catch (error) {
     console.error("Error logging in with Google", error);
     throw error;
@@ -58,14 +60,49 @@ export const onAuthChange = (callback: (user: User | null) => void) => {
 };
 
 // Storage helpers
-export { ref, uploadBytes, getDownloadURL };
+export { ref as storageRefFn, uploadBytes, uploadBytesResumable, getDownloadURL, deleteObject, getMetadata, listAll };
 
-export async function uploadToStorage(path: string, file: File): Promise<string> {
-  const sr = ref(storage, path);
+export async function uploadToStorage(path: string, file: File, onProgress?: (pct: number) => void): Promise<string> {
+  const sr = fbStorageRef(storage, path);
   const contentType = file.type || guessContentType(path);
+  if (onProgress) {
+    return new Promise((resolve, reject) => {
+      const task = uploadBytesResumable(sr, file, { contentType });
+      task.on('state_changed',
+        (snap) => onProgress(Math.round((snap.bytesTransferred / snap.totalBytes) * 100)),
+        (err) => reject(err),
+        async () => {
+          try { resolve(await getDownloadURL(task.snapshot.ref)); }
+          catch (e) { reject(e); }
+        }
+      );
+    });
+  }
   await uploadBytes(sr, file, { contentType });
   const url = await getDownloadURL(sr);
   return url;
+}
+
+export async function deleteFromStorage(path: string): Promise<void> {
+  await deleteObject(fbStorageRef(storage, path));
+}
+
+export async function listFolder(prefix: string): Promise<{ name: string; url: string; size: number; fullPath: string; updated: string }[]> {
+  const sr = fbStorageRef(storage, prefix);
+  const result = await listAll(sr);
+  const items = await Promise.all(result.items.map(async (item) => {
+    const url = await getDownloadURL(item);
+    let size = 0;
+    let updated = '';
+    try {
+      // getMetadata returns full metadata incl. size and updated time
+      const meta = await getMetadata(item);
+      size = Number(meta.size || 0);
+      updated = meta.updated || '';
+    } catch {}
+    return { name: item.name, url, size, fullPath: item.fullPath, updated };
+  }));
+  return items;
 }
 
 export function sanitizePathSegment(input: string): string {

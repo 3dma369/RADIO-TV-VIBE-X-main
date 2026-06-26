@@ -47,3 +47,29 @@
 .custom-scrollbar::-webkit-scrollbar-thumb {
   @apply bg-white/10 rounded-full hover:bg-neon-green/50 transition-colors;
 }
+
+/* ── TextOverlay animations ────────────────────────────────────────── */
+@keyframes vibexTextFade {
+  0%   { opacity: 0.3; }
+  100% { opacity: 1; }
+}
+@keyframes vibexTextSlideUp {
+  0%   { transform: translateY(40px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+@keyframes vibexTextSlideDown {
+  0%   { transform: translateY(-40px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+@keyframes vibexTypewriter {
+  0%   { width: 0; }
+  100% { width: 100%; }
+}
+@keyframes vibexPulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50%      { transform: scale(1.05); opacity: 0.85; }
+}
+
+/* ── Mood carousel: hide horizontal scrollbar but keep scrollable ─── */
+.vibe-mood-scroll { scrollbar-width: none; -ms-overflow-style: none; }
+.vibe-mood-scroll::-webkit-scrollbar { display: none; }

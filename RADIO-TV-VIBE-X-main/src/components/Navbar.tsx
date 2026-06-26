@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
-import { Radio, ShoppingBag, Heart, Menu, X, LayoutDashboard, LogIn, LogOut, User, Package } from 'lucide-react';
+import { Radio, Tv, ShoppingBag, Heart, Menu, X, LayoutDashboard, LogIn, LogOut, User, Package, ChevronDown } from 'lucide-react';
 import { cn } from '../utils';
 import { useStation } from '../context/StationContext';
 import { useAuth } from '../context/AuthContext';
@@ -22,6 +22,7 @@ export default function Navbar() {
 
   const navItems = [
     { name: 'Live', path: '/', icon: Radio },
+    { name: 'TV', path: '/tv', icon: Tv },
     { name: 'Shop', path: '/shop', icon: ShoppingBag },
     { name: 'Donate', path: '/donate', icon: Heart },
   ];
@@ -84,22 +85,33 @@ export default function Navbar() {
 
           {/* Admin / Login link */}
           {isAdmin ? (
-            <Link
-              to="/admin"
-              className={cn(
-                "relative text-sm font-medium tracking-wide transition-colors hover:text-neon-green flex items-center gap-2",
-                location.pathname === '/admin' ? "text-neon-green" : "text-white/70"
-              )}
-            >
-              <LayoutDashboard className="w-4 h-4" />
-              Admin
-              {location.pathname === '/admin' && (
-                <motion.div
-                  layoutId="nav-underline-admin"
-                  className="absolute -bottom-1 left-0 right-0 h-0.5 bg-neon-green"
-                />
-              )}
-            </Link>
+            <div className="relative group">
+              <button
+                className={cn(
+                  "relative text-sm font-medium tracking-wide transition-colors hover:text-neon-green flex items-center gap-2",
+                  location.pathname.startsWith('/admin') ? "text-neon-green" : "text-white/70"
+                )}
+              >
+                <LayoutDashboard className="w-4 h-4" />
+                Admin
+                <ChevronDown className="w-3 h-3" />
+                {location.pathname.startsWith('/admin') && (
+                  <motion.div
+                    layoutId="nav-underline-admin"
+                    className="absolute -bottom-1 left-0 right-0 h-0.5 bg-neon-green"
+                  />
+                )}
+              </button>
+              <div className="absolute right-0 top-full mt-2 w-56 glass rounded-2xl p-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
+                <Link to="/admin" className="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm hover:bg-white/5 hover:text-neon-green transition-colors">
+                  <LayoutDashboard className="w-4 h-4" />
+                  <div>
+                    <div className="font-medium">Admin Portal</div>
+                    <div className="text-[10px] text-white/40">Metrics, Shop, Schedule, DJs, Stream</div>
+                  </div>
+                </Link>
+              </div>
+            </div>
           ) : (
             <Link
               to="/login"
@@ -193,14 +205,17 @@ export default function Navbar() {
 
             {/* Admin / Login for mobile */}
             {isAdmin ? (
-              <Link
-                to="/admin"
-                onClick={() => setIsOpen(false)}
-                className="flex items-center gap-3 text-lg font-medium text-white/70"
-              >
-                <LayoutDashboard className="w-5 h-5" />
-                Admin
-              </Link>
+              <div className="space-y-2 border-t border-white/10 pt-4">
+                <div className="text-[10px] font-bold text-white/40 uppercase tracking-widest px-4">Admin</div>
+                <Link
+                  to="/admin"
+                  onClick={() => setIsOpen(false)}
+                  className="flex items-center gap-3 text-lg font-medium text-white/70 pl-4"
+                >
+                  <LayoutDashboard className="w-5 h-5" />
+                  Admin Portal
+                </Link>
+              </div>
             ) : (
               <Link
                 to="/login"

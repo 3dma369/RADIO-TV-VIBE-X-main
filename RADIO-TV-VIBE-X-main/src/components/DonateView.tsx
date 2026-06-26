@@ -32,14 +32,15 @@ const GoogleIcon = () => (
 );
 
 export default function DonateView() {
-  const { walletAddress, connectWallet, setDonorTier } = useStation();
+  const { walletAddress, walletNetwork, walletBalance, walletConnecting, walletError, connectWallet, sendNativeDonation, setDonorTier } = useStation();
   const { currentUser, isAuthenticated, isDonor, signInWithGoogle } = useAuth();
   const [copied, setCopied] = useState<string | null>(null);
   const [selectedTier, setSelectedTier] = useState<typeof DONATION_TIERS[0] | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [txHash, setTxHash] = useState<string | null>(null);
   const [isLoggingIn, setIsLoggingIn] = useState(false);
-  
+
   // Form state
   const [donorName, setDonorName] = useState('');
   const [discordHandle, setDiscordHandle] = useState('');
@@ -77,11 +78,28 @@ export default function DonateView() {
   const handleCompleteDonation = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedTier) return;
-    
+
     setIsProcessing(true);
-    
-    // Mock processing delay
-    await new Promise(resolve => setTimeout(resolve, 2000));
+    setTxHash(null);
+
+    // Vibe-X treasury address (Ethereum / EVM)
+    const TREASURY_ADDRESS = '0xa6898b0E7d169bFCD53d92287A7034828E7F46E9';
+
+    // If user has MetaMask connected, fire a real on-chain transaction
+    let hash: string | null = null;
+    const ethPriceUsd = 3000; // TODO: pull live price from oracle; static for now
+    const amountEth = (selectedTier.amount / ethPriceUsd).toFixed(6);
+
+    if (walletAddress && (window as any).ethereum) {
+      try {
+        hash = await sendNativeDonation(TREASURY_ADDRESS, amountEth);
+        setTxHash(hash);
+      } catch (err: any) {
+        setIsProcessing(false);
+        alert(`Donation failed: ${err?.message || err}\n\nYou can still copy our wallet address and send manually.`);
+        return;
+      }
+    }
 
     const donorData = {
       walletAddress: walletAddress || 'Not Connected',
@@ -90,6 +108,8 @@ export default function DonateView() {
       message: shoutoutMessage,
       tier: selectedTier.name,
       amount: selectedTier.amount,
+      txHash: hash,
+      network: walletNetwork || null,
       timestamp: Date.now()
     };
 
@@ -99,9 +119,9 @@ export default function DonateView() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(donorData)
       });
-      
+
       setDonorTier(selectedTier.name);
-      
+
       confetti({
         particleCount: 200,
         spread: 80,
@@ -329,13 +349,53 @@ export default function DonateView() {
                   </div>
 
                   <div className="pt-4 border-t border-white/10 mt-6">
-                    <h4 className="text-[10px] font-bold text-white/40 uppercase tracking-widest mb-4">Payment Information</h4>
-                    <div className="bg-white/5 rounded-2xl p-4 border border-white/10 flex items-center gap-4">
-                      <CreditCard className="w-6 h-6 text-white/20" />
-                      <div className="flex-grow">
-                        <p className="text-xs font-bold">Connected as: {currentUser?.email}</p>
-                        <p className="text-[10px] text-white/30">{walletAddress ? `Wallet: ${walletAddress.slice(0, 8)}...` : 'No wallet connected'}</p>
-                      </div>
+                    <h4 className="text-[10px] font-bold text-white/40 uppercase tracking-widest mb-4">Web3 Wallet</h4>
+                    <div className="bg-white/5 rounded-2xl p-4 border border-white/10">
+                      {walletAddress ? (
+                        <div className="space-y-2">
+                          <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-xl bg-orange-500/20 flex items-center justify-center text-orange-400 font-black text-[10px]">MM</div>
+                            <div className="flex-grow">
+                              <p className="text-xs font-bold text-white/90 font-mono">{walletAddress.slice(0, 8)}…{walletAddress.slice(-6)}</p>
+                              <p className="text-[10px] text-neon-green">
+                                Connected via MetaMask{walletNetwork ? ` • ${walletNetwork}` : ''}{walletBalance ? ` • ${walletBalance} ETH` : ''}
+                              </p>
+                            </div>
+                          </div>
+                          {txHash && (
+                            <a href={`https://etherscan.io/tx/${txHash}`} target="_blank" rel="noreferrer" className="block text-[10px] text-neon-blue hover:underline font-mono truncate">
+                              ✓ Tx: {txHash}
+                            </a>
+                          )}
+                          <p className="text-[9px] text-white/30">Click CONFIRM &amp; DONATE to send {selectedTier ? (selectedTier.amount / 3000).toFixed(6) : '0'} ETH from your wallet</p>
+                        </div>
+                      ) : (
+                        <div className="space-y-3">
+                          <div className="flex items-center gap-3">
+                            <CreditCard className="w-6 h-6 text-white/20" />
+                            <div className="flex-grow">
+                              <p className="text-xs font-bold">No wallet connected</p>
+                              <p className="text-[10px] text-white/30">Install MetaMask for one-click crypto donations</p>
+                            </div>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => connectWallet()}
+                            disabled={walletConnecting}
+                            className="w-full bg-orange-500 hover:bg-orange-600 text-white py-3 rounded-xl font-bold text-xs uppercase tracking-widest flex items-center justify-center gap-2 disabled:opacity-50"
+                          >
+                            {walletConnecting ? (
+                              <><Loader2 className="w-4 h-4 animate-spin" /> CONNECTING…</>
+                            ) : (
+                              <>🦊 Connect MetaMask</>
+                            )}
+                          </button>
+                          {walletError && <p className="text-[10px] text-red-400">{walletError}</p>}
+                          <p className="text-[9px] text-white/30 text-center">
+                            Or use the wallet addresses on the donate page (BTC / SOL / TRX supported too)
+                          </p>
+                        </div>
+                      )}
                     </div>
                   </div>
 
