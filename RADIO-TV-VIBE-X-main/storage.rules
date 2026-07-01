@@ -9,6 +9,14 @@ service firebase.storage {
                    && request.resource.size < 50 * 1024 * 1024; // 50MB max
     }
 
+    // Music library — public read, admin-only write
+    // JUNGLE-DNB and other moods read pre-signed URLs from Firestore; we make
+    // the files publicly readable so the signed URLs aren't gated by auth.
+    match /music_mp3/{allPaths=**} {
+      allow read: if true;
+      allow write: if false; // uploads via Admin SDK only
+    }
+
     // User uploads (avatars, profile pics) - auth required
     match /users/{userId}/{allPaths=**} {
       allow read: if true; // Public read so others can see profiles

@@ -6,7 +6,9 @@
       "**/.*",
       "**/node_modules/**",
       "**/server.log",
-      "**/server.pid"
+      "**/server.pid",
+      "music_mp3/**",
+      "music/**"
     ],
     "headers": [
       {
