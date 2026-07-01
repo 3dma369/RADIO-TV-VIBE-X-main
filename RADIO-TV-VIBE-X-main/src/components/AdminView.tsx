@@ -34,7 +34,6 @@ import {
   GripVertical,
   Radio,
   FolderOpen,
-  Upload,
   Folder,
   FileAudio,
   Image,
@@ -83,7 +82,6 @@ export default function AdminView() {
     { id: 'playlist', name: 'Playlist', icon: ListMusic },
     { id: 'visuals', name: 'Visuals', icon: ImageIcon },
     { id: 'commercials', name: 'Commercials', icon: Megaphone },
-    { id: 'storage', name: 'Storage', icon: FolderOpen },
     { id: 'donors', name: 'Donors', icon: Heart },
     { id: 'sources', name: 'Sources', icon: Server },
     { id: 'settings', name: 'Settings', icon: Settings },
@@ -166,7 +164,6 @@ export default function AdminView() {
               {activeTab === 'playlist' && <PlaylistManager />}
               {activeTab === 'visuals' && <VisualsManager />}
               {activeTab === 'commercials' && <CommercialsManager />}
-              {activeTab === 'storage' && <StorageManager />}
               {activeTab === 'donors' && <DonorManager />}
               {activeTab === 'sources' && <SourcesManager />}
               {activeTab === 'settings' && <SettingsManager />}
@@ -1290,225 +1287,6 @@ function DonorManager() {
     </div>
   );
 }
-
-function StorageManager() {
-  const [activeFolder, setActiveFolder] = useState<string>('visuals');
-  const [files, setFiles] = useState<{name: string; url: string; size: string; fullPath: string; updated: string}[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [uploading, setUploading] = useState(false);
-  const [uploadProgress, setUploadProgress] = useState<{current: number; total: number; pct: number; name: string} | null>(null);
-  const [message, setMessage] = useState<{type: 'success'|'error', text: string} | null>(null);
-  const [deletingPath, setDeletingPath] = useState<string | null>(null);
-
-  const STORAGE_FOLDERS = [
-    { id: 'music', label: 'Music', icon: FileAudio, accept: 'audio/*,video/*,.mp3,.wav,.aac,.flac,.m4a', extensions: '.mp3, .wav, .aac, .mp4' },
-    { id: 'visuals', label: 'Visuals', icon: Film, accept: 'video/*', extensions: '.mp4, .webm, .mov' },
-    { id: 'logos', label: 'Logos', icon: ImageIcon, accept: 'image/png,image/jpeg,image/svg+xml,image/webp', extensions: '.png, .jpg, .svg, .webp' },
-    { id: 'thumbnails', label: 'Thumbnails', icon: Image, accept: 'image/png,image/jpeg,image/webp', extensions: '.png, .jpg, .webp' },
-    { id: 'ads', label: 'Ads', icon: Film, accept: 'video/*', extensions: '.mp4, .webm' },
-    { id: 'banners', label: 'Banners', icon: Image, accept: 'image/png,image/jpeg,image/webp', extensions: '.png, .jpg, .webp' },
-  ];
-
-  const folder = STORAGE_FOLDERS.find(f => f.id === activeFolder)!;
-
-  const refresh = async () => {
-    setLoading(true);
-    try {
-      const items = await listFolder(`${activeFolder}/`);
-      setFiles(items.map(item => ({
-        name: item.name,
-        url: item.url,
-        size: item.size ? `${(item.size / 1024 / 1024).toFixed(2)} MB` : 'Unknown',
-        fullPath: item.fullPath,
-        updated: item.updated,
-      })));
-    } catch (err: any) {
-      // Permission denied / not signed in / etc.
-      setFiles([]);
-      setMessage({ type: 'error', text: `Could not list /${activeFolder}/: ${err?.message || 'auth required'}` });
-    }
-    setLoading(false);
-  };
-
-  useEffect(() => {
-    refresh();
-  }, [activeFolder]);
-
-  async function handleUpload(e: React.ChangeEvent<HTMLInputElement>) {
-    const uploadedFiles = e.target.files;
-    if (!uploadedFiles || uploadedFiles.length === 0) return;
-    setUploading(true);
-    setMessage(null);
-    let successCount = 0;
-    let failCount = 0;
-    try {
-      for (let i = 0; i < uploadedFiles.length; i++) {
-        const file = uploadedFiles[i];
-        const safeName = sanitizePathSegment(file.name.replace(/\.[^/.]+$/, ''));
-        const ext = file.name.split('.').pop() || 'bin';
-        const path = `${activeFolder}/${safeName}-${Date.now()}.${ext}`;
-        setUploadProgress({ current: i + 1, total: uploadedFiles.length, pct: 0, name: file.name });
-        try {
-          await uploadToStorage(path, file, (pct) => {
-            setUploadProgress({ current: i + 1, total: uploadedFiles.length, pct, name: file.name });
-          });
-          successCount++;
-        } catch (err: any) {
-          failCount++;
-          console.error(`Upload ${file.name} failed:`, err);
-        }
-      }
-      if (failCount === 0) {
-        setMessage({ type: 'success', text: `${successCount} file(s) uploaded to /${activeFolder}/` });
-      } else if (successCount === 0) {
-        setMessage({ type: 'error', text: `All ${failCount} upload(s) failed — check Firebase Storage rules and your auth` });
-      } else {
-        setMessage({ type: 'error', text: `${successCount} uploaded, ${failCount} failed` });
-      }
-      await refresh();
-    } catch (err: any) {
-      setMessage({ type: 'error', text: err?.message || 'Upload failed' });
-    }
-    setUploading(false);
-    setUploadProgress(null);
-    (e.target as HTMLInputElement).value = '';
-  }
-
-  async function handleDelete(file: { fullPath: string; name: string }) {
-    if (!confirm(`Delete ${file.name}? This cannot be undone.`)) return;
-    setDeletingPath(file.fullPath);
-    try {
-      await deleteFromStorage(file.fullPath);
-      setMessage({ type: 'success', text: `Deleted ${file.name}` });
-      await refresh();
-    } catch (err: any) {
-      setMessage({ type: 'error', text: `Delete failed: ${err?.message || 'permission denied'}` });
-    }
-    setDeletingPath(null);
-  }
-
-  function copyUrl(url: string) {
-    navigator.clipboard?.writeText(url).then(
-      () => setMessage({ type: 'success', text: 'URL copied to clipboard' }),
-      () => setMessage({ type: 'error', text: 'Copy failed — select & copy manually' })
-    );
-  }
-
-  const Icon = folder.icon;
-  return (
-    <div>
-      <div className="flex items-center justify-between mb-6">
-        <h3 className="text-2xl font-bold">Storage Manager</h3>
-        <label className={cn("flex items-center gap-2 px-4 py-2 bg-neon-green text-black rounded-xl text-sm font-bold transition-colors",
-          uploading ? "opacity-50 cursor-wait" : "cursor-pointer hover:bg-neon-green/90"
-        )}>
-          <Upload className="w-4 h-4" />
-          {uploading ? 'Uploading…' : 'Upload File'}
-          <input
-            type="file"
-            multiple
-            accept={folder.accept}
-            className="hidden"
-            onChange={handleUpload}
-            disabled={uploading}
-          />
-        </label>
-      </div>
-
-      {uploading && uploadProgress && (
-        <div className="glass rounded-xl p-4 mb-4 border border-neon-green/30">
-          <div className="flex items-center gap-3 text-neon-green mb-2">
-            <Loader2 className="w-4 h-4 animate-spin" />
-            <span className="text-sm font-bold">
-              Uploading {uploadProgress.current}/{uploadProgress.total}: {uploadProgress.name}
-            </span>
-            <span className="ml-auto text-xs font-mono">{uploadProgress.pct}%</span>
-          </div>
-          <div className="w-full bg-white/10 rounded-full h-1.5 overflow-hidden">
-            <div
-              className="bg-neon-green h-full transition-all duration-200"
-              style={{ width: `${uploadProgress.pct}%` }}
-            />
-          </div>
-        </div>
-      )}
-      {message && (
-        <div className={cn("glass rounded-xl p-4 mb-4 border",
-          message.type === 'success' ? 'border-neon-green/30 text-neon-green' : 'border-red-500/30 text-red-400'
-        )}>
-          <p className="text-sm">{message.text}</p>
-        </div>
-      )}
-
-      <div className="grid grid-cols-3 md:grid-cols-6 gap-3 mb-6">
-        {STORAGE_FOLDERS.map(f => {
-          const FIcon = f.icon;
-          return (
-            <button key={f.id} onClick={() => setActiveFolder(f.id)}
-              className={cn("glass rounded-2xl p-4 flex flex-col items-center gap-2 transition-all hover:border-neon-green/30",
-                activeFolder === f.id ? "border-neon-green bg-neon-green/10" : "border-white/10")}>
-              <FIcon className={cn("w-5 h-5", activeFolder === f.id ? "text-neon-green" : "text-white/40")} />
-              <span className="text-xs font-bold uppercase tracking-wider">{f.label}</span>
-            </button>
-          );
-        })}
-      </div>
-
-      <div className="glass rounded-3xl p-6">
-        <div className="flex items-center gap-3 mb-4 pb-4 border-b border-white/10">
-          <Icon className="w-5 h-5 text-neon-green" />
-          <div>
-            <h4 className="font-bold">/{activeFolder}/</h4>
-            <p className="text-xs text-white/40">{folder.extensions}</p>
-          </div>
-          <button onClick={refresh} disabled={loading} className="ml-auto p-2 glass rounded-lg hover:bg-white/5 transition-colors" title="Refresh">
-            <RefreshCw className={cn("w-4 h-4", loading && "animate-spin")} />
-          </button>
-          <span className="text-xs font-mono text-white/30">{files.length} files</span>
-        </div>
-        {loading ? (
-          <div className="flex items-center gap-3 text-white/40 text-sm py-8"><Loader2 className="w-4 h-4 animate-spin" /> Loading files...</div>
-        ) : files.length === 0 ? (
-          <div className="text-center py-12 text-white/30">
-            <Icon className="w-12 h-12 mx-auto mb-3 opacity-20" />
-            <p className="text-sm">No files in /{activeFolder}/</p>
-            <p className="text-xs mt-1 text-white/20">Upload files using the button above</p>
-          </div>
-        ) : (
-          <div className="space-y-2 max-h-[480px] overflow-y-auto">
-            {files.map(file => (
-              <div key={file.fullPath} className="flex items-center gap-3 p-3 bg-white/5 rounded-xl hover:bg-white/10 transition-colors group">
-                <Icon className="w-4 h-4 text-white/40 flex-shrink-0" />
-                <div className="flex-grow min-w-0">
-                  <p className="text-sm font-mono truncate">{file.name}</p>
-                  <p className="text-xs text-white/30">
-                    {file.size}
-                    {file.updated && <span className="ml-2">· {new Date(file.updated).toLocaleDateString()}</span>}
-                  </p>
-                </div>
-                <button onClick={() => copyUrl(file.url)} className="p-2 glass rounded-lg hover:text-neon-green transition-colors" title="Copy URL">
-                  <Copy className="w-3.5 h-3.5" />
-                </button>
-                <a href={file.url} target="_blank" rel="noopener noreferrer" className="p-2 glass rounded-lg hover:text-neon-green transition-colors" title="Open in new tab">
-                  <ExternalLink className="w-3.5 h-3.5" />
-                </a>
-                <button
-                  onClick={() => handleDelete(file)}
-                  disabled={deletingPath === file.fullPath}
-                  className="p-2 glass rounded-lg hover:text-red-400 transition-colors disabled:opacity-50"
-                  title="Delete"
-                >
-                  {deletingPath === file.fullPath ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Trash2 className="w-3.5 h-3.5" />}
-                </button>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-    </div>
-  );
-}
-
 function SettingsManager() {
   const { user, updateCredentials } = useAuth();
   const { wallets, updateWallets } = useStation();

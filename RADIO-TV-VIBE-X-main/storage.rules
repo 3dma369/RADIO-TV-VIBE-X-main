@@ -17,6 +17,39 @@ service firebase.storage {
       allow write: if false; // uploads via Admin SDK only
     }
 
+    // Admin-managed visual assets — outsourced storage
+    // Auth users (admin) can read + write; public read so signed URLs work
+    match /visuals/{allPaths=**} {
+      allow read: if true;
+      allow write: if request.auth != null
+                   && request.resource.size < 200 * 1024 * 1024; // 200MB max
+    }
+    match /logos/{allPaths=**} {
+      allow read: if true;
+      allow write: if request.auth != null
+                   && request.resource.size < 5 * 1024 * 1024; // 5MB max
+    }
+    match /thumbnails/{allPaths=**} {
+      allow read: if true;
+      allow write: if request.auth != null
+                   && request.resource.size < 5 * 1024 * 1024; // 5MB max
+    }
+    match /ads/{allPaths=**} {
+      allow read: if true;
+      allow write: if request.auth != null
+                   && request.resource.size < 200 * 1024 * 1024; // 200MB max
+    }
+    match /banners/{allPaths=**} {
+      allow read: if true;
+      allow write: if request.auth != null
+                   && request.resource.size < 5 * 1024 * 1024; // 5MB max
+    }
+    match /music/{allPaths=**} {
+      allow read: if true;
+      allow write: if request.auth != null
+                   && request.resource.size < 200 * 1024 * 1024; // 200MB max
+    }
+
     // User uploads (avatars, profile pics) - auth required
     match /users/{userId}/{allPaths=**} {
       allow read: if true; // Public read so others can see profiles
